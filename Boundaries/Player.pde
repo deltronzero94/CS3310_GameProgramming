@@ -37,7 +37,9 @@ public class Player
     py =  height*1.35; 
   }
   
-   //Public Methods/Functions
+  //****************************
+  //Public Methods/Functions
+  //****************************
   public void isPlayerIdle()
   { 
     if (isIdle)
@@ -167,7 +169,9 @@ public class Player
     this.y += y;
   }
   
+  //***********
   //Setters
+  //***********
   public void setLeft(boolean left)
   {
     this.left = left;
@@ -213,7 +217,9 @@ public class Player
     this.x = x;
   }
   
+  //**********
   //Getters
+  //**********
   public PImage getPImage()
   {
     return this.player;
@@ -259,7 +265,9 @@ public class Player
     return this.left;
   }
   
+  //********************
   //Private Methods
+  //********************
   private int currentFrameX()
   {
     return frameCount % dim * w;
