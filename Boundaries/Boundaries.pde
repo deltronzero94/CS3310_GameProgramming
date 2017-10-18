@@ -76,47 +76,83 @@ void draw()
   print(leftSideBorder);
   print("\n");
   
-  
-  //If player movement is greater than left screen boundary
-  if (width + x - px >leftSideBorder )
+  if  (rightSideBorder < 1656.6)
   {
-    if ( width/4 + x + px/3  > sx + px + width/4) //When Crossing midway point
-    {
-      leftSideBorder+= 0.01;
-      rightSideBorder+=0.01;
-      sx+= 2;
-      px+= 6;
-      PImage sprite = player.get(a, b, W, H);
-      map.draw(this.g, sx , sy);
-      
-      if (width + x - px >rightSideBorder) //If player goes beyond right boundary screen
-      {
-        x-=14;
-      }
-      image(sprite, width + x - px, height*1.35 + y);  //Centers image to screen.
-    }
-    else //Standing Still/Before Halfway point 
+    //If player movement is greater than left screen boundary
+    if (width + x - px >leftSideBorder)
     { 
-      PImage sprite = player.get(a, b, W, H);
-      map.draw(this.g, sx , sy);
-      image(sprite, width + x - px, height*1.35 + y);  
+      if ( width/4 + x + px/3  > sx + px + width/4) //When Crossing midway point
+      {
+        leftSideBorder+= 0.01;
+        rightSideBorder+=0.01;
+        sx+= 2;
+        px+= 6;
+        PImage sprite = player.get(a, b, W, H);
+        map.draw(this.g, sx , sy);
+        
+        if (width + x - px >rightSideBorder) //If player goes beyond right boundary screen
+        {
+          x-=14;
+        }
+        image(sprite, width + x - px, height*1.35 + y);  //Centers image to screen.
+      }
+      else //Standing Still/Before Halfway point 
+      { 
+        PImage sprite = player.get(a, b, W, H);
+        map.draw(this.g, sx , sy);
+        image(sprite, width + x - px, height*1.35 + y);  
+      }
+    }
+    else //When Going Beyond left boundary (NEEDS TO BE WORKED ON!!!)
+    { 
+      
+      if (left)
+      {
+        x+=14;
+        PImage sprite = player.get(a, b, W, H);
+        map.draw(this.g, sx , sy);
+        image(sprite, leftSideBorder , height*1.35 + y);  
+      }
+      else
+      {
+        PImage sprite = player.get(a, b, W, H);
+        map.draw(this.g, sx , sy);
+        image(sprite, width + x - px, height*1.35 + y); 
+      }
     }
   }
-  else //When Going Beyond left boundary (NEEDS TO BE WORKED ON!!!)
-  { 
-    if (left)
-    {
-      x+=14;
-      PImage sprite = player.get(a, b, W, H);
-      map.draw(this.g, sx , sy);
-      image(sprite, leftSideBorder , height*1.35 + y);  
-    }
-    else
-    {
-      PImage sprite = player.get(a, b, W, H);
-      map.draw(this.g, sx , sy);
-      image(sprite, width + x - px, height*1.35 + y); 
-    }
+  else
+  {
+    if ( width/4 + x + px/3  > sx + px + width/4) //When Crossing midway point
+      {
+        //sx+= 2;
+        //px+= 6;
+        PImage sprite = player.get(a, b, W, H);
+        map.draw(this.g, sx , sy);
+        
+        if (width + x - px >rightSideBorder) //If player goes beyond right boundary screen
+        {
+          x-=14;
+        }
+        image(sprite, width + x - px, height*1.35 + y);  //Centers image to screen.
+      }
+      else //Standing Still/Before Halfway point 
+      { 
+        if (width + x - px > leftSideBorder)
+        {
+          
+          PImage sprite = player.get(a, b, W, H);
+          map.draw(this.g, sx , sy);
+          image(sprite, width + x - px, height*1.35 + y);  
+        }
+        else
+        {
+          x+=14;
+          PImage sprite = player.get(a, b, W, H);
+          map.draw(this.g, sx , sy);
+          image(sprite, leftSideBorder , height*1.35 + y);
+        }
+      }
   }
 }
 
@@ -205,22 +241,3 @@ void keyReleased(){
     isMoving = false;
   }
 }
-
-//int PosX(){
-//  return  x;
-//}
- 
-//int PosY(){
-//  return y;
-//}
-
-
-//public PImage getReversePImage( PImage image ) {
-// PImage reverse = new PImage( image.width, image.height );
-// for( int i=0; i < image.width; i++ ){
-//   for(int j=0; j < image.height; j++){
-//     reverse.set( image.width - 10 - i, j, image.get(i, j) );
-//   }   
-// }
-// return reverse;
-//}

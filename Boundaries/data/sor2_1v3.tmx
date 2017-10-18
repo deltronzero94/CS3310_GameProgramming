@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" tiledversion="2017.07.26" orientation="orthogonal" renderorder="right-down" width="120" height="32" tilewidth="16" tileheight="16" nextobjectid="1">
- <tileset firstgid="1" source="sor2_1v3.tsx"/>
- <tileset firstgid="22725" source="../../TilemapAnimation/data/sor2_1v3.tsx"/>
+ <tileset firstgid="1" source="../../../../sketchbook/Boundaries/data/sor2_1v3.tsx"/>
+ <tileset firstgid="22725" source="../../../../sketchbook/TilemapAnimation/data/sor2_1v3.tsx"/>
  <layer name="Tile Layer 1" width="120" height="32">
   <data encoding="csv">
 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,22788,22789,22790,22791,22792,22793,22794,22795,22796,22797,22798,35212,35213,35214,35215,35216,35217,35218,35219,35220,35221,35222,35223,35224,35225,35226,35227,35228,35229,35230,35231,35232,35233,35234,35235,35236,35237,35238,35239,35240,35241,35242,35243,35244,35245,35246,35247,35248,35249,35250,35251,35252,35252,35253,35254,35255,35256,
