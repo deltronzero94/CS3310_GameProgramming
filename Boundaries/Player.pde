@@ -25,6 +25,18 @@ public class Player
     py =  height*1.35; 
   }
   
+  public Player(int x, int y)
+  {
+    this.x = x;
+    this.y = y;
+    isIdle = true;
+    isAttacking = false;
+    isMoving = false;
+    lastLeft = false;
+    px = width;
+    py =  height*1.35; 
+  }
+  
    //Public Methods/Functions
   public void isPlayerIdle()
   { 
@@ -74,11 +86,6 @@ public class Player
       }
     }
   }
- 
-  public int currentFrameX()
-  {
-    return frameCount % dim * w;
-  }
   
   public boolean isKeyPressed()
   {
@@ -102,6 +109,11 @@ public class Player
     {
       return false;
     }
+  }
+  
+  public PImage getCurrentSprite()
+  {
+    return player.get(currentFrameX(), 0, w, h);
   }
   
   public void playerMovement()
@@ -130,9 +142,14 @@ public class Player
      image(sprite, width + x - px, height*1.35 + y); 
   }
   
-  public float currentPlayerPosition()
+  public float currentPlayerPositionX()
   {
     return width + x - px;
+  }
+  
+   public float currentPlayerPositionY()
+  {
+    return py + y;
   }
   
   public void addPX(int x)
@@ -142,7 +159,12 @@ public class Player
   
   public void addX(int x)
   {
-    this.x += x
+    this.x += x;
+  }
+  
+  public void addY(int y)
+  {
+    this.y += y;
   }
   
   //Setters
@@ -181,6 +203,16 @@ public class Player
     this.isMoving = isMoving;
   }
   
+  public void setY(int y)
+  {
+    this.y = y;
+  }
+  
+  public void setX(int x)
+  {
+    this.x = x;
+  }
+  
   //Getters
   public PImage getPImage()
   {
@@ -215,6 +247,22 @@ public class Player
   public int getX()
   {
     return this.x;
+  }
+  
+  public int getY()
+  {
+    return this.y;
+  }
+  
+  public boolean getLeft()
+  {
+    return this.left;
+  }
+  
+  //Private Methods
+  private int currentFrameX()
+  {
+    return frameCount % dim * w;
   }
   
 } //End of Player Class
