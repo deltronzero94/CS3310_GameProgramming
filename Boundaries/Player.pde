@@ -59,7 +59,7 @@ public class Player
         h = player.height;
       }     
     }
-    else
+    else if (isMoving) 
     {
       if (!left)
       {
@@ -138,7 +138,7 @@ public class Player
       if (y > 350) y = 350;
     }
     
-     int a = currentFrameX(); //Divide
+     int a = currentFrameX();
      int b = 0;
      PImage sprite = p.getPImage().get(a, b, w,h);
      image(sprite, width + x - px, height*1.35 + y); 

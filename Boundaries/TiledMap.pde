@@ -73,7 +73,7 @@ public class TiledMap
           p.addX(14);
           PImage sprite = p.getCurrentSprite();
           map.draw(applet.g, sx , sy);
-          image(sprite, leftSideBorder , p.currentPlayerPositionY());  
+          image(sprite, p.currentPlayerPositionX() , p.currentPlayerPositionY());  
         }
         else
         {
