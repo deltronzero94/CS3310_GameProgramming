@@ -2,7 +2,6 @@
 Player p;
 TiledMap map;
 
-
 void setup()
 {
   //fullScreen();
@@ -38,8 +37,14 @@ void keyPressed(){
     p.setRight(true);
     p.setLastLeft(false);
   }
-  if(keyCode == UP) p.setUp(true);
-  if(keyCode == DOWN) p.setDown(true);
+  if(keyCode == UP)
+  {
+    p.setUp(true);
+  }
+  if(keyCode == DOWN) 
+  {
+    p.setDown(true);
+  }
   if(p.isKeyPressed())
   {
     p.setIsIdle(false);
@@ -61,12 +66,10 @@ void keyReleased(){
   if(keyCode == UP)
   {
    p.setUp(false);
-    //lastLeft = false;
   }
   if(keyCode == DOWN) 
   {
     p.setDown(false);
-    //lastLeft = false;
   }
   if(p.isKeyReleased())
   {

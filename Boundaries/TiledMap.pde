@@ -27,13 +27,12 @@ public class TiledMap
   {  
     float px = p.getPX();
     int x = p.getX();
-    int prevX = x;
-    int prevY = p.getY();
     int topBorder;
     
+    //Prevents player from moving beyond top boundary/walls
     PVector overTile = map.canvasToMap(p.currentPlayerPositionX(), p.currentPlayerPositionY());
     topBorder = map.getTileIndex(0, round(overTile.x), round(overTile.y));
-    print(map.getTileIndex(0, round(overTile.x), round(overTile.y)) + "\n");
+   
     if(topBorder == -1 || (topBorder>10000 && topBorder < 16000 ))
     {
       p.setY(45);
