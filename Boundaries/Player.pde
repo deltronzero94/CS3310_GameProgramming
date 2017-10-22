@@ -12,6 +12,9 @@ public class Player
   private int w; //width of the sprite
   private int h; //height of the sprite
   
+  private int lastAttack;
+  private int currentAttack;
+  
   //Default Constructor
   public Player()
   {
@@ -42,7 +45,7 @@ public class Player
   //****************************
   public void isPlayerIdle()
   { 
-    if (isIdle)
+    if (isIdle && !isAttacking)
     {    
       if (lastLeft && !right)
       {
@@ -59,7 +62,7 @@ public class Player
         h = player.height;
       }     
     }
-    else if (isMoving) 
+    else if (isMoving && !isAttacking) 
     {
       if (!left)
       {
@@ -85,6 +88,23 @@ public class Player
         dim = 24;
         w = player.width/dim;
         h = player.height;
+      }
+    }
+    else if(isAttacking)
+    {
+      if(!lastLeft)
+      {
+        player = loadImage("punch_animation_v2_right.png");
+         dim = 14;
+         w = player.width/dim;
+         h = player.height;
+      }
+      else
+      {
+        player = loadImage("punch1_left.png");
+         dim = 3;
+         w = player.width/dim;
+         h = player.height;
       }
     }
   }
@@ -120,22 +140,25 @@ public class Player
   
   public void playerMovement()
   {
-    if(left)
+    if(isMoving)
     {
-      x -= 14;
-    }
-    if(right)
-    {
-      x += 14;
-    }
-    if(up)
-    {
-      y -= 8;
-    }
-    if(down)
-    {
-      y += 8;
-      if (y > 350) y = 350;
+      if(left)
+      {
+        x -= 14;
+      }
+      if(right)
+      {
+        x += 14;
+      }
+      if(up)
+      {
+        y -= 8;
+      }
+      if(down)
+      {
+        y += 8;
+        if (y > 350) y = 350;
+      }
     }
     
      int a = currentFrameX();
@@ -205,6 +228,11 @@ public class Player
   public void setIsMoving(boolean isMoving)
   {
     this.isMoving = isMoving;
+  }
+  
+  public void setIsAttacking(boolean isAttacking)
+  {
+    this.isAttacking = isAttacking;
   }
   
   public void setY(int y)
