@@ -125,14 +125,12 @@ void keyReleased(){
       p.setIsAttacking(false);
       p.setIsIdle(false);
       p.setIsMoving(true);
-      print("Z is pressed while moving\n");
     }
     else if (key == 'z' && p.isKeyReleased() ) //Attacking while standing still
     {
       p.setIsAttacking(false);
       p.setIsIdle(true);
       p.setIsMoving(false);
-      print("Z is released while standing still\n");
     }
   }
 }

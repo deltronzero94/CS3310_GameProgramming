@@ -28,6 +28,7 @@ public class Player
     lastLeft = false;
     px = width;
     py =  height*1.35; 
+    activeFrame = -1;
   }
   
   public Player(int x, int y)
@@ -40,6 +41,7 @@ public class Player
     lastLeft = false;
     px = width;
     py =  height*1.35; 
+    activeFrame = -1;
   }
   
   //****************************
@@ -47,109 +49,21 @@ public class Player
   //****************************
   public void isPlayerIdle()
   { 
-    if (isIdle && !isAttacking) //Player is Idle
-    {    
-      if (lastLeft && !right)
-      {
-        player = loadImage("idle3.png");
-        dim = 12;
-        w = player.width/dim;
-        h = player.height;
+    //if(!isActiveFrame)
+      //{
+      if (isIdle && !isAttacking) //Player is Idle
+      {    
+        drawPlayerIdle();     
       }
-      else
+      else if (isMoving && !isAttacking) //Player is Moving
       {
-        player = loadImage("idle3_R.png");
-        dim = 12;
-        w = player.width/dim;
-        h = player.height;
-      }     
-    }
-    else if (isMoving && !isAttacking) //Player is Moving
-    {
-      if (!left)
-      {
-        if ((up && lastLeft || down &&lastLeft) && !right )
-        {   
-          player = loadImage("walk.png");
-          dim = 24;
-          w = player.width/dim;
-          h = player.height;
-          
-        }
-        else
-        {
-          player = loadImage("walk_right.png");
-          dim = 24;
-          w = player.width/dim;
-          h = player.height;
-        }
+        drawPlayerMoving();
       }
-      else
+      else if(isAttacking ) //Player is Attacking
       {
-        player = loadImage("walk.png");
-        dim = 24;
-        w = player.width/dim;
-        h = player.height;
+        drawPlayerAttacking();
       }
-    }
-    else if(isAttacking) //Player is Attacking
-    {
-      if(!lastLeft && !left || right)
-      {
-        
-        player = loadImage("punch_animation_v2_right.png");
-        dim = 14;
-        w = player.width/dim;
-        h = player.height;
-      }
-      else
-      {
-        if (getTimeBetweenAttack() >= 0.05) //Delay b/w Attacks
-        {
-          
-          if(currentAttackFrame == 0 && previousAttackFrame ==0 ) //Punch 1
-          {
-            if (activeFrame == 0)
-            {
-              activeFrame = frameCount;
-            }
-              
-            lastAttackTime = millis(); //Timer for delay
-            player = loadImage("punch1_f6_left.png");
-            dim = 6;
-            w = player.width/dim;
-            h = player.height;
-            currentAttackFrame++;
-          }
-          else if (currentAttackFrame == 1 && previousAttackFrame == 0 && getTimeBetweenAttack() <=1) //Punch 2
-          {
-            player = loadImage("punch3_f6_left_V2.png");
-            dim = 8;
-            w = player.width/dim;
-            h = player.height;
-            previousAttackFrame++;
-            currentAttackFrame++;
-            //previousAttackFrame = 0;
-            //currentAttackFrame = 0;
-            print("Inside punch2\n");
-          }
-          //else if (currentAttackFrame == 2 && previousAttackFrame == 1 && getTimeBetweenAttack() <=1)
-          //{
-             
-          //  print("Inside punch3\n");
-          //}
-          else //Resets Attack Animation if idle
-          {
-            if (getTimeBetweenAttack() > .10) 
-            {
-              this.lastAttackTime = millis();
-              currentAttackFrame = 0;
-              previousAttackFrame = 0;
-            }
-          } 
-        }
-      }
-    }
+    //}
   }
   
   public boolean isKeyPressed()
@@ -288,6 +202,7 @@ public class Player
     this.x = x;
   }
   
+  
   //**********
   //Getters
   //**********
@@ -362,6 +277,125 @@ public class Player
   private int currentFrameX()
   {
     return frameCount % dim * w;
+  }
+  
+  private void drawPlayerIdle()
+  {
+    if (lastLeft && !right)
+      {
+        player = loadImage("idle3.png");
+        dim = 12;
+        w = player.width/dim;
+        h = player.height;
+      }
+      else
+      {
+        player = loadImage("idle3_R.png");
+        dim = 12;
+        w = player.width/dim;
+        h = player.height;
+      }
+  }
+  
+  private void drawPlayerMoving()
+  {
+    if (!left)
+      {
+        if ((up && lastLeft || down &&lastLeft) && !right )
+        {   
+          player = loadImage("walk.png");
+          dim = 24;
+          w = player.width/dim;
+          h = player.height;
+          
+        }
+        else
+        {
+          player = loadImage("walk_right.png");
+          dim = 24;
+          w = player.width/dim;
+          h = player.height;
+        }
+      }
+      else
+      {
+        player = loadImage("walk.png");
+        dim = 24;
+        w = player.width/dim;
+        h = player.height;
+      }
+  }
+  
+  private void drawPlayerAttacking()
+  {
+    print("CurrentFrame: " + activeFrame +"\n" );
+    if (activeFrame != -1)
+    {
+      if(frameCount - activeFrame >= 0.25)
+      {
+        activeFrame = -1;
+        print("True\n");
+      }
+    }
+    else
+    {
+      if(!lastLeft && !left || right)
+      {
+        
+        player = loadImage("punch_animation_v2_right.png");
+        dim = 14;
+        w = player.width/dim;
+        h = player.height;
+      }
+      else
+      {
+        if((currentAttackFrame == 0 && previousAttackFrame ==0) ||
+            (currentAttackFrame == 1 && previousAttackFrame ==0)) //Punch 1 & 2
+        {
+          if (activeFrame == -1)
+          {
+            activeFrame = frameCount;
+          }
+            
+          lastAttackTime = millis(); //Timer for delay
+          player = loadImage("punch1_f6_left_v2.png");
+          dim = 6;
+          w = player.width/dim;
+          h = player.height;
+   
+          
+          //MIGHT NEED TO DELETE
+          if(currentAttackFrame == 1)
+          {
+            previousAttackFrame++;
+            activeFrame = frameCount;
+          }
+          currentAttackFrame++;
+        }
+        else if ((currentAttackFrame == 2 && previousAttackFrame ==1)) //Punch 3 & punch4
+        {
+          activeFrame = frameCount;
+          player = loadImage("punch3_f6_left_V2.png");
+          dim = 8;
+          w = player.width/dim;
+          h = player.height;
+          previousAttackFrame++;
+          currentAttackFrame++;
+          frameCount+=16;
+        }
+        else //Resets Attack Animation if idle
+        {            
+          if (getTimeBetweenAttack() > .05) 
+          {
+            this.lastAttackTime = millis();
+            currentAttackFrame = 0;
+            previousAttackFrame = 0;
+            activeFrame = -1;
+          }
+        } 
+        
+      }
+    }
   }
   
 } //End of Player Class
