@@ -1,8 +1,8 @@
 public class Player
 {
   //Declared Variable Members
-  private PImage player;
-  private boolean isIdle, isAttacking, isMoving; //
+  private PImage player; //Player avatar
+  private boolean isIdle, isAttacking, isMoving; //Keeps of current state of the player
   private boolean lastLeft; //Keeps track of last key released (true if last key released was left )
   private boolean left,right, up, down; //Track currentMovement
   private int x , y; //Player Movement for X and Y plane
@@ -13,8 +13,8 @@ public class Player
   private int h; //height of the sprite
   
   private int lastAttackTime;
-  private int previousAttackFrame;
-  private int currentAttackFrame;
+  private int previousAttack;
+  private int currentAttack;
   private int activeFrame;
   
   //Default Constructor
@@ -49,8 +49,8 @@ public class Player
   //****************************
   public void isPlayerIdle()
   { 
-    //if(!isActiveFrame)
-      //{
+    if(!isAttackFrameActive())
+    {
       if (isIdle && !isAttacking) //Player is Idle
       {    
         drawPlayerIdle();     
@@ -59,11 +59,19 @@ public class Player
       {
         drawPlayerMoving();
       }
-      else if(isAttacking ) //Player is Attacking
+      else if(isAttacking) //Player is Attacking
       {
         drawPlayerAttacking();
       }
-    //}
+    }
+    else if (player == null) //Default Option (If anything hasn't loaded)
+    {
+      drawPlayerIdle();
+    }
+    else
+    {
+      print("Active Frame!: " + currentFrameX() + "\n");
+    }
   }
   
   public boolean isKeyPressed()
@@ -97,7 +105,7 @@ public class Player
   
   public void playerMovement()
   {
-    if(isMoving)
+    if(isMoving && !isAttackFrameActive())
     {
       if(left)
       {
@@ -256,14 +264,14 @@ public class Player
     return this.lastAttackTime;
   }
   
-  public int getCurrentAttackFrame()
+  public int getCurrentAttack()
   {
-    return this.currentAttackFrame;
+    return this.currentAttack;
   }
   
-  public int getPreviousAttackFrame()
+  public int getPreviousAttack()
   {
-    return this.previousAttackFrame;
+    return this.previousAttack;
   }
   
   public float getTimeBetweenAttack()
@@ -277,6 +285,20 @@ public class Player
   private int currentFrameX()
   {
     return frameCount % dim * w;
+  }
+  
+  //NEEDS WORK!!!!!!
+  private boolean isAttackFrameActive()
+  {
+    if (frameCount - activeFrame < dim/2   && activeFrame != -1)
+    {
+      activeFrame = frameCount;
+      return true;
+    }
+    else
+    {
+      return false;
+    }
   }
   
   private void drawPlayerIdle()
@@ -329,9 +351,9 @@ public class Player
   private void drawPlayerAttacking()
   {
     print("CurrentFrame: " + activeFrame +"\n" );
-    if (activeFrame != -1)
+    if (activeFrame != -1 && currentAttack != 0 )
     {
-      if(frameCount - activeFrame >= 0.25)
+      if(frameCount - activeFrame >= 1)
       {
         activeFrame = -1;
         print("True\n");
@@ -349,8 +371,8 @@ public class Player
       }
       else
       {
-        if((currentAttackFrame == 0 && previousAttackFrame ==0) ||
-            (currentAttackFrame == 1 && previousAttackFrame ==0)) //Punch 1 & 2
+        if((currentAttack == 0 && previousAttack ==0) ||
+            (currentAttack == 1 && previousAttack ==0)) //Punch 1 & 2
         {
           if (activeFrame == -1)
           {
@@ -362,36 +384,42 @@ public class Player
           dim = 6;
           w = player.width/dim;
           h = player.height;
-   
           
-          //MIGHT NEED TO DELETE
-          if(currentAttackFrame == 1)
+          if(currentAttack == 1)
           {
-            previousAttackFrame++;
-            activeFrame = frameCount;
+            previousAttack++;
+            activeFrame = frameCount ;
           }
-          currentAttackFrame++;
+          currentAttack++;
         }
-        else if ((currentAttackFrame == 2 && previousAttackFrame ==1)) //Punch 3 & punch4
+        else if ((currentAttack == 2 && previousAttack ==1)) //Punch 3 & punch4
         {
           activeFrame = frameCount;
+          lastAttackTime = millis(); 
           player = loadImage("punch3_f6_left_V2.png");
           dim = 8;
           w = player.width/dim;
           h = player.height;
-          previousAttackFrame++;
-          currentAttackFrame++;
-          frameCount+=16;
+          previousAttack++;
+          currentAttack++;
+        }
+        else if (currentAttack == 3 && previousAttack == 2) //Kick
+        {
+          activeFrame = frameCount;
+          lastAttackTime = millis(); 
+          player = loadImage("punch4_f6_left.png");
+          dim = 8;
+          w = player.width/dim;
+          h = player.height;
+          previousAttack++;
+          currentAttack++; 
         }
         else //Resets Attack Animation if idle
         {            
-          if (getTimeBetweenAttack() > .05) 
-          {
             this.lastAttackTime = millis();
-            currentAttackFrame = 0;
-            previousAttackFrame = 0;
+            currentAttack = 0;
+            previousAttack = 0;
             activeFrame = -1;
-          }
         } 
         
       }

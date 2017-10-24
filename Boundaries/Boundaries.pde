@@ -74,7 +74,7 @@ void keyPressed(){
       p.setIsAttacking(false);
       p.setIsIdle(false);
       p.setIsMoving(true);
-      print("Inside the other\n");
+      //print("Player is moving\n");
     }
     else if(key == 'z')
     {
@@ -139,5 +139,10 @@ void drawTitleScreen()
 {
     
   
+  
+}
+
+void drawCreditScreen()
+{
   
 }
