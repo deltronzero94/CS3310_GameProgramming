@@ -12,8 +12,10 @@ public class Player
   private int w; //width of the sprite
   private int h; //height of the sprite
   
-  private int lastAttack;
-  private int currentAttack;
+  private int lastAttackTime;
+  private int previousAttackFrame;
+  private int currentAttackFrame;
+  private int activeFrame;
   
   //Default Constructor
   public Player()
@@ -45,7 +47,7 @@ public class Player
   //****************************
   public void isPlayerIdle()
   { 
-    if (isIdle && !isAttacking)
+    if (isIdle && !isAttacking) //Player is Idle
     {    
       if (lastLeft && !right)
       {
@@ -62,7 +64,7 @@ public class Player
         h = player.height;
       }     
     }
-    else if (isMoving && !isAttacking) 
+    else if (isMoving && !isAttacking) //Player is Moving
     {
       if (!left)
       {
@@ -90,21 +92,62 @@ public class Player
         h = player.height;
       }
     }
-    else if(isAttacking)
+    else if(isAttacking) //Player is Attacking
     {
-      if(!lastLeft)
+      if(!lastLeft && !left || right)
       {
+        
         player = loadImage("punch_animation_v2_right.png");
-         dim = 14;
-         w = player.width/dim;
-         h = player.height;
+        dim = 14;
+        w = player.width/dim;
+        h = player.height;
       }
       else
       {
-        player = loadImage("punch1_left.png");
-         dim = 3;
-         w = player.width/dim;
-         h = player.height;
+        if (getTimeBetweenAttack() >= 0.05) //Delay b/w Attacks
+        {
+          
+          if(currentAttackFrame == 0 && previousAttackFrame ==0 ) //Punch 1
+          {
+            if (activeFrame == 0)
+            {
+              activeFrame = frameCount;
+            }
+              
+            lastAttackTime = millis(); //Timer for delay
+            player = loadImage("punch1_f6_left.png");
+            dim = 6;
+            w = player.width/dim;
+            h = player.height;
+            currentAttackFrame++;
+          }
+          else if (currentAttackFrame == 1 && previousAttackFrame == 0 && getTimeBetweenAttack() <=1) //Punch 2
+          {
+            player = loadImage("punch3_f6_left_V2.png");
+            dim = 8;
+            w = player.width/dim;
+            h = player.height;
+            previousAttackFrame++;
+            currentAttackFrame++;
+            //previousAttackFrame = 0;
+            //currentAttackFrame = 0;
+            print("Inside punch2\n");
+          }
+          //else if (currentAttackFrame == 2 && previousAttackFrame == 1 && getTimeBetweenAttack() <=1)
+          //{
+             
+          //  print("Inside punch3\n");
+          //}
+          else //Resets Attack Animation if idle
+          {
+            if (getTimeBetweenAttack() > .10) 
+            {
+              this.lastAttackTime = millis();
+              currentAttackFrame = 0;
+              previousAttackFrame = 0;
+            }
+          } 
+        }
       }
     }
   }
@@ -291,6 +334,26 @@ public class Player
   public boolean getLeft()
   {
     return this.left;
+  }
+  
+  public int getLastAttackTime()
+  {
+    return this.lastAttackTime;
+  }
+  
+  public int getCurrentAttackFrame()
+  {
+    return this.currentAttackFrame;
+  }
+  
+  public int getPreviousAttackFrame()
+  {
+    return this.previousAttackFrame;
+  }
+  
+  public float getTimeBetweenAttack()
+  {
+    return (float)(millis() - this.lastAttackTime)/1000;
   }
   
   //********************

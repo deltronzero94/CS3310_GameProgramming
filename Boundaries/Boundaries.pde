@@ -7,11 +7,13 @@ void setup()
 {
   //fullScreen();
   size(600,340);
-
+ 
+ //Probably Needs to changed (NEED 1 SINGLE VARIABLE RATHER THAN 4) -------
   isTitleScreen = false;
   isGameScreen = true;
   isGamePause = false;
   isCreditScreen = false;
+  // ---------------------------------------
   
   map = new TiledMap(this);
   p = new Player();
@@ -27,17 +29,17 @@ void draw()
   background(map.getMap().getBackgroundColor());
   fill(128);
   
-  if (isTitleScreen)
+  if (isTitleScreen) //Title Screen Mode
   {
  
   }
-  else if (isGameScreen)
+  else if (isGameScreen) //Game Screen Mode
   {
     p.isPlayerIdle();
     p.playerMovement();
     map.drawMap(p);
   }
-  else if (isCreditScreen)
+  else if (isCreditScreen) //Credit Screen Mode
   {
     
   }
@@ -79,7 +81,13 @@ void keyPressed(){
       p.setIsAttacking(true);
       p.setIsIdle(false);
       p.setIsMoving(false);
-      print("Z is hit\n");
+      print(p.getTimeBetweenAttack()+"\n");
+    }
+    else
+    {
+      p.setIsAttacking(false);
+      p.setIsIdle(true);
+      p.setIsMoving(false);
     }
   }
 }
@@ -106,7 +114,6 @@ void keyReleased(){
       p.setDown(false);
     }
     
-    
     if(p.isKeyReleased() && key != 'z') //Player just moving and not attacking
     {
       p.setIsIdle(true);
@@ -118,14 +125,14 @@ void keyReleased(){
       p.setIsAttacking(false);
       p.setIsIdle(false);
       p.setIsMoving(true);
-      print("Z is released\n");
+      print("Z is pressed while moving\n");
     }
     else if (key == 'z' && p.isKeyReleased() ) //Attacking while standing still
     {
       p.setIsAttacking(false);
       p.setIsIdle(true);
       p.setIsMoving(false);
-      print("Z is released\n");
+      print("Z is released while standing still\n");
     }
   }
 }
