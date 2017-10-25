@@ -290,9 +290,13 @@ public class Player
   //NEEDS WORK!!!!!!
   private boolean isAttackFrameActive()
   {
-    if (frameCount - activeFrame < dim/2   && activeFrame != -1)
+    if (frameCount - activeFrame < dim  && activeFrame != -1)
     {
-      activeFrame = frameCount;
+      if (currentFrameX()/w == 1)
+        activeFrame = -1;
+       
+      
+      //activeFrame -= frameCount;
       return true;
     }
     else
@@ -385,11 +389,11 @@ public class Player
           w = player.width/dim;
           h = player.height;
           
-          if(currentAttack == 1)
-          {
-            previousAttack++;
-            activeFrame = frameCount ;
-          }
+          //if(currentAttack == 1)
+          //{
+          //  previousAttack++;
+          //  activeFrame = frameCount ;
+          //}
           currentAttack++;
         }
         else if ((currentAttack == 2 && previousAttack ==1)) //Punch 3 & punch4
