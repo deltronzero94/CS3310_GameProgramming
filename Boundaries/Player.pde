@@ -343,20 +343,52 @@ public class Player
   
   private void drawPlayerAttacking()
   {
-    if(!lastLeft && !left || right)
+    if (activeFrame == -1)
     {
+      frameCount = 0;
+      //currentAttack = 2; //FOR TESTING
       
-      player = loadImage("punch_animation_v2_right.png");
-      dim = 14;
-      w = player.width/dim;
-      h = player.height;
-    }
-    else
-    {
-      if (activeFrame == -1)
+      if(!lastLeft && !left || right)
+      {        
+       if(currentAttack == 0 ) //Punch 1 
+          {
+            activeFrame = frameCount;
+            lastAttackTime = millis(); //Timer for delay
+            player = loadImage("punch1_f6_right_v2.png");
+            dim = 6;
+            w = player.width/dim;
+            h = player.height;
+            currentAttack++;
+          }
+          else if (currentAttack == 1 && getTimeBetweenAttack() < .5) //Punch 2
+          {
+            activeFrame = frameCount;
+            lastAttackTime = millis(); 
+            player = loadImage("punch3_f6_right_V2.png");
+            dim = 8;
+            w = player.width/dim;
+            h = player.height;
+            currentAttack++;
+          }
+          else if (currentAttack == 2 && getTimeBetweenAttack() < .5) //Kick
+          {
+            activeFrame = frameCount;
+            lastAttackTime = millis(); 
+            player = loadImage("punch4_f6_right.png");
+            dim = 10;
+            w = player.width/dim;
+            h = player.height;
+            currentAttack = 0; 
+          }
+          else if (getTimeBetweenAttack() >= .5) //Resets Attack Animation if idle
+          {   
+            activeFrame = -1;
+            currentAttack = 0; 
+            lastAttackTime = millis();  
+          }
+      }
+      else
       {
-        frameCount = 0;
-        
         if(currentAttack == 0 ) //Punch 1 
         {
           activeFrame = frameCount;
@@ -382,7 +414,7 @@ public class Player
           activeFrame = frameCount;
           lastAttackTime = millis(); 
           player = loadImage("punch4_f6_left.png");
-          dim = 8;
+          dim = 10;
           w = player.width/dim;
           h = player.height;
           currentAttack = 0; 
