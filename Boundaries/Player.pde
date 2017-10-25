@@ -375,12 +375,12 @@ public class Player
             activeFrame = frameCount;
             lastAttackTime = millis(); 
             player = loadImage("punch4_f6_right.png");
-            dim = 10;
+            dim = 8;
             w = player.width/dim;
             h = player.height;
             currentAttack = 0; 
           }
-          else if (getTimeBetweenAttack() >= .5) //Resets Attack Animation if idle
+          else if (getTimeBetweenAttack() >= .5) //Resets Attack Animation if idle for more than .5 seconds
           {   
             activeFrame = -1;
             currentAttack = 0; 
@@ -417,9 +417,9 @@ public class Player
           dim = 8;
           w = player.width/dim;
           h = player.height;
-          currentAttack = 0; 
+          currentAttack = 0;  
         }
-        else if (getTimeBetweenAttack() >= .5) //Resets Attack Animation if idle
+        else if (getTimeBetweenAttack() >= .5) //Resets Attack Animation if idle for more than .5 seconds
         {   
           activeFrame = -1;
           currentAttack = 0; 
