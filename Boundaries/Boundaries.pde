@@ -79,7 +79,7 @@ void keyPressed(){
     }
     else if(key == 'z')
     {
-       print("******************************\nZ was hit\n******************************\n");
+      print("******************************\nZ was hit\n******************************\n");
       map.getPlayer().setIsAttacking(true);
       map.getPlayer().setIsIdle(false);
       map.getPlayer().setIsMoving(false);
