@@ -1,36 +1,22 @@
-import ptmx.*;
-
 //Global Member Variables
-PImage player;
-Ptmx map;
-int DIM; //How space they are in the jpeg file
-int W;
-int H;
-int x = 100, y = 100;
-boolean left, right, up, down;
-boolean isIdle = true, isAttacking = false, isMoving = false;
-boolean lastLeft = false;
-int sx = 300; //Screen Postion X
-int sy = 170; // Screen positon y
-float px = width; //Adjust player position x when screen moves
-float py =  height*1.35; //Adjust player position y when screen moves
-float leftSideBorder = 50.0; //Left Edge of the screen
-float rightSideBorder = 1650.0; //Left Edge of the screen
+//Player p;
+TiledMap map;
+boolean isTitleScreen, isGameScreen, isCreditScreen, isGamePause;
 
 void setup()
 {
-  //isPlayerIdle();
   //fullScreen();
   size(600,340);
-  pushMatrix();
-
-  map = new Ptmx(this, "sor2_1v3.tmx");
-  map.setDrawMode(CENTER);
-  map.setPositionMode("CANVAS");//Default Position Mode
-  x = int(map.mapToCanvas(map.getMapSize()).x / 12);
-  y = int(map.mapToCanvas(map.getMapSize()).y / 6);
+ 
+ //Probably Needs to changed (NEED 1 SINGLE VARIABLE RATHER THAN 4) -------
+  isTitleScreen = false;
+  isGameScreen = true;
+  isGamePause = false;
+  isCreditScreen = false;
+  // ---------------------------------------
   
-  popMatrix();
+  map = new TiledMap(this);
+  //p = new Player();
   
   imageMode(CENTER);
   noCursor();  // hide the mouse cursor
@@ -40,204 +26,122 @@ void setup()
 void draw()
 {  
   scale(.35);
-  //isPlayerIdle();
-
-  background(map.getBackgroundColor());
-  //map.draw(this.g, x, y);
+  background(map.getMap().getBackgroundColor());
   fill(128);
-  isPlayerIdle();
   
-  int a = frameCount % DIM * W; //Divide
-  int b = 0;
-  
-  if(left)
+  if (isTitleScreen) //Title Screen Mode
   {
-    x -= 14;
+ 
   }
-  if(right)
+  else if (isGameScreen) //Game Screen Mode
   {
-    x += 14;
+    map.drawMap();
   }
-  if(up)
+  else if (isCreditScreen) //Credit Screen Mode
   {
-    y -= 8;
-  }
-  if(down)
-  {
-    y += 8;
-    if (y > 350) y = 350;
+    
   }
   
-  print("\nPX\n");
-  print(width + x - px);
-  print("\nSX\n");
-  print(sx - width/4 + 50);
-  print("\nLeftScreenBorder\n");
-  print(leftSideBorder);
-  print("\n");
-  
-  if  (rightSideBorder < 1656.6)
-  {
-    //If player movement is greater than left screen boundary
-    if (width + x - px >leftSideBorder)
-    { 
-      if ( width/4 + x + px/3  > sx + px + width/4) //When Crossing midway point
-      {
-        leftSideBorder+= 0.01;
-        rightSideBorder+=0.01;
-        sx+= 2;
-        px+= 6;
-        PImage sprite = player.get(a, b, W, H);
-        map.draw(this.g, sx , sy);
-        
-        if (width + x - px >rightSideBorder) //If player goes beyond right boundary screen
-        {
-          x-=14;
-        }
-        image(sprite, width + x - px, height*1.35 + y);  //Centers image to screen.
-      }
-      else //Standing Still/Before Halfway point 
-      { 
-        PImage sprite = player.get(a, b, W, H);
-        map.draw(this.g, sx , sy);
-        image(sprite, width + x - px, height*1.35 + y);  
-      }
-    }
-    else //When Going Beyond left boundary (NEEDS TO BE WORKED ON!!!)
-    { 
-      
-      if (left)
-      {
-        x+=14;
-        PImage sprite = player.get(a, b, W, H);
-        map.draw(this.g, sx , sy);
-        image(sprite, leftSideBorder , height*1.35 + y);  
-      }
-      else
-      {
-        PImage sprite = player.get(a, b, W, H);
-        map.draw(this.g, sx , sy);
-        image(sprite, width + x - px, height*1.35 + y); 
-      }
-    }
-  }
-  else
-  {
-    if ( width/4 + x + px/3  > sx + px + width/4) //When Crossing midway point
-      {
-        //sx+= 2;
-        //px+= 6;
-        PImage sprite = player.get(a, b, W, H);
-        map.draw(this.g, sx , sy);
-        
-        if (width + x - px >rightSideBorder) //If player goes beyond right boundary screen
-        {
-          x-=14;
-        }
-        image(sprite, width + x - px, height*1.35 + y);  //Centers image to screen.
-      }
-      else //Standing Still/Before Halfway point 
-      { 
-        if (width + x - px > leftSideBorder)
-        {
-          
-          PImage sprite = player.get(a, b, W, H);
-          map.draw(this.g, sx , sy);
-          image(sprite, width + x - px, height*1.35 + y);  
-        }
-        else
-        {
-          x+=14;
-          PImage sprite = player.get(a, b, W, H);
-          map.draw(this.g, sx , sy);
-          image(sprite, leftSideBorder , height*1.35 + y);
-        }
-      }
-  }
-}
-
-void isPlayerIdle()
-{
-  if (isIdle)
-  {    
-    if (lastLeft && !right)
-    {
-      player = loadImage("idle3.png");
-      DIM = 12;
-      W = player.width/DIM;
-      H = player.height;
-    }
-    else
-    {
-      player = loadImage("idle3_R.png");
-      DIM = 12;
-      W = player.width/DIM;
-      H = player.height;
-    }     
-  }
-  else
-  {
-    if (!left)
-    {
-      player = loadImage("walk_right.png");
-      DIM = 24;
-      W = player.width/DIM;
-      H = player.height;
-    }
-    else
-    {
-      player = loadImage("walk.png");
-      DIM = 24;
-      W = player.width/DIM;
-      H = player.height;
-    }
-  }
 }
 
 void keyPressed(){
-  if(keyCode == LEFT)
+  if(isGameScreen)
   {
-    left = true;
-    lastLeft = true;
-  }
-  if(keyCode == RIGHT)
-  {
-    right = true;
-    lastLeft = false;
-  }
-  if(keyCode == UP) up = true;
-  if(keyCode == DOWN) down = true;
-  if(left || right || up || down)
-  {
-    isIdle = false;
-    isMoving = true;
+    if(keyCode == LEFT)
+    {
+      map.getPlayer().setLeft(true);
+      map.getPlayer().setLastLeft(true);
+    }
+    if(keyCode == RIGHT)
+    {
+      map.getPlayer().setRight(true);
+      map.getPlayer().setLastLeft(false);
+    }
+    if(keyCode == UP)
+    {
+      map.getPlayer().setUp(true);
+    }
+    if(keyCode == DOWN) 
+    {
+      map.getPlayer().setDown(true);
+    }
+    
+    
+    if(map.getPlayer().isKeyPressed() && key != 'z')//Player moving
+    {
+      map.getPlayer().setIsAttacking(false);
+      map.getPlayer().setIsIdle(false);
+      map.getPlayer().setIsMoving(true);
+      //print("Player is moving\n");
+    }
+    else if(key == 'z')
+    {
+      print("******************************\nZ was hit\n******************************\n");
+      map.getPlayer().setIsAttacking(true);
+      map.getPlayer().setIsIdle(false);
+      map.getPlayer().setIsMoving(false);
+      print(map.getPlayer().getTimeBetweenAttack()+"\n");
+    }
+    else
+    {
+      map.getPlayer().setIsAttacking(false);
+      map.getPlayer().setIsIdle(true);
+      map.getPlayer().setIsMoving(false);
+    }
   }
 }
 
 void keyReleased(){
-  if(keyCode == LEFT) 
+  if (isGameScreen)
   {
-    left = false;
-    lastLeft = true;
+    if(keyCode == LEFT) 
+    {
+      map.getPlayer().setLeft(false);
+      map.getPlayer().setLastLeft(true);
+    }
+    if(keyCode == RIGHT)
+    {
+      map.getPlayer().setRight(false);
+      map.getPlayer().setLastLeft(false);
+    }
+    if(keyCode == UP)
+    {
+     map.getPlayer().setUp(false);
+    }
+    if(keyCode == DOWN) 
+    {
+      map.getPlayer().setDown(false);
+    }
+    
+    if(map.getPlayer().isKeyReleased() && key != 'z') //Player just moving and not attacking
+    {
+      map.getPlayer().setIsIdle(true);
+      map.getPlayer().setIsAttacking(false);
+      map.getPlayer().setIsMoving(false);
+    } 
+    else if (key == 'z' && map.getPlayer().isKeyPressed()) //Attacking while moving
+    {
+      map.getPlayer().setIsAttacking(false);
+      map.getPlayer().setIsIdle(false);
+      map.getPlayer().setIsMoving(true);
+    }
+    else if (key == 'z' && map.getPlayer().isKeyReleased() ) //Attacking while standing still
+    {
+      map.getPlayer().setIsAttacking(false);
+      map.getPlayer().setIsIdle(true);
+      map.getPlayer().setIsMoving(false);
+    }
   }
-  if(keyCode == RIGHT)
-  {
-    right = false;
-    lastLeft = false;
-  }
-  if(keyCode == UP)
-  {
-    up = false;
-    //lastLeft = false;
-  }
-  if(keyCode == DOWN) 
-  {
-    down = false;
-    //lastLeft = false;
-  }
-  if(!left && !right && !up && !down)
-  {
-    isIdle = true;
-    isMoving = false;
-  }
+}
+
+void drawTitleScreen()
+{
+    
+  
+  
+}
+
+void drawCreditScreen()
+{
+  
 }
