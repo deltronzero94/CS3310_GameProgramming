@@ -35,9 +35,6 @@ void draw()
   }
   else if (isGameScreen) //Game Screen Mode
   {
-    //p.isPlayerIdle();
-    //p.playerMovement();
-    //print(frameRate + "\n");
     map.drawMap();
   }
   else if (isCreditScreen) //Credit Screen Mode

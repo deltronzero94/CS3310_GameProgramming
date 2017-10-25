@@ -118,7 +118,7 @@ public class Player
       if(down)
       {
         y += 8;
-        if (y > 350) y = 350;
+        if (y > 350) y = 350; //Prevent player from going too far bottom
       }
     }
      //int a = currentFrameX();
@@ -346,16 +346,16 @@ public class Player
     if (activeFrame == -1)
     {
       frameCount = 0;
-      //currentAttack = 2; //FOR TESTING
+      //currentAttack = 0; //FOR TESTING
       
-      if(!lastLeft && !left || right)
+      if(!lastLeft && !left || right) //Attacking right
       {        
        if(currentAttack == 0 ) //Punch 1 
           {
             activeFrame = frameCount;
             lastAttackTime = millis(); //Timer for delay
             player = loadImage("punch1_f6_right_v2.png");
-            dim = 6;
+            dim = 4;
             w = player.width/dim;
             h = player.height;
             currentAttack++;
@@ -365,7 +365,7 @@ public class Player
             activeFrame = frameCount;
             lastAttackTime = millis(); 
             player = loadImage("punch3_f6_right_V2.png");
-            dim = 8;
+            dim = 6;
             w = player.width/dim;
             h = player.height;
             currentAttack++;
@@ -387,14 +387,14 @@ public class Player
             lastAttackTime = millis();  
           }
       }
-      else
+      else //Attacking left
       {
         if(currentAttack == 0 ) //Punch 1 
         {
           activeFrame = frameCount;
           lastAttackTime = millis(); //Timer for delay
           player = loadImage("punch1_f6_left_v2.png");
-          dim = 6;
+          dim = 4;
           w = player.width/dim;
           h = player.height;
           currentAttack++;
@@ -404,7 +404,7 @@ public class Player
           activeFrame = frameCount;
           lastAttackTime = millis(); 
           player = loadImage("punch3_f6_left_V2.png");
-          dim = 8;
+          dim = 6;
           w = player.width/dim;
           h = player.height;
           currentAttack++;
@@ -413,8 +413,8 @@ public class Player
         {
           activeFrame = frameCount;
           lastAttackTime = millis(); 
-          player = loadImage("punch4_f6_left.png");
-          dim = 10;
+          player = loadImage("punch4_f6_leftV2.png");
+          dim = 8;
           w = player.width/dim;
           h = player.height;
           currentAttack = 0; 
