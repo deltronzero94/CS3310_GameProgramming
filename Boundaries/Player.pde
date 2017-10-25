@@ -11,10 +11,9 @@ public class Player
   private int dim; //How space they are in the jpeg file
   private int w; //width of the sprite
   private int h; //height of the sprite
-  
-  private int lastAttackTime;
-  private int currentAttack;
-  private int activeFrame;
+  private int lastAttackTime; //Tracks time between attacks for combos
+  private int currentAttack; //Current Attack Being Animated (Punch 1, Punch 2, and Kick)
+  private int activeFrame; //Keeps Track of Active Attack Frames (helps attack animation finish)
   
   //Default Constructor
   public Player()

@@ -1,5 +1,4 @@
 //Global Member Variables
-//Player p;
 TiledMap map;
 boolean isTitleScreen, isGameScreen, isCreditScreen, isGamePause;
 
@@ -16,7 +15,6 @@ void setup()
   // ---------------------------------------
   
   map = new TiledMap(this);
-  //p = new Player();
   
   imageMode(CENTER);
   noCursor();  // hide the mouse cursor
