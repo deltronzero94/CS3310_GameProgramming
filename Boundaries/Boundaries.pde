@@ -1,5 +1,5 @@
 //Global Member Variables
-Player p;
+//Player p;
 TiledMap map;
 boolean isTitleScreen, isGameScreen, isCreditScreen, isGamePause;
 
@@ -16,7 +16,7 @@ void setup()
   // ---------------------------------------
   
   map = new TiledMap(this);
-  p = new Player();
+  //p = new Player();
   
   imageMode(CENTER);
   noCursor();  // hide the mouse cursor
@@ -35,9 +35,10 @@ void draw()
   }
   else if (isGameScreen) //Game Screen Mode
   {
-    p.isPlayerIdle();
-    p.playerMovement();
-    map.drawMap(p);
+    //p.isPlayerIdle();
+    //p.playerMovement();
+    //print(frameRate + "\n");
+    map.drawMap();
   }
   else if (isCreditScreen) //Credit Screen Mode
   {
@@ -51,43 +52,44 @@ void keyPressed(){
   {
     if(keyCode == LEFT)
     {
-      p.setLeft(true);
-      p.setLastLeft(true);
+      map.getPlayer().setLeft(true);
+      map.getPlayer().setLastLeft(true);
     }
     if(keyCode == RIGHT)
     {
-      p.setRight(true);
-      p.setLastLeft(false);
+      map.getPlayer().setRight(true);
+      map.getPlayer().setLastLeft(false);
     }
     if(keyCode == UP)
     {
-      p.setUp(true);
+      map.getPlayer().setUp(true);
     }
     if(keyCode == DOWN) 
     {
-      p.setDown(true);
+      map.getPlayer().setDown(true);
     }
     
     
-    if(p.isKeyPressed() && key != 'z')//Player moving
+    if(map.getPlayer().isKeyPressed() && key != 'z')//Player moving
     {
-      p.setIsAttacking(false);
-      p.setIsIdle(false);
-      p.setIsMoving(true);
+      map.getPlayer().setIsAttacking(false);
+      map.getPlayer().setIsIdle(false);
+      map.getPlayer().setIsMoving(true);
       //print("Player is moving\n");
     }
     else if(key == 'z')
     {
-      p.setIsAttacking(true);
-      p.setIsIdle(false);
-      p.setIsMoving(false);
-      print(p.getTimeBetweenAttack()+"\n");
+       print("******************************\nZ was hit\n******************************\n");
+      map.getPlayer().setIsAttacking(true);
+      map.getPlayer().setIsIdle(false);
+      map.getPlayer().setIsMoving(false);
+      print(map.getPlayer().getTimeBetweenAttack()+"\n");
     }
     else
     {
-      p.setIsAttacking(false);
-      p.setIsIdle(true);
-      p.setIsMoving(false);
+      map.getPlayer().setIsAttacking(false);
+      map.getPlayer().setIsIdle(true);
+      map.getPlayer().setIsMoving(false);
     }
   }
 }
@@ -97,40 +99,40 @@ void keyReleased(){
   {
     if(keyCode == LEFT) 
     {
-      p.setLeft(false);
-      p.setLastLeft(true);
+      map.getPlayer().setLeft(false);
+      map.getPlayer().setLastLeft(true);
     }
     if(keyCode == RIGHT)
     {
-      p.setRight(false);
-      p.setLastLeft(false);
+      map.getPlayer().setRight(false);
+      map.getPlayer().setLastLeft(false);
     }
     if(keyCode == UP)
     {
-     p.setUp(false);
+     map.getPlayer().setUp(false);
     }
     if(keyCode == DOWN) 
     {
-      p.setDown(false);
+      map.getPlayer().setDown(false);
     }
     
-    if(p.isKeyReleased() && key != 'z') //Player just moving and not attacking
+    if(map.getPlayer().isKeyReleased() && key != 'z') //Player just moving and not attacking
     {
-      p.setIsIdle(true);
-      p.setIsAttacking(false);
-      p.setIsMoving(false);
+      map.getPlayer().setIsIdle(true);
+      map.getPlayer().setIsAttacking(false);
+      map.getPlayer().setIsMoving(false);
     } 
-    else if (key == 'z' && p.isKeyPressed()) //Attacking while moving
+    else if (key == 'z' && map.getPlayer().isKeyPressed()) //Attacking while moving
     {
-      p.setIsAttacking(false);
-      p.setIsIdle(false);
-      p.setIsMoving(true);
+      map.getPlayer().setIsAttacking(false);
+      map.getPlayer().setIsIdle(false);
+      map.getPlayer().setIsMoving(true);
     }
-    else if (key == 'z' && p.isKeyReleased() ) //Attacking while standing still
+    else if (key == 'z' && map.getPlayer().isKeyReleased() ) //Attacking while standing still
     {
-      p.setIsAttacking(false);
-      p.setIsIdle(true);
-      p.setIsMoving(false);
+      map.getPlayer().setIsAttacking(false);
+      map.getPlayer().setIsIdle(true);
+      map.getPlayer().setIsMoving(false);
     }
   }
 }
