@@ -1,4 +1,5 @@
 import ptmx.*;
+import java.util.*;
 
 public class TiledMap
 {
@@ -8,6 +9,9 @@ public class TiledMap
   private Ptmx map;
   private PApplet applet;
   private Player player;
+  private Enemy[] enemy;
+  
+  private PriorityQueue<Entry> q;
   
   //Default Constructor
   public TiledMap(PApplet applet)
@@ -18,6 +22,7 @@ public class TiledMap
     leftSideBorder = 50.0;
     rightSideBorder = 1650.0;
     player = new Player();
+    enemy = new Enemy[]{new Enemy(200, 200, 1), new Enemy(500,50), new Enemy(1000,200)};
     
     map = new Ptmx(applet,"sor2_1v3.tmx");
     map.setDrawMode(CENTER);
@@ -27,13 +32,14 @@ public class TiledMap
   //Public Methods/Functions
   public void drawMap()
   { 
-    //Draw Player
+    //Check State of Player
     player.isPlayerIdle();
     player.playerMovement();
     
     float px = player.getPX();
     int x = player.getX();
     int topBorder;
+    PImage sprite;
     
     //Prevents player from moving beyond top boundary/walls
     PVector overTile = map.canvasToMap(player.currentPlayerPositionX(), player.currentPlayerPositionY());
@@ -55,20 +61,24 @@ public class TiledMap
           rightSideBorder+=0.01;
           sx+= 2;
           player.addPX(6);
-          PImage sprite = player.getCurrentSprite();
+          
+          for (int num = 0; num < enemy.length; num++)
+             enemy[num].addPX(6);
+             
+          sprite = player.getCurrentSprite();
           map.draw(applet.g, sx , sy);
           
           if (player.currentPlayerPositionX() >rightSideBorder) //If player goes beyond right boundary screen
           {
             player.addX(-14);
           }
-          image(sprite, player.currentPlayerPositionX(), player.currentPlayerPositionY());  //Centers image to screen.
+          //image(sprite, player.currentPlayerPositionX(), player.currentPlayerPositionY());  //Centers image to screen.
         }
         else //Standing Still/Before Halfway point 
         { 
-          PImage sprite = player.getCurrentSprite();
+          sprite = player.getCurrentSprite();
           map.draw(applet.g, sx , sy);
-          image(sprite, player.currentPlayerPositionX(), player.currentPlayerPositionY());  
+          //image(sprite, player.currentPlayerPositionX(), player.currentPlayerPositionY());  
         }
       }
       else //When Going Beyond left boundary 
@@ -77,15 +87,15 @@ public class TiledMap
         if (player.getLeft())
         {
           player.addX(14);
-          PImage sprite = player.getCurrentSprite();
+          sprite = player.getCurrentSprite();
           map.draw(applet.g, sx , sy);
-          image(sprite, player.currentPlayerPositionX() , player.currentPlayerPositionY());  
+          //image(sprite, player.currentPlayerPositionX() , player.currentPlayerPositionY());  
         }
         else
         {
-          PImage sprite = player.getCurrentSprite();
+          sprite = player.getCurrentSprite();
           map.draw(applet.g, sx , sy);
-          image(sprite, player.currentPlayerPositionX(), player.currentPlayerPositionY()); 
+          //image(sprite, player.currentPlayerPositionX(), player.currentPlayerPositionY()); 
         }
       }
     }
@@ -93,33 +103,46 @@ public class TiledMap
     {
       if ( width/4 + x + px/3  > sx + px + width/4) //When Crossing midway point
         {
-          PImage sprite = player.getCurrentSprite();
+          sprite = player.getCurrentSprite();
           map.draw(applet.g, sx , sy);
           
           if (player.currentPlayerPositionX() >rightSideBorder) //If player goes beyond right boundary screen
           {
             player.addX(-14);
           }
-          image(sprite, player.currentPlayerPositionX(),player.currentPlayerPositionY());  //Centers image to screen.
+          //image(sprite, player.currentPlayerPositionX(),player.currentPlayerPositionY());  //Centers image to screen.
         }
         else //Standing Still/Before Halfway point 
         { 
           if (player.currentPlayerPositionX() > leftSideBorder)
           {
             
-            PImage sprite = player.getCurrentSprite();
+            sprite = player.getCurrentSprite();
             map.draw(applet.g, sx , sy);
             image(sprite, player.currentPlayerPositionX(), player.currentPlayerPositionY());  
           }
           else //If player attemps to move beyond the left border, prevent it by adding 14 to player position x
           {
             player.addX(14);
-            PImage sprite = player.getCurrentSprite();
+            sprite = player.getCurrentSprite();
             map.draw(applet.g, sx , sy);
-            image(sprite, leftSideBorder , player.currentPlayerPositionY());
+            //image(sprite, player.currentPlayerPositionX() , player.currentPlayerPositionY());
           }
         }
       }
+      
+      //Checks the depth images and then draws them based on height priority queue 
+      checkDepth();
+       Iterator itr = q.iterator();
+       while (itr.hasNext())
+       {
+         int num = ((Entry) itr.next()).getKey();
+
+         if (num != enemy.length)
+           enemy[num].drawEnemy();
+         else
+           image(sprite, player.currentPlayerPositionX(),player.currentPlayerPositionY());
+       }
     }
   
   //Setters
@@ -163,4 +186,61 @@ public class TiledMap
   {
     return this.player;
   }
+  
+  //Check and prioritize drawing queue based on height (the higher the y position of image, the higher priority it has)
+  private void checkDepth()
+  {
+    q = new PriorityQueue<Entry>(enemy.length, new Comparator<Entry>() {
+    public int compare(Entry edge1, Entry edge2) {
+        if (edge1.getValue() < edge2.getValue()) return -1;
+        if (edge1.getValue() > edge2.getValue()) return 1;
+        return 0;
+    } });
+    
+    for(int num = 0; num <= enemy.length ; num++)
+    {
+      if( num < enemy.length) //For Enemy height
+      {
+        float enemyHeight = enemy[num].currentEnemyPositionY();
+        q.add(new Entry(num, enemyHeight));
+        //print(pQueue.peek() + "\n");
+      }
+      else //For Player Height
+      {
+        q.add(new Entry(num, player.currentPlayerPositionY()));
+      } 
+    }
+    
+    Iterator itr = q.iterator();
+    while (itr.hasNext())
+    {
+      Entry temp = (Entry)itr.next();
+      System.out.println(temp.getKey());
+    }
+    //System.out.println("DONE!!!!!");
+  }
+  
+  private class Entry 
+  {
+    private int key;
+    private float value;
+    
+    
+    public Entry(int key, float value) {
+        this.key = key;
+        this.value = value;
+    }
+
+    // getters
+    public int getKey()
+    {
+      return this.key;
+    }
+    
+    public float getValue()
+    {
+      return this.value;
+    }
+  }
+  
 }

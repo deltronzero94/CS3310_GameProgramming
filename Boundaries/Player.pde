@@ -25,7 +25,7 @@ public class Player
     isMoving = false;
     lastLeft = false;
     px = width;
-    py =  height*1.35; 
+    py = height * 1.35; 
     activeFrame = -1;
   }
   
@@ -38,7 +38,7 @@ public class Player
     isMoving = false;
     lastLeft = false;
     px = width;
-    py =  height*1.35; 
+    py = height*1.35; 
     activeFrame = -1;
   }
   
