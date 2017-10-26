@@ -139,9 +139,9 @@ public class TiledMap
          int num = ((Entry) itr.next()).getKey();
 
          if (num != enemy.length)
-           enemy[num].drawEnemy();
+           enemy[num].drawEnemy(); //Draw Enemy
          else
-           image(sprite, player.currentPlayerPositionX(),player.currentPlayerPositionY());
+           image(sprite, player.currentPlayerPositionX(),player.currentPlayerPositionY()); //Draw Player
        }
     }
   
