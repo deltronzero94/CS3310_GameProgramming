@@ -203,21 +203,12 @@ public class TiledMap
       {
         float enemyHeight = enemy[num].currentEnemyPositionY();
         q.add(new Entry(num, enemyHeight));
-        //print(pQueue.peek() + "\n");
       }
       else //For Player Height
       {
         q.add(new Entry(num, player.currentPlayerPositionY()));
       } 
     }
-    
-    Iterator itr = q.iterator();
-    while (itr.hasNext())
-    {
-      Entry temp = (Entry)itr.next();
-      System.out.println(temp.getKey());
-    }
-    //System.out.println("DONE!!!!!");
   }
   
   private class Entry 
