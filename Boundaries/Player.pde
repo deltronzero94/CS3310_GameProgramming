@@ -66,6 +66,8 @@ public class Player
       {
         drawPlayerAttacking();
       }
+      
+      playerMovement();
     }
   }
   
@@ -120,10 +122,6 @@ public class Player
         if (y > 350) y = 350; //Prevent player from going too far bottom
       }
     }
-     //int a = currentFrameX();
-     //int b = 0;
-     //PImage sprite = getPImage().get(a, b, w,h);
-     //image(sprite, width + x - px, height*1.35 + y); 
   }
   
   public float currentPlayerPositionX()

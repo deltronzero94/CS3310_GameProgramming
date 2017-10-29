@@ -78,8 +78,16 @@ public class Enemy
     if (enemy == null) //Load image if image hasn't been loaded
       getEnemyType(type);
     
-    isIdle = false;
-    isMoving = true;
+    if(x < 4000)
+    {
+      isIdle = false;
+      isMoving = true;
+    }
+    else
+    {
+      isIdle = true;
+      isMoving = false;
+    }
     
     if (!isAttackFrameActive())
     {
@@ -131,6 +139,18 @@ public class Enemy
     this.y += y;
   }
   
+  public int getState()
+  {
+    if (isIdle)
+      return 1;
+    else if (isMoving)
+      return 2;
+    else if (isAttacking)
+      return 3;
+    else
+      return -1;
+  }
+  
   // ******************************************
   // Private Methods
   // ******************************************
@@ -175,14 +195,22 @@ public class Enemy
         if ((up && lastLeft || down &&lastLeft) && !right )  //Walking Left
         {  
            if (type == 0)
+           {
             filename = "Enemy1_walking.png";  //Enemy 1
+            dim = 3;
+           }
           else if (type == 1)
+          {
             filename = "Enemy2_walking.png";  //Enemy 2
+            dim = 3;
+          }
           else
+          {
             filename = "Enemy1_walking.png";  //Default
+            dim = 3;
+          }
           
           enemy = loadImage(filename);
-          dim = 3;
           w = enemy.width/dim;
           h = enemy.height;
           
@@ -190,14 +218,22 @@ public class Enemy
         else  //Walking Right
         {
           if (type == 0)
+          {
             filename = "Enemy1_walking_Right.png";  //Enemy 1
+            dim = 3;
+          }
           else if (type == 1)
-            filename = "Enemy2_walking_Right.png";  //Enemy 2
+          {
+            filename = "Enemy2_walking_Right_v2.png";  //Enemy 2
+            dim = 3;
+          }
           else
+          {
             filename = "Enemy1_walking_Right.png";  //Default
+            dim = 3;
+          }
           
           enemy = loadImage(filename);
-          dim = 3;
           w = enemy.width/dim;
           h = enemy.height;
         }
@@ -205,17 +241,27 @@ public class Enemy
       else  //Walking Left
       {
         if (type == 0)
+        {
           filename = "Enemy1_walking.png";  //Enemy 1
+          dim = 3;
+        }
         else if (type == 1)
+        {
           filename = "Enemy2_walking.png";  //Enemy 2
+          dim = 3;
+        }
         else
+        {
           filename = "Enemy1_walking.png";  //Default
+          dim = 3;
+        }
         
-        enemy = loadImage("walk.png");
-        dim = 3;
+        enemy = loadImage(filename);
         w = enemy.width/dim;
         h = enemy.height;
       }
+      
+      addX(24);
   }
  
   private void drawEnemyIdle()

@@ -33,6 +33,7 @@ void draw()
   }
   else if (isGameScreen) //Game Screen Mode
   {
+    print(frameRate + "\n");
     map.drawMap();
   }
   else if (isCreditScreen) //Credit Screen Mode
@@ -78,7 +79,6 @@ void keyPressed(){
       map.getPlayer().setIsAttacking(true);
       map.getPlayer().setIsIdle(false);
       map.getPlayer().setIsMoving(false);
-      print(map.getPlayer().getTimeBetweenAttack()+"\n");
     }
     else
     {

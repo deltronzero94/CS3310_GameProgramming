@@ -22,7 +22,7 @@ public class TiledMap
     leftSideBorder = 50.0;
     rightSideBorder = 1650.0;
     player = new Player();
-    enemy = new Enemy[]{new Enemy(200, 200, 1), new Enemy(500,50), new Enemy(1000,200)};
+    enemy = new Enemy[]{new Enemy(200, 200, 1), new Enemy(500,50), new Enemy(1000,200), new Enemy(1000,100), new Enemy(800,300)};
     
     map = new Ptmx(applet,"sor2_1v3.tmx");
     map.setDrawMode(CENTER);
@@ -34,7 +34,6 @@ public class TiledMap
   { 
     //Check State of Player
     player.isPlayerIdle();
-    player.playerMovement();
     
     float px = player.getPX();
     int x = player.getX();
@@ -62,8 +61,11 @@ public class TiledMap
           sx+= 2;
           player.addPX(6);
           
-          for (int num = 0; num < enemy.length; num++)
-             enemy[num].addPX(6);
+          if ( enemy != null)
+          {
+            for (int num = 0; num < enemy.length; num++)
+               enemy[num].addPX(6);
+          }
              
           sprite = player.getCurrentSprite();
           map.draw(applet.g, sx , sy);
@@ -72,13 +74,11 @@ public class TiledMap
           {
             player.addX(-14);
           }
-          //image(sprite, player.currentPlayerPositionX(), player.currentPlayerPositionY());  //Centers image to screen.
         }
         else //Standing Still/Before Halfway point 
         { 
           sprite = player.getCurrentSprite();
           map.draw(applet.g, sx , sy);
-          //image(sprite, player.currentPlayerPositionX(), player.currentPlayerPositionY());  
         }
       }
       else //When Going Beyond left boundary 
@@ -89,13 +89,11 @@ public class TiledMap
           player.addX(14);
           sprite = player.getCurrentSprite();
           map.draw(applet.g, sx , sy);
-          //image(sprite, player.currentPlayerPositionX() , player.currentPlayerPositionY());  
         }
         else
         {
           sprite = player.getCurrentSprite();
           map.draw(applet.g, sx , sy);
-          //image(sprite, player.currentPlayerPositionX(), player.currentPlayerPositionY()); 
         }
       }
     }
@@ -110,7 +108,6 @@ public class TiledMap
           {
             player.addX(-14);
           }
-          //image(sprite, player.currentPlayerPositionX(),player.currentPlayerPositionY());  //Centers image to screen.
         }
         else //Standing Still/Before Halfway point 
         { 
@@ -126,23 +123,29 @@ public class TiledMap
             player.addX(14);
             sprite = player.getCurrentSprite();
             map.draw(applet.g, sx , sy);
-            //image(sprite, player.currentPlayerPositionX() , player.currentPlayerPositionY());
           }
         }
       }
       
       //Checks the depth images and then draws them based on height priority queue 
-      checkDepth();
-       Iterator itr = q.iterator();
-       while (itr.hasNext())
-       {
-         int num = ((Entry) itr.next()).getKey();
-
-         if (num != enemy.length)
-           enemy[num].drawEnemy(); //Draw Enemy
-         else
-           image(sprite, player.currentPlayerPositionX(),player.currentPlayerPositionY()); //Draw Player
-       }
+      if (enemy != null)
+      {
+         checkDepth();
+         Iterator itr = q.iterator();
+         while (itr.hasNext())
+         {
+           int num = ((Entry) itr.next()).getKey();
+  
+           if (num != enemy.length)
+             enemy[num].drawEnemy(); //Draw Enemy
+           else
+             image(sprite, player.currentPlayerPositionX(),player.currentPlayerPositionY()); //Draw Player
+         }
+      }
+      else
+      {
+        image(sprite, player.currentPlayerPositionX(),player.currentPlayerPositionY());
+      }
     }
   
   //Setters
