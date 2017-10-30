@@ -99,7 +99,7 @@ public class Enemy
       {    
         drawEnemyIdle();
       }
-      else if (isMoving && !isAttacking && currentFrameX() == 0) //Player is Moving
+      else if (isMoving && !isAttacking) //Player is Moving
       {
         drawEnemyMoving();  
       }

@@ -14,6 +14,7 @@ public class Player
   private int lastAttackTime; //Tracks time between attacks for combos
   private int currentAttack; //Current Attack Being Animated (Punch 1, Punch 2, and Kick)
   private int activeFrame; //Keeps Track of Active Attack Frames (helps attack animation finish)
+  private String filename;
   
   //Default Constructor
   public Player()
@@ -58,8 +59,9 @@ public class Player
       {    
         drawPlayerIdle();     
       }
-      else if (isMoving && !isAttacking) //Player is Moving
+      else if (isMoving && !isAttacking && ((filename != "walk_right.png" && right && !left) || (filename != "walk.png" && left && !right))) //Player is Moving
       {
+        //print(frameRate + "\n");
         drawPlayerMoving();
       }
       else if(isAttacking) //Player is Attacking
@@ -295,14 +297,16 @@ public class Player
   {
     if (lastLeft && !right)
       {
-        player = loadImage("idle3.png");
+        filename = "idle3.png";
+        player = loadImage(filename);
         dim = 12;
         w = player.width/dim;
         h = player.height;
       }
       else
       {
-        player = loadImage("idle3_R.png");
+        filename = "idle3_R.png";
+        player = loadImage(filename);
         dim = 12;
         w = player.width/dim;
         h = player.height;
@@ -315,7 +319,8 @@ public class Player
       {
         if ((up && lastLeft || down &&lastLeft) && !right )
         {   
-          player = loadImage("walk.png");
+          filename = "walk.png";
+          player = loadImage(filename);
           dim = 24;
           w = player.width/dim;
           h = player.height;
@@ -323,7 +328,8 @@ public class Player
         }
         else
         {
-          player = loadImage("walk_right.png");
+          filename = "walk_right.png";
+          player = loadImage(filename);
           dim = 24;
           w = player.width/dim;
           h = player.height;
@@ -331,7 +337,8 @@ public class Player
       }
       else
       {
-        player = loadImage("walk.png");
+        filename = "walk.png";
+        player = loadImage(filename);
         dim = 24;
         w = player.width/dim;
         h = player.height;
@@ -351,7 +358,8 @@ public class Player
           {
             activeFrame = frameCount;
             lastAttackTime = millis(); //Timer for delay
-            player = loadImage("punch1_f6_right_v2.png");
+            filename = "punch1_f6_right_v2.png";
+            player = loadImage(filename);
             dim = 4;
             w = player.width/dim;
             h = player.height;
@@ -361,7 +369,8 @@ public class Player
           {
             activeFrame = frameCount;
             lastAttackTime = millis(); 
-            player = loadImage("punch3_f6_right_V2.png");
+            filename = "punch3_f6_right_V2.png";
+            player = loadImage(filename);
             dim = 6;
             w = player.width/dim;
             h = player.height;
@@ -371,7 +380,8 @@ public class Player
           {
             activeFrame = frameCount;
             lastAttackTime = millis(); 
-            player = loadImage("punch4_f6_right.png");
+            filename = "punch4_f6_right.png";
+            player = loadImage(filename);
             dim = 8;
             w = player.width/dim;
             h = player.height;
@@ -382,7 +392,8 @@ public class Player
             currentAttack = 0; 
             lastAttackTime = millis();     
             activeFrame = frameCount;  
-            player = loadImage("punch1_f6_right_v2.png");
+            filename = "punch1_f6_right_v2.png";
+            player = loadImage(filename);
             dim = 4;
             w = player.width/dim;
             h = player.height;
@@ -395,7 +406,8 @@ public class Player
         {
           activeFrame = frameCount;
           lastAttackTime = millis(); //Timer for delay
-          player = loadImage("punch1_f6_left_v2.png");
+          filename = "punch1_f6_left_v2.png";
+          player = loadImage(filename);
           dim = 4;
           w = player.width/dim;
           h = player.height;
@@ -405,7 +417,8 @@ public class Player
         {
           activeFrame = frameCount;
           lastAttackTime = millis(); 
-          player = loadImage("punch3_f6_left_V2.png");
+          filename = "punch3_f6_left_V2.png";
+          player = loadImage(filename);
           dim = 6;
           w = player.width/dim;
           h = player.height;
@@ -415,7 +428,8 @@ public class Player
         {
           activeFrame = frameCount;
           lastAttackTime = millis(); 
-          player = loadImage("punch4_f6_leftV2.png");
+          filename = "punch4_f6_leftV2.png";
+          player = loadImage(filename);
           dim = 8;
           w = player.width/dim;
           h = player.height;
@@ -426,7 +440,8 @@ public class Player
             currentAttack = 0; 
             activeFrame = frameCount;
             lastAttackTime = millis(); //Timer for delay
-            player = loadImage("punch1_f6_right_v2.png");
+            filename = "punch1_f6_left_v2.png";
+            player = loadImage(filename);
             dim = 4;
             w = player.width/dim;
             h = player.height;
