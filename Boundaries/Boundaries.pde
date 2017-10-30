@@ -26,7 +26,7 @@ void draw()
   scale(.35);
   background(map.getMap().getBackgroundColor());
   fill(128);
-  print(frameRate + "\n");
+  //print(frameRate + "\n");
   
   if (isTitleScreen) //Title Screen Mode
   {

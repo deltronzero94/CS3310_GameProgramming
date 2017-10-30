@@ -11,7 +11,7 @@ public class TiledMap
   private Player player;
   private Enemy[] enemy;
   
-  private PriorityQueue<Entry> q;
+  private PriorityQueue<Image> q;
   
   //Default Constructor
   public TiledMap(PApplet applet)
@@ -22,8 +22,8 @@ public class TiledMap
     leftSideBorder = 50.0;
     rightSideBorder = 1650.0;
     player = new Player();
-    enemy = new Enemy[]{new Enemy(200, 0, 1), new Enemy(500,100,1), new Enemy(1000,200,1), new Enemy(1000,300,1), new Enemy(800,250)};
-    //enemy = new Enemy[]{new Enemy(200, 200, 1)};
+    enemy = new Enemy[]{new Enemy(200, 100, 1), new Enemy(500,150,1), new Enemy(1000,200,1), new Enemy(1000,250,1), new Enemy(800, 175)};
+    //enemy = new Enemy[]{new Enemy(200, 200, 1), new Enemy(500,50,1)};
     map = new Ptmx(applet,"sor2_1v3.tmx");
     map.setDrawMode(CENTER);
     map.setPositionMode("CANVAS");//Default Position Mode
@@ -134,8 +134,13 @@ public class TiledMap
          Iterator itr = q.iterator();
          while (itr.hasNext())
          {
-           int num = ((Entry) itr.next()).getKey();
-  
+           Image temp = (Image) itr.next();
+           int num = temp.getKey();
+           float y = temp.getPositionY();
+           
+           itr.remove();
+            print(num +": "  + y  + "\n");
+            
            if (num != enemy.length)
              enemy[num].drawEnemy(); //Draw Enemy
            else
@@ -146,6 +151,7 @@ public class TiledMap
       {
         image(sprite, player.currentPlayerPositionX(),player.currentPlayerPositionY());
       }
+      print("***********************\n");
     }
   
   //Setters
@@ -193,10 +199,10 @@ public class TiledMap
   //Check and prioritize drawing queue based on height (the higher the y position of image, the higher priority it has)
   private void checkDepth()
   {
-    q = new PriorityQueue<Entry>(enemy.length, new Comparator<Entry>() {
-    public int compare(Entry edge1, Entry edge2) {
-        if (edge1.getValue() < edge2.getValue()) return -1;
-        if (edge1.getValue() > edge2.getValue()) return 1;
+    q = new PriorityQueue<Image>(enemy.length, new Comparator<Image>() {
+    public int compare(Image edge1, Image edge2) {
+        if (edge1.positionY < edge2.positionY) return -1;
+        if (edge1.positionY > edge2.positionY) return 1;
         return 0;
     } });
     
@@ -205,24 +211,24 @@ public class TiledMap
       if( num < enemy.length) //For Enemy height
       {
         float enemyHeight = enemy[num].currentEnemyPositionY();
-        q.add(new Entry(num, enemyHeight));
+        q.add(new Image(num, enemyHeight));
       }
       else //For Player Height
       {
-        q.add(new Entry(num, player.currentPlayerPositionY()));
+        q.add(new Image(num, player.currentPlayerPositionY()));
       } 
     }
   }
   
-  private class Entry 
+  private class Image 
   {
     private int key;
-    private float value;
+    private float positionY;
     
     
-    public Entry(int key, float value) {
+    public Image(int key, float positionY) {
         this.key = key;
-        this.value = value;
+        this.positionY = positionY;
     }
 
     // getters
@@ -231,9 +237,9 @@ public class TiledMap
       return this.key;
     }
     
-    public float getValue()
+    public float getPositionY()
     {
-      return this.value;
+      return this.positionY;
     }
   }
   

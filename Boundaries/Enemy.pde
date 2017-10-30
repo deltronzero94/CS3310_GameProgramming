@@ -99,7 +99,7 @@ public class Enemy
       {    
         drawEnemyIdle();
       }
-      else if (isMoving && !isAttacking) //Player is Moving
+      else if (isMoving && !isAttacking && currentFrameX() == 0) //Player is Moving
       {
         drawEnemyMoving();  
       }
@@ -123,7 +123,7 @@ public class Enemy
   }
   public float currentEnemyPositionY()
   {
-    return y + py + 130;
+    return y + py ;
   }
   
   public void addPX(int x)

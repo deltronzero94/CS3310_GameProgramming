@@ -61,7 +61,6 @@ public class Player
       }
       else if (isMoving && !isAttacking && ((filename != "walk_right.png" && right && !left) || (filename != "walk.png" && left && !right))) //Player is Moving
       {
-        //print(frameRate + "\n");
         drawPlayerMoving();
       }
       else if(isAttacking) //Player is Attacking
