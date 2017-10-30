@@ -13,6 +13,7 @@ public class Enemy
   private int health;
   private int type;
   private int activeFrame;
+  private String filename;
   
   public Enemy()
   {
@@ -190,8 +191,6 @@ public class Enemy
   
   private void drawEnemyMoving()
   {
-    String filename;
-    
     if (!left)
       {
         if ((up && lastLeft || down &&lastLeft) && !right )  //Walking Left
@@ -267,9 +266,7 @@ public class Enemy
   }
  
   private void drawEnemyIdle()
-  {
-    String filename;
-    
+  { 
     if (lastLeft && !right)  //Poition to the left
       {
         if (type == 0)

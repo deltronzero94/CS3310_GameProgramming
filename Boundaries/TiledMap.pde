@@ -136,10 +136,8 @@ public class TiledMap
          {
            Image temp = (Image) itr.next();
            int num = temp.getKey();
-           float y = temp.getPositionY();
            
            itr.remove();
-            print(num +": "  + y  + "\n");
             
            if (num != enemy.length)
              enemy[num].drawEnemy(); //Draw Enemy
@@ -151,7 +149,6 @@ public class TiledMap
       {
         image(sprite, player.currentPlayerPositionX(),player.currentPlayerPositionY());
       }
-      print("***********************\n");
     }
   
   //Setters
