@@ -21,11 +21,12 @@ void setup()
   frameRate(24);  
 }
 
-void draw()
+void draw()  
 {  
   scale(.35);
   background(map.getMap().getBackgroundColor());
   fill(128);
+  //print(frameRate + "\n");
   
   if (isTitleScreen) //Title Screen Mode
   {
@@ -33,7 +34,7 @@ void draw()
   }
   else if (isGameScreen) //Game Screen Mode
   {
-    print(frameRate + "\n");
+    //print(frameRate + "\n");
     map.drawMap();
   }
   else if (isCreditScreen) //Credit Screen Mode
@@ -113,8 +114,8 @@ void keyReleased(){
     
     if(map.getPlayer().isKeyReleased() && key != 'z') //Player just moving and not attacking
     {
-      map.getPlayer().setIsIdle(true);
       map.getPlayer().setIsAttacking(false);
+      map.getPlayer().setIsIdle(true);
       map.getPlayer().setIsMoving(false);
     } 
     else if (key == 'z' && map.getPlayer().isKeyPressed()) //Attacking while moving

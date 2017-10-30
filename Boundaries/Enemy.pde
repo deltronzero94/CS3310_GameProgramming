@@ -31,6 +31,7 @@ public class Enemy
     isAttacking = false;
     isMoving = false;
     lastLeft = false;
+    health = 100;
   }
   
   public Enemy(int x, int y)
@@ -50,7 +51,7 @@ public class Enemy
     isAttacking = false;
     isMoving = false;
     lastLeft = false;
-    
+    health = 100;
   }
   
   public Enemy(int x, int y, int type)
@@ -69,16 +70,17 @@ public class Enemy
     isIdle = true;
     isAttacking = false;
     isMoving = false;
+    health = 100;
   }
   
   public void drawEnemy()
   {
     PImage sprite;
     
-    if (enemy == null) //Load image if image hasn't been loaded
+    if (enemy == null && health != 0) //Load image if image hasn't been loaded
       getEnemyType(type);
     
-    if(x < 4000)
+    if(x < 2000)
     {
       isIdle = false;
       isMoving = true;
@@ -87,32 +89,32 @@ public class Enemy
     {
       isIdle = true;
       isMoving = false;
+      //enemy = null;
+      //health = 0;
     }
     
-    if (!isAttackFrameActive())
+    if (!isAttackFrameActive() && health != 0)
     {
       if (isIdle && !isAttacking) //Player is Idle
       {    
         drawEnemyIdle();
-        sprite = getCurrentSprite();
-        image(sprite, currentEnemyPositionX(), currentEnemyPositionY());  
       }
-      else if (isMoving && !isAttacking) //Player is Moving
+      else if (isMoving && !isAttacking && currentFrameX() == 0) //Player is Moving
       {
-        drawEnemyMoving();
-        sprite = getCurrentSprite();
-        image(sprite, currentEnemyPositionX(), currentEnemyPositionY());  
+        drawEnemyMoving();  
       }
       else if(isAttacking) //Player is Attacking
       {
         //drawPlayerAttacking();
       }
+       sprite = getCurrentSprite();
+       image(sprite, currentEnemyPositionX(), currentEnemyPositionY());
     }
   }
   
    public PImage getCurrentSprite()
   {
-    return enemy.get(currentFrameX(), 0, w, h);
+    return enemy.get(this.currentFrameX(), 0, w, h);
   }
   
   public float currentEnemyPositionX()
@@ -201,7 +203,7 @@ public class Enemy
            }
           else if (type == 1)
           {
-            filename = "Enemy2_walking.png";  //Enemy 2
+            filename = "Enemy2_standing_Right.png";  //Enemy 2
             dim = 3;
           }
           else
@@ -224,8 +226,8 @@ public class Enemy
           }
           else if (type == 1)
           {
-            filename = "Enemy2_walking_Right_v2.png";  //Enemy 2
-            dim = 3;
+           filename = "Enemy2_walking_Right_20.png";  //Enemy 2
+              dim = 9;
           }
           else
           {
@@ -261,7 +263,7 @@ public class Enemy
         h = enemy.height;
       }
       
-      addX(24);
+      addX(12);
   }
  
   private void drawEnemyIdle()

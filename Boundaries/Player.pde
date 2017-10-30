@@ -379,9 +379,14 @@ public class Player
           }
           else if (getTimeBetweenAttack() >= .5) //Resets Attack Animation if idle for more than .5 seconds
           {   
-            activeFrame = -1;
             currentAttack = 0; 
-            lastAttackTime = millis();  
+            lastAttackTime = millis();     
+            activeFrame = frameCount;  
+            player = loadImage("punch1_f6_right_v2.png");
+            dim = 4;
+            w = player.width/dim;
+            h = player.height;
+            currentAttack++;
           }
       }
       else //Attacking left
@@ -418,9 +423,14 @@ public class Player
         }
         else if (getTimeBetweenAttack() >= .5) //Resets Attack Animation if idle for more than .5 seconds
         {   
-          activeFrame = -1;
-          currentAttack = 0; 
-          lastAttackTime = millis();  
+            currentAttack = 0; 
+            activeFrame = frameCount;
+            lastAttackTime = millis(); //Timer for delay
+            player = loadImage("punch1_f6_right_v2.png");
+            dim = 4;
+            w = player.width/dim;
+            h = player.height;
+            currentAttack++; 
         }
       }
     }
