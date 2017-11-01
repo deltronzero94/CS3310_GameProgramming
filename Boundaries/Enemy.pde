@@ -36,7 +36,7 @@ public class Enemy
     isMoving = false;
     lastLeft = false;
     isHit = false;
-    health = 100;
+    health = 300;
     timeInterval = -1;
   }
   
@@ -59,7 +59,7 @@ public class Enemy
     isMoving = false;
     lastLeft = false;
     isHit = false;
-    health = 100;
+    health = 300;
     timeInterval = -1;
   }
   
@@ -69,7 +69,7 @@ public class Enemy
     enemy = loadImage(filename);
     this.type = type;
     activeFrame = -1;
-    health = 100;
+    health = 300;
     dim = 1;
     this.x = x;
     this.y = y;
@@ -82,7 +82,7 @@ public class Enemy
     isMoving = false;
     lastLeft = false;
     isHit = false;
-    health = 100;
+    health = 300;
     timeInterval = -1;
   }
   
@@ -93,7 +93,8 @@ public class Enemy
     if (enemy == null && health != 0) //Load image if image hasn't been loaded
       getEnemyType(type);
     
-    decideAction(p);
+    if (health > 0)
+      decideAction(p);
     
     if (!isAttackFrameActive() && health != 0)
     {
@@ -105,7 +106,6 @@ public class Enemy
         }
         else if (isMoving && !isAttacking && checkFileMovementName()) //Player is Moving
         { 
-          print("testing\n");
           drawEnemyMoving();  
         }
         else if(isAttacking) //Player is Attacking
@@ -120,6 +120,7 @@ public class Enemy
      sprite = getCurrentSprite();
      image(sprite, currentEnemyPositionX(), currentEnemyPositionY());
     }
+    
     else if (health == 0)
       enemy = null; 
   }
@@ -169,7 +170,7 @@ public class Enemy
     
     if(p.getIsAttacking())
     {
-      if(abs(playerY-currentEnemyPositionY()+25) <= 25 && abs(playerX - currentEnemyPositionX()) <= 300.0) //If Player is within Range
+      if(abs(playerY-currentEnemyPositionY()+25) <= 30 && abs(playerX - currentEnemyPositionX()) <= 300.0) //If Player is within Range
       {
         if (currentEnemyPositionX() >=playerX && !p.getFacingLeft())  //If player is facing right
         {
@@ -186,6 +187,7 @@ public class Enemy
           {
             isHit = true;
           }
+          health -=10;
         }
         else if(p.getFacingLeft() && currentEnemyPositionX() < playerX)//Player facing left
         {
@@ -202,6 +204,7 @@ public class Enemy
           {
              isHit = true;
           }
+          health -=10;
         }
       }
       else  
@@ -232,14 +235,14 @@ public class Enemy
         }
         //currentState = 3;
       }
-      else if (rand >=25 && rand <60) //%35 chance (Moving)
+      else if (rand >=25 && rand <50) //%25 chance (Moving)
       {
         isMoving = true;
         isIdle = false;
         isAttacking = false;
         timeInterval = random(0,4);
       }
-      else  //40% chance (Idle)
+      else  //50% chance (Idle)
       {
         isMoving = false;
         isIdle = true;
@@ -270,9 +273,7 @@ public class Enemy
       {
         if (playerX - 250 <= currentEnemyPositionX() && playerX + 250 >=currentEnemyPositionX())
         {
-          //right = false;
-          //left = false;
-          //lastLeft = false;
+          
         }
         else if (playerX - 250 > currentEnemyPositionX())
         {
@@ -288,6 +289,28 @@ public class Enemy
           addX(-8);
         }
         
+        if(playerY - 30 < currentEnemyPositionY())
+        {
+          up = true;
+          down = false;
+          
+          if (playerY + 24 <= currentEnemyPositionY())
+            addY(-8);
+        }
+        else if (playerY + 30>= currentEnemyPositionY())
+        {
+          up = false;
+          down = true;
+          addY(8);
+        }
+        
+         if (playerX - 250 <= currentEnemyPositionX() && playerX + 250 >=currentEnemyPositionX()
+             && playerY - 30 >= currentEnemyPositionY() && (playerY + 30 < currentEnemyPositionY()))
+         {
+           isMoving = false;
+           isAttacking = true;
+           print("Testing\n");
+         }
       }
       else if(isAttacking)
       {
@@ -321,14 +344,20 @@ public class Enemy
   {
     if (type == 0)  //Enemy #1
     {
-      if((filename != "Enemy1_walking_Right.png" && (right || up || down) && !left) || (filename != "Enemy1_walking.png" && (left || up || down) && !right))
+      if((filename != "Enemy1_walking_Right.png" && right && !left) 
+      || (filename != "Enemy1_walking.png" && left && !right)
+      || (filename != "walk.Enemy1_walking" && left && (up || down))
+      || (filename != "Enemy1_walking_Right.png" && !left && (up || down)))
         return true;
       else
         return false;
     }
     else if (type == 1)  //Enemy #2
     {
-      if((filename != "Enemy2_walking_Right_20.png" && (right || up || down) && !left) || (filename != "Enemy2_walking.png" && (left || up || down) && !right))
+      if((filename != "Enemy2_walking_Right_20.png" && right && !left) 
+      || (filename != "Enemy2_walking.png" && left && !right)
+      || (filename != "Enemy2_walking" && left && (up || down))
+      || (filename != "Enemy2_walking_Right_20.png" && !left && (up || down)))
         return true;
       else
         return false;

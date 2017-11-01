@@ -133,9 +133,9 @@ public class TiledMap
       }
       
       
-      stroke(255);
-      rect(player.currentPlayerPositionX(),player.currentPlayerPositionY() - 120, 220, 50); //Punch 1 HitBox
-      rect(player.currentPlayerPositionX() + 60,player.currentPlayerPositionY() - 120, 200, 50); //Punch 2 HitBox
+      //stroke(255);
+      //rect(player.currentPlayerPositionX(),player.currentPlayerPositionY() - 120, 220, 50); //Punch 1 HitBox
+      //rect(player.currentPlayerPositionX() + 60,player.currentPlayerPositionY() - 120, 200, 50); //Punch 2 HitBox
       
       //Checks the depth images and then draws them based on height priority queue 
       if (enemy != null)
