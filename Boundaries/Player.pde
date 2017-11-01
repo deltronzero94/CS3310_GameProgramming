@@ -16,6 +16,7 @@ public class Player
   private int activeFrame; //Keeps Track of Active Attack Frames (helps attack animation finish)
   private String filename;
   private int currentFrame;
+  private boolean facingLeft;
   
   //Default Constructor
   public Player()
@@ -196,7 +197,10 @@ public class Player
   
   public void setIsAttacking(boolean isAttacking)
   {
-    this.isAttacking = isAttacking;
+    ///if (activeFrame == -1)
+      this.isAttacking = isAttacking;
+    //else
+    //  this.isAttacking = true;
   }
   
   public void setY(int y)
@@ -268,9 +272,24 @@ public class Player
     return this.currentAttack;
   }
   
+  public boolean getIsAttacking()
+  {
+    return this.isAttacking;
+  }
+  
   public float getTimeBetweenAttack()
   {
     return (float)(millis() - this.lastAttackTime)/1000;
+  }
+  
+  public boolean getLastLeft()
+  {
+    return this.lastLeft;
+  }
+  
+  public boolean getFacingLeft()
+  {
+    return this.facingLeft;
   }
   
   //********************
@@ -286,8 +305,9 @@ public class Player
     if (activeFrame != -1)
     {    
       if (currentFrame +  1 == dim)
+      {
         activeFrame = -1;       
-      
+      }
       currentFrame++;
       
       return true;
@@ -302,6 +322,7 @@ public class Player
   {
     if (lastLeft && !right)
       {
+        facingLeft = true;
         filename = "idle3.png";
         player = loadImage(filename);
         dim = 12;
@@ -310,6 +331,7 @@ public class Player
       }
       else
       {
+        facingLeft = false;
         filename = "idle3_R.png";
         player = loadImage(filename);
         dim = 12;
@@ -324,6 +346,7 @@ public class Player
       {
         if ((up && lastLeft || down &&lastLeft) && !right )
         {   
+          facingLeft = true;
           filename = "walk.png";
           player = loadImage(filename);
           dim = 24;
@@ -333,6 +356,7 @@ public class Player
         }
         else
         {
+          facingLeft = false;
           filename = "walk_right.png";
           player = loadImage(filename);
           dim = 24;
@@ -342,6 +366,7 @@ public class Player
       }
       else
       {
+        facingLeft = true;
         filename = "walk.png";
         player = loadImage(filename);
         dim = 24;

@@ -23,7 +23,7 @@ public class TiledMap
     rightSideBorder = 1650.0;
     player = new Player();
     enemy = new Enemy[]{new Enemy(200, 100, 1), new Enemy(500,150,1), new Enemy(1000,200,1), new Enemy(1000,250,1), new Enemy(800, 175)};
-    //enemy = new Enemy[]{new Enemy(200, 200, 1), new Enemy(500,50,1)};
+    //enemy = new Enemy[]{new Enemy(200, 200, 1)};
     map = new Ptmx(applet,"sor2_1v3.tmx");
     map.setDrawMode(CENTER);
     map.setPositionMode("CANVAS");//Default Position Mode
@@ -132,6 +132,11 @@ public class TiledMap
         }
       }
       
+      
+      stroke(255);
+      rect(player.currentPlayerPositionX(),player.currentPlayerPositionY() - 120, 220, 50); //Punch 1 HitBox
+      rect(player.currentPlayerPositionX() + 60,player.currentPlayerPositionY() - 120, 200, 50); //Punch 2 HitBox
+      
       //Checks the depth images and then draws them based on height priority queue 
       if (enemy != null)
       {
@@ -146,6 +151,7 @@ public class TiledMap
             
            if (num != enemy.length)
            {
+             //player.checkHit(enemy[num]);
              enemy[num].drawEnemy(player); //Draw Enemy
            }
            else
@@ -156,6 +162,9 @@ public class TiledMap
       {
         image(sprite, player.currentPlayerPositionX(),player.currentPlayerPositionY());
       }
+      
+       //fill(200,0,200);
+       //rect(player.currentPlayerPositionX() - 60,player.currentPlayerPositionY() - 150, 130, 300); //Player Hitbox
     }
   
   //Setters
@@ -208,7 +217,7 @@ public class TiledMap
       if( num < enemy.length) //For Enemy height
       {
         float enemyHeight = enemy[num].currentEnemyPositionY();
-        q.add(new Image(num, enemyHeight));
+        q.add(new Image(num, enemyHeight - 15));
       }
       else //For Player Height
       {
