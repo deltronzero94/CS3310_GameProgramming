@@ -71,6 +71,7 @@ public class Enemy
     isIdle = true;
     isAttacking = false;
     isMoving = false;
+    lastLeft = false;
     health = 100;
   }
   
@@ -101,7 +102,7 @@ public class Enemy
         drawEnemyIdle();
       }
       else if (isMoving && !isAttacking && currentFrameX() == 0) //Player is Moving
-      {
+      { 
         drawEnemyMoving();  
       }
       else if(isAttacking) //Player is Attacking
@@ -111,6 +112,8 @@ public class Enemy
        sprite = getCurrentSprite();
        image(sprite, currentEnemyPositionX(), currentEnemyPositionY());
     }
+    else if (health == 0)
+      enemy = null; 
   }
   
    public PImage getCurrentSprite()
@@ -160,6 +163,20 @@ public class Enemy
    private int currentFrameX()
   {
     return frameCount % dim * w;
+  }
+
+  private PImage getEnemyPicture(int type, int state)
+  {
+    if (type == 0) //Enemy #1
+    {
+       
+    }
+    else  //Enemy #2
+    {
+      
+    }
+    
+    return null;
   }
   
   private PImage getEnemyType(int type)

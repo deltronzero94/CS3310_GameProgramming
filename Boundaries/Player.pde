@@ -15,6 +15,7 @@ public class Player
   private int currentAttack; //Current Attack Being Animated (Punch 1, Punch 2, and Kick)
   private int activeFrame; //Keeps Track of Active Attack Frames (helps attack animation finish)
   private String filename;
+  private int currentFrame;
   
   //Default Constructor
   public Player()
@@ -28,6 +29,7 @@ public class Player
     px = width;
     py = height * 1.35; 
     activeFrame = -1;
+    currentFrame = -1;
   }
   
   public Player(int x, int y)
@@ -41,6 +43,7 @@ public class Player
     px = width;
     py = height*1.35; 
     activeFrame = -1;
+    currentFrame = -1;
   }
   
   //****************************
@@ -59,7 +62,7 @@ public class Player
       {    
         drawPlayerIdle();     
       }
-      else if (isMoving && !isAttacking && ((filename != "walk_right.png" && right && !left) || (filename != "walk.png" && left && !right))) //Player is Moving
+      else if (isMoving && !isAttacking && ((filename != "walk_right.png" && (right || up || down) && !left) || (filename != "walk.png" && (left || up || down) && !right))) //Player is Moving
       {
         drawPlayerMoving();
       }
@@ -98,7 +101,10 @@ public class Player
   
   public PImage getCurrentSprite()
   {
-    return player.get(currentFrameX(), 0, w, h);
+    if (activeFrame == -1)
+      return player.get(currentFrameX(), 0, w, h);
+    else
+        return player.get(currentFrame % dim * w, 0, w, h);
   }
   
   public void playerMovement()
@@ -278,12 +284,12 @@ public class Player
   private boolean isAttackFrameActive()
   {
     if (activeFrame != -1)
-    {
-      if ((currentFrameX()+w)/player.width == 1)
-      {
-        print(currentFrameX()+w + "\n");
-        activeFrame = -1;
-      } 
+    {    
+      if (currentFrame +  1 == dim)
+        activeFrame = -1;       
+      
+      currentFrame++;
+      
       return true;
     }
     else
@@ -348,7 +354,7 @@ public class Player
   {
     if (activeFrame == -1)
     {
-      frameCount = 0;
+      currentFrame = 0;
       //currentAttack = 0; //FOR TESTING
       
       if(!lastLeft && !left || right) //Attacking right
@@ -375,7 +381,7 @@ public class Player
             h = player.height;
             currentAttack++;
           }
-          else if (currentAttack == 2 && getTimeBetweenAttack() < .5) //Kick
+          else if (currentAttack == 2 && getTimeBetweenAttack() < .6) //Kick
           {
             activeFrame = frameCount;
             lastAttackTime = millis(); 
@@ -423,7 +429,7 @@ public class Player
           h = player.height;
           currentAttack++;
         }
-        else if (currentAttack == 2 && getTimeBetweenAttack() < .5) //Kick
+        else if (currentAttack == 2 && getTimeBetweenAttack() < .6) //Kick
         {
           activeFrame = frameCount;
           lastAttackTime = millis(); 

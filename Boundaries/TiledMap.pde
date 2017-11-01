@@ -116,7 +116,6 @@ public class TiledMap
             
             sprite = player.getCurrentSprite();
             map.draw(applet.g, sx , sy);
-            image(sprite, player.currentPlayerPositionX(), player.currentPlayerPositionY());  
           }
           else //If player attemps to move beyond the left border, prevent it by adding 14 to player position x
           {
