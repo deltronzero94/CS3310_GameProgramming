@@ -27,6 +27,12 @@ public class TiledMap
     map = new Ptmx(applet,"sor2_1v3.tmx");
     map.setDrawMode(CENTER);
     map.setPositionMode("CANVAS");//Default Position Mode
+     q = new PriorityQueue<Image>(enemy.length, new Comparator<Image>() {
+    public int compare(Image edge1, Image edge2) {
+        if (edge1.positionY < edge2.positionY) return -1;
+        if (edge1.positionY > edge2.positionY) return 1;
+        return 0;
+    } });
   }
   
   //Public Methods/Functions
@@ -139,7 +145,9 @@ public class TiledMap
            itr.remove();
             
            if (num != enemy.length)
-             enemy[num].drawEnemy(); //Draw Enemy
+           {
+             enemy[num].drawEnemy(player); //Draw Enemy
+           }
            else
              image(sprite, player.currentPlayerPositionX(),player.currentPlayerPositionY()); //Draw Player
          }
@@ -195,13 +203,6 @@ public class TiledMap
   //Check and prioritize drawing queue based on height (the higher the y position of image, the higher priority it has)
   private void checkDepth()
   {
-    q = new PriorityQueue<Image>(enemy.length, new Comparator<Image>() {
-    public int compare(Image edge1, Image edge2) {
-        if (edge1.positionY < edge2.positionY) return -1;
-        if (edge1.positionY > edge2.positionY) return 1;
-        return 0;
-    } });
-    
     for(int num = 0; num <= enemy.length ; num++)
     {
       if( num < enemy.length) //For Enemy height
@@ -220,7 +221,6 @@ public class TiledMap
   {
     private int key;
     private float positionY;
-    
     
     public Image(int key, float positionY) {
         this.key = key;

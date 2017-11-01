@@ -10,13 +10,16 @@ public class Enemy
   private float py; //Adjust enemy position y when screen moves
   private int w; //width of the sprite
   private int h; //height of the sprite
-  private int health;
-  private int type;
+  private int health;  //Health of the enemy
+  private int type;  //Type of Enemy
   private int activeFrame;
   private String filename;
+  private float startTime;
+  private float timeInterval;
+  private int currentState;
   
   public Enemy()
-  {
+  { 
     enemy = loadImage("Enemy1_standing_Right.png");
     activeFrame = -1;
     type = 0;
@@ -33,6 +36,7 @@ public class Enemy
     isMoving = false;
     lastLeft = false;
     health = 100;
+    timeInterval = -1;
   }
   
   public Enemy(int x, int y)
@@ -53,6 +57,7 @@ public class Enemy
     isMoving = false;
     lastLeft = false;
     health = 100;
+    timeInterval = -1;
   }
   
   public Enemy(int x, int y, int type)
@@ -73,27 +78,17 @@ public class Enemy
     isMoving = false;
     lastLeft = false;
     health = 100;
+    timeInterval = -1;
   }
   
-  public void drawEnemy()
+  public void drawEnemy(Player p)
   {
     PImage sprite;
     
     if (enemy == null && health != 0) //Load image if image hasn't been loaded
       getEnemyType(type);
     
-    if(x < 2000)
-    {
-      isIdle = false;
-      isMoving = true;
-    }
-    else
-    {
-      isIdle = true;
-      isMoving = false;
-      //enemy = null;
-      //health = 0;
-    }
+    decideAction(p);
     
     if (!isAttackFrameActive() && health != 0)
     {
@@ -101,7 +96,7 @@ public class Enemy
       {    
         drawEnemyIdle();
       }
-      else if (isMoving && !isAttacking && currentFrameX() == 0) //Player is Moving
+      else if (isMoving && !isAttacking ) //Player is Moving
       { 
         drawEnemyMoving();  
       }
@@ -154,8 +149,9 @@ public class Enemy
     else if (isAttacking)
       return 3;
     else
-      return -1;
+      return -1;  //Error
   }
+  
   
   // ******************************************
   // Private Methods
@@ -164,12 +160,98 @@ public class Enemy
   {
     return frameCount % dim * w;
   }
+  
+  public void decideAction(Player p)
+  {
+    if(timeInterval == -1)
+    {
+      timeInterval = random(0,6);
+      int rand = (int)random(1,101);
+      
+      if (rand >=1 && rand <20) //20% chance (Attacking)
+      {
+        isMoving = false;
+        isIdle = false;
+        isAttacking = true;
+        //currentState = 3;
+      }
+      else if (rand >=20 && rand <60) //%40 chance (Moving)
+      {
+        isMoving = true;
+        isIdle = false;
+        isAttacking = false;
+      }
+      else  //60% chance (Idle)
+      {
+        isMoving = false;
+        isIdle = true;
+        isAttacking = false;
+        //currentState = 2;
+      }
+      
+      startTime = millis();
+    }
+    
+    if (timeElapsed() < timeInterval) //Action based on State Takes Place Here for Duration of Time
+    {
+      //print("Current State: " + currentState + "\n");
+    }
+    else
+    {
+      timeInterval = -1;
+    }
+  }
+  
+  private float timeElapsed()
+  {
+    return (float)(millis() - this.startTime)/1000;
+  }
+  
+  
+  private boolean checkFileMovementName()
+  {
+    if (type == 0)  //Enemy #1
+    {
+      if((filename != "Enemy1_walking_Right.png" && (right || up || down) && !left) || (filename != "Enemy1_walking" && (left || up || down) && !right))
+        return true;
+      else
+        return false;
+    }
+    else if (type == 1)  //Enemy #2
+    {
+      if((filename != "Enemy2_walking_Right_20.png" && (right || up || down) && !left) || (filename != "Enemy2_walking" && (left || up || down) && !right))
+        return true;
+      else
+        return false;
+    }
+    else
+    {
+      return false;
+    }
+  }
 
-  private PImage getEnemyPicture(int type, int state)
+  private PImage getEnemyPicture(int type)
   {
     if (type == 0) //Enemy #1
     {
+       int state = this.getState();
        
+       if(state == 1)  //isIdle State
+       {
+         
+       }
+       else if(isMoving)  //isMoving State
+       {
+         
+       }
+       else if(isAttacking)
+       {
+         
+       }
+       else
+       {
+         
+       }
     }
     else  //Enemy #2
     {
@@ -219,7 +301,7 @@ public class Enemy
            }
           else if (type == 1)
           {
-            filename = "Enemy2_standing_Right.png";  //Enemy 2
+            filename = "Enemy2_walking.png";  //Enemy 2
             dim = 3;
           }
           else
@@ -242,8 +324,8 @@ public class Enemy
           }
           else if (type == 1)
           {
-           filename = "Enemy2_walking_Right_20.png";  //Enemy 2
-              dim = 9;
+             filename = "Enemy2_walking_Right_20.png";  //Enemy 2
+             dim = 9;
           }
           else
           {
@@ -278,7 +360,6 @@ public class Enemy
         w = enemy.width/dim;
         h = enemy.height;
       }
-      
       addX(12);
   }
  
