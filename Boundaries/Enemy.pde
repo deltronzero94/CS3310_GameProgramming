@@ -304,8 +304,10 @@ public class Enemy
           addY(8);
         }
         
-         if (playerX - 250 <= currentEnemyPositionX() && playerX + 250 >=currentEnemyPositionX()
-             && playerY - 30 >= currentEnemyPositionY() && (playerY + 30 < currentEnemyPositionY()))
+         if (playerX - 250 <= currentEnemyPositionX() 
+             && playerX + 250 >=currentEnemyPositionX()
+             && playerY - 30 >= currentEnemyPositionY() 
+             && (playerY + 30 < currentEnemyPositionY()))
          {
            isMoving = false;
            isAttacking = true;

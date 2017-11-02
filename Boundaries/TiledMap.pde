@@ -27,7 +27,7 @@ public class TiledMap
     map = new Ptmx(applet,"sor2_1v3.tmx");
     map.setDrawMode(CENTER);
     map.setPositionMode("CANVAS");//Default Position Mode
-     q = new PriorityQueue<Image>(enemy.length, new Comparator<Image>() {
+    q = new PriorityQueue<Image>(enemy.length, new Comparator<Image>() {
     public int compare(Image edge1, Image edge2) {
         if (edge1.positionY < edge2.positionY) return -1;
         if (edge1.positionY > edge2.positionY) return 1;
