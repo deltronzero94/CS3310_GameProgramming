@@ -166,6 +166,7 @@ public class Enemy
     float playerX = p.currentPlayerPositionX();
     float playerY = p.currentPlayerPositionY();
     int playerYValue = p.getY();
+    int playerXValue = p.getX();
     int playerAttack = p.getCurrentAttack();
 
     if (p.getIsAttacking())
@@ -221,11 +222,31 @@ public class Enemy
         } 
         else
         {
-          mode = (int)random(0,4);
           isMoving = true;
           isAttacking = false;
           isIdle = false;
-          timeInterval = random(0, 1);
+          rand = (int) random (1,101);
+          
+          if (rand < 10)  //10% for Fleeing/Running Away Mode
+          {
+            mode = 2;
+            timeInterval = random(0, 1);
+          }
+          else if (rand >= 10 && rand < 45)  //35% for Chasing Player
+          {
+            mode = 0;
+            timeInterval = random(0, 3);
+          }
+          else if (rand >=45 && rand < 60)  //25% Walking to random location
+          {
+            mode = 1;
+            timeInterval = random(0, 2);
+          }
+          else  //35% of walking to attack 
+          {
+            mode = 3;
+            timeInterval = random(0, 1);
+          }
         }
         //currentState = 3;
       } 
@@ -234,8 +255,28 @@ public class Enemy
         isMoving = true;
         isIdle = false;
         isAttacking = false;
-        timeInterval = random(0, 4);
-        mode = (int)random(0,4);
+        
+        rand = (int) random (1,101);
+        if (rand < 10)  //10% for Fleeing/Running Away Mode
+        {
+          mode = 2;
+          timeInterval = random(0, 1);
+        }
+        else if (rand >= 10 && rand < 45)  //35% for Chasing Player
+        {
+          mode = 0;
+          timeInterval = random(0, 3);
+        }
+        else if (rand >=45 && rand < 60)  //25% Walking to random location
+        {
+          mode = 1;
+          timeInterval = random(0, 3);
+        }
+        else  //35% of walking to attack 
+        {
+          mode = 3;
+          timeInterval = random(0, 2);
+        }
       } 
       else  //50% chance (Idle)
       {
@@ -271,7 +312,7 @@ public class Enemy
         {
           if (playerX - 250 <= currentEnemyPositionX() && playerX + 250 >=currentEnemyPositionX())
           {
-            
+
           } 
           else if (playerX - 250 > currentEnemyPositionX())
           {
@@ -289,63 +330,146 @@ public class Enemy
   
           if (playerY - 24 <= currentEnemyPositionY() && playerY + 24 >= currentEnemyPositionY())
           {
-            y = playerYValue + 8;
             
           } 
           else if (playerY - 24 > currentEnemyPositionY()) //Enemy above Player / Enemy will down
           {
             up = true;
             down = false;
-            addY(8);
+            addY(4);
           } 
           else if (playerY + 24 < currentEnemyPositionY())  //Enemy Below Player, Enemy will move up
           {
             up = false;
             down = true;
-            addY(-8);
+            addY(-4);
+          }
+          
+          if(playerX - 250 <= currentEnemyPositionX() && playerX + 250 >=currentEnemyPositionX() 
+              &&  playerY - 24 <= currentEnemyPositionY() && playerY + 24 >= currentEnemyPositionY())
+          {
+            isIdle = true;
+            isMoving = false;
+            
+            //y = playerYValue + 8;
+            if(playerX <= currentEnemyPositionX())
+            {
+              left = true;
+              right = false;
+              lastLeft = true;
+            }
+            else
+            {
+              left = false;
+              right = true;
+              lastLeft = false;
+            }
           }
         }
         else if (mode == 1)//Enemy is moving around
         {
-          
+          addX(16);
         }
         else if (mode == 2) //Enemy is running away
         {
-          if (playerX - 250 <= currentEnemyPositionX() && playerX + 250 >=currentEnemyPositionX())
+          if (currentEnemyPositionX() == playerX && currentEnemyPositionY() == playerY)  //Same Y & X (Enemy and Player)
           {
-            isIdle = true;
-            isMoving = false;
-          } 
-          else if (playerX - 250 > currentEnemyPositionX())
-          {
-            right = true;
-            left = false;
-            addX(-8);
-          } 
-          else if (playerX + 250 < currentEnemyPositionX())
-          {
-            left = true;
-            right = false;
-            lastLeft = true;
-            addX(8);
+            int i = (int)random(0,5);
+            
+            if (i == 0) //Move Right
+            {
+              addX(12);
+            }
+            else if (i == 1)  //Move Left
+            {
+              addX(-12);
+            }
+            else if ( i == 2)  //Move up
+            {
+              addY(8);
+            }
+            else  //Move down
+            {
+              addY(-8);
+            } 
           }
-  
-          if (playerY - 24 <= currentEnemyPositionY() && playerY + 24 >= currentEnemyPositionY())
+          else if (currentEnemyPositionY() == playerY && currentEnemyPositionX() != playerX)  //Same Height, Different X Position
           {
-            ///y = playerYValue + 8;
-          } 
-          else if (playerY - 24 > currentEnemyPositionY()) //Enemy above Player / Enemy will down
-          {
-            up = true;
-            down = false;
-            addY(-8);
-          } 
-          else if (playerY + 24 < currentEnemyPositionY())  //Enemy Below Player, Enemy will move up
-          {
-            up = false;
-            down = true;
-            addY(8);
+            if(currentEnemyPositionX() > playerX)  //Enemy Will Move to the right (away from player)
+            {
+              addX(8);
+              if (currentEnemyPositionX() >= playerX + 300)
+              {
+                int j = (int)random(0,2);
+                if (j == 0)      
+                  addY(4);
+                else
+                  addY(-4);
+              }
+            }
+            else
+            {
+              addX(-8);
+              if (currentEnemyPositionX() <= playerX - 300)
+              {
+                int j = (int)random(0,2);
+                if (j == 0)      
+                  addY(4);
+                else
+                  addY(-4);
+              }
+            }
           }
+          else if (currentEnemyPositionY() != playerY && currentEnemyPositionX() == playerX)  //Same X, Different Y Position
+          {
+            if(currentEnemyPositionY() > playerY)  //Enemy is above Player then enemy will move up
+            {
+              addY(-4);
+              int j = (int)random(0,2);
+              if (j == 0)      
+                addX(8);
+              else
+                addX(-8);
+            }
+            else  //Enemy is below Player then enemy will move down
+            {
+              addY(4);
+              int j = (int)random(0,2);
+              if (j == 0)      
+                addX(8);
+              else
+                addX(-8);
+            }
+          }
+          else  //Different X and Y
+          {
+            if (currentEnemyPositionX() > playerX) //Enemy Moving to the right (away from Player)
+            {
+              left = true;
+              right = false;
+              addX(8);
+            }
+            else  //Enemy Moving to the left (away from Player)
+            {
+              left = false;
+              right = true;
+              addX(-8);
+            }  
+            
+            if (currentEnemyPositionY() > playerY)  //Enemy Moving down (away from Player)
+            {
+              addY(4);
+            }
+            else  //Enemy Moving up (away from Player)
+            {
+              addY(-4);
+            }
+          }
+          
+          if (y > 350)
+            y = 350;
+          if (y < 45)
+            y = 45;
         }
         else if(mode == 3) //Moving towards player and then fight
         {
@@ -384,11 +508,26 @@ public class Enemy
             addY(-8);
           }
           
-          if(playerY - 24 <= currentEnemyPositionY() && playerY + 24 >= currentEnemyPositionY() 
-            && playerX - 250 <= currentEnemyPositionX() && playerX + 250 >=currentEnemyPositionX())
+          if(playerX - 250 <= currentEnemyPositionX() && playerX + 250 >=currentEnemyPositionX() 
+              &&  playerY - 24 <= currentEnemyPositionY() && playerY + 24 >= currentEnemyPositionY())
           {
             isAttacking = true;
             isMoving = false;
+            
+            y = playerYValue + 8;
+            
+            if(playerX <= currentEnemyPositionX())
+            {
+              left = true;
+              right = false;
+              lastLeft = true;
+            }
+            else
+            {
+              left = false;
+              right = true;
+              lastLeft = false;
+            }
           }
         }
       } 
@@ -544,14 +683,14 @@ public class Enemy
     
     if (lastLeft && !right)  //Standing and looking to the left
     {
-      if (type == 0)
+      if (type == 0 && filename != "Enemy1_standing.png")
       {
         filename = "Enemy1_standing.png";  //Enemy 1
         enemy = loadImage(filename);
         w = enemy.width/dim;
         h = enemy.height;
       }
-      else if (type == 1)
+      else if (type == 1 && filename != "Enemy2_standing.png")
       {
         filename = "Enemy2_standing.png";  //Enemy 2
         enemy = loadImage(filename);
@@ -562,14 +701,14 @@ public class Enemy
     } 
     else  //Standing and looking to the right
     {
-      if (type == 0)
+      if (type == 0 && filename != "Enemy1_standing_Right.png")
       {
         filename = "Enemy1_standing_Right.png";  //Enemy 1
         enemy = loadImage(filename);
         w = enemy.width/dim;
         h = enemy.height;
       }
-      else if (type == 1)
+      else if (type == 1 && filename != "Enemy2_standing_Right.png")
       {
         filename = "Enemy2_standing_Right.png";  //Enemy 2
         enemy = loadImage(filename);
@@ -584,30 +723,41 @@ public class Enemy
   {
     if (lastLeft && !right)  //Looking Left
     {
-      if (type == 0)
+      if (type == 0 && filename != "Enemy1_standing.png")
+      {
         filename = "Enemy1_standing.png";  //Enemy 1
-      else if (type == 1)
+        enemy = loadImage(filename);
+        dim = 1;
+        w = enemy.width/dim;
+        h = enemy.height;
+      }
+      else if (type == 1 && filename != "Enemy2_HitStun.png")
+      {
         filename = "Enemy2_HitStun.png";  //Enemy 2
-      else
-        filename = "Enemy1_standing.png";  //Default
-
-      enemy = loadImage(filename);
-      dim = 1;
-      w = enemy.width/dim;
-      h = enemy.height;
-    } else  //Looking right
+        enemy = loadImage(filename);
+        dim = 1;
+        w = enemy.width/dim;
+        h = enemy.height;
+      }
+    } 
+    else  //Looking right
     {
-      if (type == 0)
-        filename = "Enemy1_standing_Right.png";  //Enemy 1
-      else if (type == 1)
-        filename = "Enemy2_HitStun_right.png";  //Enemy 2
-      else
-        filename = "Enemy1_standing_Right.png";  //Default
-
-      enemy = loadImage(filename);
-      dim = 1;
-      w = enemy.width/dim;
-      h = enemy.height;
+      if (type == 0 && filename != "Enemy1_standing_Right.png")  ////Enemy 1 Stunned (facing right)
+      {
+        filename = "Enemy1_standing_Right.png";
+        enemy = loadImage(filename);
+        dim = 1;
+        w = enemy.width/dim;
+        h = enemy.height;
+      }
+      else if (type == 1 && filename != "Enemy2_HitStun_right.png")  //Enemy 2 Stunned (facing right)
+      {
+        filename = "Enemy2_HitStun_right.png"; 
+        enemy = loadImage(filename);
+        dim = 1;
+        w = enemy.width/dim;
+        h = enemy.height;
+      }
     }
   }
 }
