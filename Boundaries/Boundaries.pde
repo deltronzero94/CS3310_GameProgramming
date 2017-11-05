@@ -24,9 +24,9 @@ void setup()
 void draw()  
 {  
   scale(.35);
-  background(map.getMap().getBackgroundColor());
-  fill(128);
-  //print(frameRate + "\n");
+  //background(map.getMap().getBackgroundColor());
+  //fill(128);
+  print(frameRate + "\n");
   
   if (isTitleScreen) //Title Screen Mode
   {

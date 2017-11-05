@@ -329,7 +329,7 @@ public class Player
 
   private void drawPlayerIdle()
   {
-    if (lastLeft && !right)
+    if ((lastLeft || facingLeft) && !right && filename != "idle3.png" )
     {
       facingLeft = true;
       filename = "idle3.png";
@@ -337,7 +337,17 @@ public class Player
       dim = 12;
       w = player.width/dim;
       h = player.height;
-    } else
+    } 
+    else if (facingLeft == false && filename != "idle3_R.png")
+    {
+      facingLeft = false;
+      filename = "idle3_R.png";
+      player = loadImage(filename);
+      dim = 12;
+      w = player.width/dim;
+      h = player.height;
+    }
+    else if (filename == null)
     {
       facingLeft = false;
       filename = "idle3_R.png";
