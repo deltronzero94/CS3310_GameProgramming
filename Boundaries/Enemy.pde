@@ -17,6 +17,11 @@ public class Enemy
   private float startTime;
   private float timeInterval;
   private int mode;
+  private int locX;
+  private int locY;
+  private int lastAttackTime;
+  private int currentAttack;
+  private int currentFrame;
 
   public Enemy()
   { 
@@ -104,24 +109,29 @@ public class Enemy
     {
       if (!isHit)
       {
-        if (isIdle && !isAttacking) //Player is Idle
+        if (isIdle && !isAttacking) //Enemy is Idle
         {    
           drawEnemyIdle();
-        } else if (isMoving && !isAttacking && checkFileMovementName()) //Player is Moving
+        } else if (isMoving && !isAttacking && checkFileMovementName()) //Enemy is Moving
         { 
           drawEnemyMoving();
-        } else if (isAttacking) //Player is Attacking
+        } else if (isAttacking) //Enemy is Attacking
         {
-          //drawPlayerAttacking();
+          drawPlayerAttacking();
         }
       } else
       {
         drawEnemyHit();
       }
-      sprite = getCurrentSprite();
-      image(sprite, currentEnemyPositionX(), currentEnemyPositionY());
     } else if (health == 0)
       enemy = null;
+    
+    //Draw Enemy
+    if (enemy != null)
+    {
+      sprite = getCurrentSprite();
+      image(sprite, currentEnemyPositionX(), currentEnemyPositionY());
+    }
   }
 
   public PImage getCurrentSprite()
@@ -209,38 +219,58 @@ public class Enemy
 
     if (timeInterval == -1 && !isHit)
     {
-      int rand = (int)random(1, 101);
+      int rand = (int)random(0, 101);
 
-      if (rand >=1 && rand <25) //25% chance (Attacking)
+      if (rand <25) //25% chance (Attacking)
       {
         if (abs(playerX - currentEnemyPositionX()) <= 300.0 && abs(playerY - currentEnemyPositionY()) <= 25) //If Enemy is within 300 units (x) within the player
         {
-          isMoving = false;
-          isIdle = false;
-          isAttacking = true;
-          timeInterval = random(0, 2); // 0-.999 seconds
+    
+          if (abs(playerX - currentEnemyPositionX()) <= 250)
+            {
+              isMoving = true;
+              isIdle = false;
+              isAttacking = false;
+              timeInterval = random(0, 4);
+              mode = 3;
+            }
+            else
+            {
+              isMoving = false;
+              isIdle = false;
+              isAttacking = true;
+              timeInterval = random(0, 2);
+              addY(12);
+            }
         } 
         else
         {
           isMoving = true;
           isAttacking = false;
           isIdle = false;
-          rand = (int) random (1,101);
+          rand = (int) random (0,101);
           
-          if (rand < 10)  //10% for Fleeing/Running Away Mode
+          if (rand < 5)  //5% for Fleeing/Running Away Mode
           {
             mode = 2;
             timeInterval = random(0, 1);
           }
-          else if (rand >= 10 && rand < 45)  //35% for Chasing Player
+          else if (rand >= 5 && rand < 45)  //35% for Chasing Player
           {
             mode = 0;
             timeInterval = random(0, 3);
           }
-          else if (rand >=45 && rand < 60)  //25% Walking to random location
+          else if (rand >=45 && rand < 65)  //20% Walking to random location
           {
             mode = 1;
-            timeInterval = random(0, 2);
+            timeInterval = random(0, 3);
+            
+            locX = playerXValue+ (int)random(-1000,1000);
+            locY = playerYValue + (int)random(-250,250);
+            if (locY > 350)
+              locY = 350;
+            if (locY < 45)
+              locY = 45;
           }
           else  //35% of walking to attack 
           {
@@ -256,23 +286,30 @@ public class Enemy
         isIdle = false;
         isAttacking = false;
         
-        rand = (int) random (1,101);
+        rand = (int) random (0,101);
         if (rand < 10)  //10% for Fleeing/Running Away Mode
         {
           mode = 2;
-          timeInterval = random(0, 1);
+          timeInterval = random(0, 1.5);
         }
         else if (rand >= 10 && rand < 45)  //35% for Chasing Player
         {
           mode = 0;
           timeInterval = random(0, 3);
         }
-        else if (rand >=45 && rand < 60)  //25% Walking to random location
+        else if (rand >=45 && rand < 85)  //40% Walking to random location
         {
           mode = 1;
           timeInterval = random(0, 3);
+          
+          locX = playerXValue+ (int)random(-500,500);
+          locY = playerYValue + (int)random(-250,250);
+          if (locY > 350)
+            locY = 350;
+          if (locY < 45)
+            locY = 45;
         }
-        else  //35% of walking to attack 
+        else  //15% of walking to attack 
         {
           mode = 3;
           timeInterval = random(0, 2);
@@ -304,7 +341,18 @@ public class Enemy
     {
       if (isIdle)
       {
-        
+         if (currentEnemyPositionX() > playerX)
+            {
+              right = false;
+              left = true;
+              lastLeft = true;
+            }
+            else
+            {
+              right = true;
+              left = false;
+              lastLeft = false;
+            }
       } 
       else if (isMoving)  //Enemy Moving
       {
@@ -364,11 +412,77 @@ public class Enemy
               right = true;
               lastLeft = false;
             }
+            
+            timeInterval = 0;
           }
         }
         else if (mode == 1)//Enemy is moving around
         {
-          addX(16);
+            if (x < locX)
+            {
+              if (abs(x + 16 - locX) > 16)
+              {
+                 addX(16); 
+              }
+              else
+              {
+                x = locX;
+              }
+            }
+            else
+            {
+              if (abs(x + 16 - locX) > 16)
+              {
+                 addX(-16); 
+              }
+              else
+              {
+                x = locX;
+              }
+            }
+            
+            if (y > locY)
+            {
+              if (abs(y + 8 - locY) > 8)
+              {
+                addY(-8);
+              }
+              else
+              {
+                y = locY;
+              }
+            }
+            else
+            {
+              if (abs(y + 8 - locY) > 8)
+              {
+                addY(8);
+              }
+              else
+              {
+                y = locY;
+              }
+            }
+            
+            if (currentEnemyPositionX() > playerX)
+            {
+              right = false;
+              left = true;
+              lastLeft = true;
+            }
+            else
+            {
+              right = true;
+              left = false;
+              lastLeft = false;
+            }
+            
+            if(y == locY && x == locX)
+            {
+              isMoving = false;
+              isIdle = true;
+            }
+            
         }
         else if (mode == 2) //Enemy is running away
         {
@@ -473,9 +587,11 @@ public class Enemy
         }
         else if(mode == 3) //Moving towards player and then fight
         {
+          //print("ABSOLUTE: "+ (abs(playerX - currentEnemyPositionX()) <= 200) + "\n");
+          
           if (playerX - 250 <= currentEnemyPositionX() && playerX + 250 >=currentEnemyPositionX())
           {
-
+            
           } 
           else if (playerX - 250 > currentEnemyPositionX())
           {
@@ -511,22 +627,35 @@ public class Enemy
           if(playerX - 250 <= currentEnemyPositionX() && playerX + 250 >=currentEnemyPositionX() 
               &&  playerY - 24 <= currentEnemyPositionY() && playerY + 24 >= currentEnemyPositionY())
           {
-            isAttacking = true;
-            isMoving = false;
-            
-            y = playerYValue + 8;
+            y = playerYValue + 12;
             
             if(playerX <= currentEnemyPositionX())
             {
               left = true;
               right = false;
               lastLeft = true;
+              
+              if (abs(playerX - currentEnemyPositionX()) <= 200)
+                addX(16);
+              else
+              {
+                isAttacking = true;
+                isMoving = false;
+              }
             }
             else
             {
               left = false;
               right = true;
               lastLeft = false;
+              
+              if (abs(playerX - currentEnemyPositionX()) <= 200)
+                addX(-16);
+              else
+              {
+               isAttacking = true;
+                isMoving = false;
+              }
             }
           }
         }
@@ -549,6 +678,7 @@ public class Enemy
         isAttacking = false;
         isMoving = false;
       }
+      ///activeFrame = -1;
       timeInterval = -1;
       mode = -1;
     }
@@ -599,16 +729,98 @@ public class Enemy
   private boolean isAttackFrameActive()
   {
     if (activeFrame != -1)
-    {
-      if ((currentFrameX()+w)/enemy.width == 1)
+    {    
+      if (currentFrame +  1 == dim )
       {
-        print(currentFrameX()+w + "\n");
+        
         activeFrame = -1;
-      } 
+      }
+      currentFrame++;
       return true;
     } else
     {
       return false;
+    }
+  }
+  
+  private void drawPlayerAttacking()
+  {
+    if (activeFrame == -1)
+    {
+      currentFrame = 0;
+      //currentAttack = 0; //FOR TESTING
+
+      if (!lastLeft && !left || right) //Attacking right
+      {        
+          if (getTimeBetweenAttack() >1)
+            lastAttackTime = 0;
+          
+          if (type == 0)
+          {
+            if (getTimeBetweenAttack() > 1 || lastAttackTime == 0)
+            {
+              activeFrame = frameCount;
+              lastAttackTime = millis(); //Timer for delay
+              filename = "Enemy1_Punch_Right.png";  //Enemy 1
+              dim = 2;
+              enemy = loadImage(filename);
+              w = enemy.width/dim;
+              h = enemy.height;
+            }
+            else if (filename != "Enemy1_standing_Right.png")
+            {
+              filename = "Enemy1_standing_Right.png";  //Enemy 1
+              enemy = loadImage(filename);
+              dim = 1;
+              w = enemy.width/dim;
+              h = enemy.height;
+            }
+          }
+          else if (type == 1)
+          {
+            
+          }
+          
+        //if (currentAttack == 0 ) //Punch 1 
+        //{
+        //  activeFrame = frameCount;
+        //  lastAttackTime = millis(); //Timer for delay
+        //  filename = "punch1_f6_right_v2.png";
+        //  player = loadImage(filename);
+        //  dim = 4;
+        //  w = player.width/dim;
+        //  h = player.height;
+        //  currentAttack++;
+        //} 
+      } else //Attacking left
+      {
+       if (type == 0)
+          {
+            if (getTimeBetweenAttack() > 1 || lastAttackTime == 0)
+            {
+              activeFrame = frameCount;
+              lastAttackTime = millis(); //Timer for delay
+              filename = "Enemy1_Punch.png";  //Enemy 1
+              dim = 2;
+              enemy = loadImage(filename);
+              w = enemy.width/dim;
+              h = enemy.height;
+            }
+            else if (filename != "Enemy1_standing_Right.png")
+            {
+              filename = "Enemy1_standing.png";  //Enemy 1
+              enemy = loadImage(filename);
+              dim = 1;
+              w = enemy.width/dim;
+              h = enemy.height;
+            }
+          }
+          else if (type == 1)
+          {
+            
+          }
+          
+      }
     }
   }
 
@@ -723,9 +935,9 @@ public class Enemy
   {
     if (lastLeft && !right)  //Looking Left
     {
-      if (type == 0 && filename != "Enemy1_standing.png")
+      if (type == 0 && filename != "Enemy1_HitStun.png.png")
       {
-        filename = "Enemy1_standing.png";  //Enemy 1
+        filename = "Enemy1_HitStun.png";  //Enemy 1
         enemy = loadImage(filename);
         dim = 1;
         w = enemy.width/dim;
@@ -742,9 +954,9 @@ public class Enemy
     } 
     else  //Looking right
     {
-      if (type == 0 && filename != "Enemy1_standing_Right.png")  ////Enemy 1 Stunned (facing right)
+      if (type == 0 && filename != "Enemy1_HitStun_right.png")  ////Enemy 1 Stunned (facing right)
       {
-        filename = "Enemy1_standing_Right.png";
+        filename = "Enemy1_HitStun_right.png";
         enemy = loadImage(filename);
         dim = 1;
         w = enemy.width/dim;
@@ -759,5 +971,10 @@ public class Enemy
         h = enemy.height;
       }
     }
+  }
+  
+  private float getTimeBetweenAttack()
+  {
+    return (float)(millis() - this.lastAttackTime)/1000;
   }
 }
