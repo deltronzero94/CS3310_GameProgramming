@@ -136,7 +136,10 @@ public class Enemy
 
   public PImage getCurrentSprite()
   {
-    return enemy.get(this.currentFrameX(), 0, w, h);
+     if (activeFrame == -1)
+      return enemy.get(currentFrameX(), 0, w, h);
+    else
+      return enemy.get(currentFrame % dim * w, 0, w, h);
   }
 
   public float currentEnemyPositionX()
@@ -212,9 +215,7 @@ public class Enemy
           }
           health -=10;
         }
-      } else  
-      {
-      }
+      } 
     }
 
     if (timeInterval == -1 && !isHit)
@@ -280,7 +281,7 @@ public class Enemy
         }
         //currentState = 3;
       } 
-      else if (rand >=25 && rand <50) //%25 chance (Moving)
+      else if (rand >=25 && rand <55) //%30 chance (Moving)
       {
         isMoving = true;
         isIdle = false;
@@ -315,7 +316,7 @@ public class Enemy
           timeInterval = random(0, 2);
         }
       } 
-      else  //50% chance (Idle)
+      else  //45% chance (Idle)
       {
         isMoving = false;
         isIdle = true;
@@ -335,8 +336,6 @@ public class Enemy
       startTime = millis();
     }
 
-
-    //print(mode+"\n");
     if (timeElapsed() < timeInterval) //Action based on State Takes Place Here for Duration of Time
     {
       if (isIdle)
@@ -653,7 +652,7 @@ public class Enemy
                 addX(-16);
               else
               {
-               isAttacking = true;
+                isAttacking = true;
                 isMoving = false;
               }
             }
@@ -662,7 +661,13 @@ public class Enemy
       } 
       else if (isAttacking)
       {
-        
+        if (!(playerX - 250 <= currentEnemyPositionX() && playerX + 250 >=currentEnemyPositionX() 
+              &&  playerY - 24 <= currentEnemyPositionY() && playerY + 24 >= currentEnemyPositionY()))
+        {
+          isMoving = true;
+          isAttacking = false;
+          mode = 1;
+        }
       }
       else if (isHit)
       {
@@ -688,7 +693,6 @@ public class Enemy
   {
     return (float)(millis() - this.startTime)/1000;
   }
-
 
   private boolean checkFileMovementName()
   {
@@ -730,9 +734,10 @@ public class Enemy
   {
     if (activeFrame != -1)
     {    
-      if (currentFrame +  1 == dim )
+      print("Current Frame: " + currentFrame + "\n");
+      if (currentFrame +  1 == dim  )
       {
-        
+        print("Current Frame: " + currentFrame + "\nDim: " + dim + "\n");
         activeFrame = -1;
       }
       currentFrame++;
@@ -745,19 +750,20 @@ public class Enemy
   
   private void drawPlayerAttacking()
   {
+    print("Current Attack: " + currentAttack + "\n");
     if (activeFrame == -1)
     {
       currentFrame = 0;
       //currentAttack = 0; //FOR TESTING
+      
+       if (getTimeBetweenAttack() > 2)
+            lastAttackTime = 0;
 
       if (!lastLeft && !left || right) //Attacking right
       {        
-          if (getTimeBetweenAttack() >1)
-            lastAttackTime = 0;
-          
           if (type == 0)
           {
-            if (getTimeBetweenAttack() > 1 || lastAttackTime == 0)
+            if (getTimeBetweenAttack() > 1)
             {
               activeFrame = frameCount;
               lastAttackTime = millis(); //Timer for delay
@@ -778,25 +784,43 @@ public class Enemy
           }
           else if (type == 1)
           {
-            
+            if ((currentAttack == 0 || currentAttack == 1 ) && getTimeBetweenAttack() > 1 )
+            {
+              currentAttack++;
+              activeFrame = frameCount;
+              lastAttackTime = millis(); //Timer for delay
+              filename = "Enemy2_Punch_right.png";  //Enemy 1
+              dim = 2;
+              enemy = loadImage(filename);
+              w = enemy.width/dim;
+              h = enemy.height;
+            }
+            else if(currentAttack == 2)
+            {
+              currentAttack++;
+              activeFrame = frameCount;
+              lastAttackTime = millis(); //Timer for delay
+              filename = "Enemy2_Punch2_right.png";  //Enemy 1
+              dim = 6;
+              enemy = loadImage(filename);
+              w = enemy.width/dim;
+              h = enemy.height;
+            }
+            else if (filename != "Enemy2_standing_Right.png")
+            {
+              currentAttack = 0;
+              filename = "Enemy2_standing_Right.png";  //Enemy 1
+              enemy = loadImage(filename);
+              dim = 1;
+              w = enemy.width/dim;
+              h = enemy.height;
+            }
           }
-          
-        //if (currentAttack == 0 ) //Punch 1 
-        //{
-        //  activeFrame = frameCount;
-        //  lastAttackTime = millis(); //Timer for delay
-        //  filename = "punch1_f6_right_v2.png";
-        //  player = loadImage(filename);
-        //  dim = 4;
-        //  w = player.width/dim;
-        //  h = player.height;
-        //  currentAttack++;
-        //} 
       } else //Attacking left
       {
        if (type == 0)
           {
-            if (getTimeBetweenAttack() > 1 || lastAttackTime == 0)
+            if (getTimeBetweenAttack() > 1)
             {
               activeFrame = frameCount;
               lastAttackTime = millis(); //Timer for delay
@@ -817,7 +841,37 @@ public class Enemy
           }
           else if (type == 1)
           {
-            
+             if ((currentAttack == 0 || currentAttack == 1 ) && getTimeBetweenAttack() > 1 )
+            {
+              currentAttack++;
+              activeFrame = frameCount;
+              lastAttackTime = millis(); //Timer for delay
+              filename = "Enemy2_Punch.png";  //Enemy 1
+              dim = 2;
+              enemy = loadImage(filename);
+              w = enemy.width/dim;
+              h = enemy.height;
+            }
+            else if (currentAttack == 2 )
+            {
+              currentAttack++;
+              activeFrame = frameCount;
+              lastAttackTime = millis(); //Timer for delay
+              filename = "Enemy2_Punch2.png";  //Enemy 1
+              dim = 6;
+              enemy = loadImage(filename);
+              w = enemy.width/dim;
+              h = enemy.height;
+            }
+            else if (filename != "Enemy2_standing_Right.png")
+            {
+              currentAttack = 0;
+              filename = "Enemy2_standing.png";  //Enemy 1
+              enemy = loadImage(filename);
+              dim = 1;
+              w = enemy.width/dim;
+              h = enemy.height;
+            }
           }
           
       }
