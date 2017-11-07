@@ -215,8 +215,27 @@ public class Enemy
           }
           health -=10;
         }
-      } 
+      }
+      else  //If enemy is outside hit range 
+      {
+        if (mode != 4 && mode != 2)  //If Enemy isn't moving around
+        {
+          //mode = 4;
+          //Random Chance to Make Enemy Go Behind Player
+          //  1st: Make sure they aren't close to the player
+          //  2nd: 
+          
+          int rand = (int)random(0,100);
+          
+          if (rand < 40)
+          {
+            //mode = 4;
+          }
+        }
+      }
     }
+
+
 
     if (timeInterval == -1 && !isHit)
     {
@@ -335,6 +354,9 @@ public class Enemy
       timeInterval = .4;  //Hit Stun Timer
       startTime = millis();
     }
+
+    mode = 4;
+
 
     if (timeElapsed() < timeInterval) //Action based on State Takes Place Here for Duration of Time
     {
@@ -640,6 +662,8 @@ public class Enemy
               {
                 isAttacking = true;
                 isMoving = false;
+                timeInterval = random(0, 2);
+                startTime = millis();
               }
             }
             else
@@ -658,6 +682,33 @@ public class Enemy
             }
           }
         }
+        else if( mode == 4) //Enemy moves behind player
+        {
+          //addX(2);
+          PVector vector1 = new PVector(playerXValue, playerYValue);  //PLayer Vector
+          PVector vector2 = new PVector(x,y);  //Enemy Vector
+          PVector vector3;
+          
+          //float distance = sqrt(abs(playerX - ))
+          print("Player: " + playerXValue + ", " + playerYValue);
+          print("\nVector1 : "+ vector1.x + ", "+ vector1.y + "\n");
+          print("Vector2: "+ vector2.x + ", "+ vector2.y + "\n");
+          //print(PVector.lerp(vector1, vector2, .2) + "\n");
+          print(vector2.dist(vector1) + "\n");
+          
+          //locX = x;
+          locX = (int)abs(playerXValue - (302 * (playerXValue - x)) / vector2.dist(vector1));  //https://math.stackexchange.com/questions/175896/finding-a-point-along-a-line-a-certain-distance-away-from-another-point
+          locY = (int)abs(playerYValue - (302 * (playerYValue - y)) / vector2.dist(vector1));
+          vector3 = new PVector(locX, locY);
+          
+          print("Location X: " + locX + ", Location Y: " + locY + "\nDistance Between Player and new Loc: " + vector3.dist(vector1) + "\n\n");
+          x = locX;
+          y = locY;
+          //if (y >350)
+          //  y = 350;
+          //if (y < 45)
+          //  y = 45; 
+        }
       } 
       else if (isAttacking)
       {
@@ -668,6 +719,83 @@ public class Enemy
           isAttacking = false;
           mode = 1;
         }
+        
+        //if(currentAttack < 0 || currentAttack >= 3)  //Reset Attack
+        //  currentAttack = 0; 
+        if (type == 1)
+        {
+          int rand = (int)random(0,101);
+          
+          if (currentAttack == 3)
+          {
+            if (!isAttackFrameActive())
+            {
+              isAttacking = false;
+              currentAttack = 0;
+              
+              if(rand >   25)
+              {
+                isMoving = true;
+                mode = 1;
+                timeInterval = random(0, 2);
+                startTime = millis();
+              }
+              else
+                isIdle = true;
+            }
+          }
+          else if(currentAttack == 0)  //If 1st Attack
+          {
+            if(rand < 10) //10% chance starting off attack with a strong attack
+              currentAttack = 2;    
+          }
+          else if (currentAttack == 1)
+          {
+            
+            if(rand < 25) //25% chance next attack is a strong attack
+              currentAttack = 2;   
+          }
+        }
+        else if (type == 0)
+        {
+          int rand = (int)random(0,101);
+          if (currentAttack == 1)  //10% chance to stop attacking after 1st Attack
+          {
+            if (rand < 10) 
+            {
+              isAttacking = false;
+              isMoving = true;
+              mode = 1;
+            }
+          }
+          else if (currentAttack == 2)  //25% chance to stop attacking after 2nd Attack
+          {
+            if (rand < 25)
+            {
+              isAttacking = false;
+              isMoving = true;
+              mode = 1;
+            }
+          }
+          else if (currentAttack == 3)  //75% chance to stop attacking after 3rd Attack
+          {
+            if (rand < 75)
+            {
+              isAttacking = false;
+              isMoving = true;
+              mode = 1;
+            }
+          }
+          else if (currentAttack >= 4)  //100% chance to stop attacking after 4th Attack
+          {
+            if (rand <= 100)
+            {
+              isAttacking = false;
+              isMoving = true;
+              mode = 1;
+            }
+          }
+        }   
       }
       else if (isHit)
       {
@@ -734,10 +862,10 @@ public class Enemy
   {
     if (activeFrame != -1)
     {    
-      print("Current Frame: " + currentFrame + "\n");
+      //print("Current Frame: " + currentFrame + "\n");
       if (currentFrame +  1 == dim  )
       {
-        print("Current Frame: " + currentFrame + "\nDim: " + dim + "\n");
+        //print("Current Frame: " + currentFrame + "\nDim: " + dim + "\n");
         activeFrame = -1;
       }
       currentFrame++;
@@ -750,14 +878,17 @@ public class Enemy
   
   private void drawPlayerAttacking()
   {
-    print("Current Attack: " + currentAttack + "\n");
+    //print("Current Attack: " + currentAttack + "\n");
     if (activeFrame == -1)
     {
       currentFrame = 0;
       //currentAttack = 0; //FOR TESTING
       
        if (getTimeBetweenAttack() > 2)
+       {
             lastAttackTime = 0;
+            currentAttack = 0;
+       }
 
       if (!lastLeft && !left || right) //Attacking right
       {        
@@ -765,6 +896,7 @@ public class Enemy
           {
             if (getTimeBetweenAttack() > 1)
             {
+              currentAttack++;
               activeFrame = frameCount;
               lastAttackTime = millis(); //Timer for delay
               filename = "Enemy1_Punch_Right.png";  //Enemy 1
@@ -795,7 +927,7 @@ public class Enemy
               w = enemy.width/dim;
               h = enemy.height;
             }
-            else if(currentAttack == 2)
+            else if(currentAttack == 2 && getTimeBetweenAttack() > 1)
             {
               currentAttack++;
               activeFrame = frameCount;
@@ -808,7 +940,6 @@ public class Enemy
             }
             else if (filename != "Enemy2_standing_Right.png")
             {
-              currentAttack = 0;
               filename = "Enemy2_standing_Right.png";  //Enemy 1
               enemy = loadImage(filename);
               dim = 1;
@@ -822,6 +953,7 @@ public class Enemy
           {
             if (getTimeBetweenAttack() > 1)
             {
+              currentAttack++;
               activeFrame = frameCount;
               lastAttackTime = millis(); //Timer for delay
               filename = "Enemy1_Punch.png";  //Enemy 1
@@ -852,7 +984,7 @@ public class Enemy
               w = enemy.width/dim;
               h = enemy.height;
             }
-            else if (currentAttack == 2 )
+            else if (currentAttack == 2 && getTimeBetweenAttack() > 1)
             {
               currentAttack++;
               activeFrame = frameCount;
@@ -865,7 +997,8 @@ public class Enemy
             }
             else if (filename != "Enemy2_standing_Right.png")
             {
-              currentAttack = 0;
+              if(currentAttack == 3)
+                currentAttack = 0;
               filename = "Enemy2_standing.png";  //Enemy 1
               enemy = loadImage(filename);
               dim = 1;
@@ -1031,4 +1164,4 @@ public class Enemy
   {
     return (float)(millis() - this.lastAttackTime)/1000;
   }
-}
+}  
