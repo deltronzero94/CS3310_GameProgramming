@@ -136,29 +136,24 @@ public class Enemy
   
   public void checkDistanceBetweenEnemy(Enemy e)
   {
-    if(e.isAttacking && !this.isAttacking && mode != 1)  //If other enemy is attacking and this enemy isn't
-    {
-      //isMoving = true;
-      //mode = 4;
-      //isMoving = false;
-      //isIdle = true;
-      //isAttacking = false;
-      
-      //timeInterval = (int)random(1,3);
-      
+    if((e.isAttacking || e.getMode() == 3) && !this.isAttacking && (mode != 1 || mode != 3)) //If other enemy is attacking and this enemy isn't
+    {      
       PVector vector1 = new PVector(x, y);  //Enemy  1 Vector
       PVector vector2 = new PVector(e.getX(), e.getY());  //Enemy 2 Vector
       
-      if(vector1.dist(vector2) <= 300)
+      if(vector1.dist(vector2) <= 100)
       {
         mode = 1;
         isMoving = true;
         isIdle = false;
         isAttacking = false;
         
-        locX = (int)abs(e.getLocX() - (300 * (e.getX() - locX)) / vector2.dist(vector1));  //https://math.stackexchange.com/questions/175896/finding-a-point-along-a-line-a-certain-distance-away-from-another-point
-        locY = (int)abs(e.getLocY() - (300 * (e.getY() - locY)) / vector2.dist(vector1));
+        locX = (int)abs(e.getLocX() - (100 * (e.getX() - locX)) / vector2.dist(vector1));  //https://math.stackexchange.com/questions/175896/finding-a-point-along-a-line-a-certain-distance-away-from-another-point
+        locY = (int)abs(e.getLocY() - (100 * (e.getY() - locY)) / vector2.dist(vector1));
       }
+    }
+    else
+    {
     }
   }
 
@@ -209,9 +204,14 @@ public class Enemy
     return this.locX;
   }
   
-    public int getLocY()
+  public int getLocY()
   {
     return this.locY;
+  }
+  
+  public int getMode()
+  {
+    return this.mode;
   }
 
   // ******************************************
@@ -336,7 +336,11 @@ public class Enemy
           }
           else  //35% of walking to attack 
           {
-            mode = 3;
+            rand = (int)random(0,100);
+            if(rand < 40)
+              mode = 4;
+            else
+              mode = 3;
             timeInterval = random(0, 2);
           }
         }
