@@ -355,6 +355,7 @@ public class Enemy
       startTime = millis();
     }
 
+    isMoving = true;
     mode = 4;
 
 
@@ -685,29 +686,171 @@ public class Enemy
         else if( mode == 4) //Enemy moves behind player
         {
           //addX(2);
-          PVector vector1 = new PVector(playerXValue, playerYValue);  //PLayer Vector
+          PVector vector1 = new PVector(playerXValue, playerYValue);  //Player Vector
           PVector vector2 = new PVector(x,y);  //Enemy Vector
           PVector vector3;
           
           //float distance = sqrt(abs(playerX - ))
-          print("Player: " + playerXValue + ", " + playerYValue);
-          print("\nVector1 : "+ vector1.x + ", "+ vector1.y + "\n");
-          print("Vector2: "+ vector2.x + ", "+ vector2.y + "\n");
-          //print(PVector.lerp(vector1, vector2, .2) + "\n");
-          print(vector2.dist(vector1) + "\n");
+          //print("Player: " + playerXValue + ", " + playerYValue);
+          //print("\nVector1 : "+ vector1.x + ", "+ vector1.y + "\n");
+          //print("Vector2: "+ vector2.x + ", "+ vector2.y + "\n");
+          ////print(PVector.lerp(vector1, vector2, .2) + "\n");
+          //print(vector2.dist(vector1) + "\n");
           
+          if(p.getFacingLeft())  //Player facing left
+          {
+            if (currentEnemyPositionX() < playerX)  //Enemy to the left of the player
+            {
+                left = false;
+                lastLeft = false;
+                right = true;
+              if(vector1.dist(vector2) < 380 && (y <= playerYValue + 48 && y >= playerYValue - 48 ))  //Enemy will move away if within a 300 radius of the player
+              {
+                addX(-16);
+                if (y < playerYValue)
+                {
+                  //Need to check if there are boundaries above/below it
+                  addY(-12);
+                }
+                else
+                { 
+                  //Need to check if there are boundaries above/below it
+                  addY(12);
+                }
+              }
+              else  //Enemy will try to navigate while avoiding being within the 300 radius
+              {
+                 float dist = vector1.dist(new PVector(x + 16, y));
+                 if (y < playerYValue)
+                 {
+                  if (dist >= 24)
+                  {
+                    addX(16);
+                    //addY(-4);
+                  }
+                  else
+                  {
+                    addY(-4);
+                  }
+                 }
+                 else
+                 {
+                  if (dist >= 24)
+                  {
+                    addX(16);
+                    //addY(4);
+                  }
+                  else
+                  {
+                    addY(4);
+                  }
+                 }
+              }
+            }
+            else  //Enemy to the right of the player while player is facing left
+            {
+              left = true;
+              lastLeft = true;
+              right = false;
+              if (playerX + 250 >= currentEnemyPositionX() 
+              &&  playerY - 24 <= currentEnemyPositionY() 
+              &&  playerY + 24 >= currentEnemyPositionY())  //Enemy in position to hit or get hit
+              {
+                y = playerYValue + 12;
+                
+                if (abs(playerX - currentEnemyPositionX()) <= 200)
+                {
+                  addX(16);
+                }
+                else
+                {
+                  isAttacking = true;
+                  isMoving = false;
+                }
+              }
+              else 
+              {
+                if (playerX + 250 <= currentEnemyPositionX())
+                {
+                  if(playerY - 24 > currentEnemyPositionY())
+                    addY(8);
+                  else if (playerY + 24 <= currentEnemyPositionY())
+                    addY(-8);
+                  //addX(-16);
+                }
+                else if (playerX + 250 > currentEnemyPositionX())
+                {
+                   addX(16);
+                   
+                  if(playerY - 24 > currentEnemyPositionY())
+                  {
+                    
+                  }
+                  else if (playerY + 24 < currentEnemyPositionY())
+                  {
+                    
+                  }
+                }
+              } 
+            }
+          }
+          else  //Player facing right
+          {
+            if (currentEnemyPositionX() < playerX)  //Enemy to the left of the player
+            {
+
+            }
+            else  //Enemy to the right of the player
+            {
+              left = true;
+              lastLeft = true;
+              right = false;
+              
+              if(vector1.dist(vector2) < 302 && (y <= playerYValue + 24 && y >= playerYValue - 24 ))  //Enemy will move away if within a 300 radius of the player
+              {
+               // print(vector1.dist(vector2)+"\n");
+                addX(16);
+                if (y < playerYValue)
+                {
+                  addY(-8);
+                }
+                else
+                {
+                  addY(8);
+                }
+              }
+              else  //Enemy will try to navigate while avoiding being within the 300 radius
+              {
+                float dist = vector1.dist(new PVector(x - 16, y - 4));
+                
+                if (y < playerYValue)
+                {
+                  if (dist >= 25)
+                  {
+                    addX(-16);
+                    //addY(-4);
+                  }
+                }
+                else
+                {
+                  if (dist >= 25)
+                  {
+                    addX(-16);
+                    //addY(4);
+                  }
+                }
+              }
+            }
+          }
           //locX = x;
-          locX = (int)abs(playerXValue - (302 * (playerXValue - x)) / vector2.dist(vector1));  //https://math.stackexchange.com/questions/175896/finding-a-point-along-a-line-a-certain-distance-away-from-another-point
-          locY = (int)abs(playerYValue - (302 * (playerYValue - y)) / vector2.dist(vector1));
-          vector3 = new PVector(locX, locY);
+          //locX = (int)abs(playerXValue - (302 * (playerXValue - x)) / vector2.dist(vector1));  //https://math.stackexchange.com/questions/175896/finding-a-point-along-a-line-a-certain-distance-away-from-another-point
+          //locY = (int)abs(playerYValue - (302 * (playerYValue - y)) / vector2.dist(vector1));
+          //vector3 = new PVector(locX, locY);
           
-          print("Location X: " + locX + ", Location Y: " + locY + "\nDistance Between Player and new Loc: " + vector3.dist(vector1) + "\n\n");
-          x = locX;
-          y = locY;
-          //if (y >350)
-          //  y = 350;
-          //if (y < 45)
-          //  y = 45; 
+          //print("Location X: " + locX + ", Location Y: " + locY + "\nDistance Between Player and new Loc: " + vector3.dist(vector1) + "\n\n");
+          //x = locX;
+          //y = locY;
+         
         }
       } 
       else if (isAttacking)
