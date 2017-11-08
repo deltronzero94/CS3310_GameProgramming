@@ -218,18 +218,13 @@ public class Enemy
       }
       else  //If enemy is outside hit range 
       {
-        if (mode != 4 && mode != 2)  //If Enemy isn't moving around
+        if (mode != 4 && mode != 2 && !isAttacking)  //If Enemy isn't moving around or attacking
         {
-          //mode = 4;
-          //Random Chance to Make Enemy Go Behind Player
-          //  1st: Make sure they aren't close to the player
-          //  2nd: 
-          
           int rand = (int)random(0,100);
           
-          if (rand < 40)
+          if (rand < 30)
           {
-            //mode = 4;
+            mode = 4;
           }
         }
       }
@@ -239,7 +234,7 @@ public class Enemy
 
     if (timeInterval == -1 && !isHit)
     {
-      int rand = (int)random(0, 101);
+      int rand = (int)random(0, 10);
 
       if (rand <25) //25% chance (Attacking)
       {
@@ -268,7 +263,7 @@ public class Enemy
           isMoving = true;
           isAttacking = false;
           isIdle = false;
-          rand = (int) random (0,101);
+          rand = (int) random (0,100);
           
           if (rand < 5)  //5% for Fleeing/Running Away Mode
           {
@@ -306,7 +301,7 @@ public class Enemy
         isIdle = false;
         isAttacking = false;
         
-        rand = (int) random (0,101);
+        rand = (int) random (0,100);
         if (rand < 10)  //10% for Fleeing/Running Away Mode
         {
           mode = 2;
@@ -354,10 +349,6 @@ public class Enemy
       timeInterval = .4;  //Hit Stun Timer
       startTime = millis();
     }
-
-    //isMoving = true;
-    //mode = 4;
-
 
     if (timeElapsed() < timeInterval) //Action based on State Takes Place Here for Duration of Time
     {
@@ -688,7 +679,7 @@ public class Enemy
           //addX(2);
           PVector vector1 = new PVector(playerXValue, playerYValue);  //Player Vector
           PVector vector2 = new PVector(x,y);  //Enemy Vector
-          PVector vector3;
+          //PVector vector3;
           
           //float distance = sqrt(abs(playerX - ))
           //print("Player: " + playerXValue + ", " + playerYValue);
@@ -704,7 +695,7 @@ public class Enemy
                 left = false;
                 lastLeft = false;
                 right = true;
-              if(vector1.dist(vector2) < 380 && (y <= playerYValue + 48 && y >= playerYValue - 48 ))  //Enemy will move away if within a 300 radius of the player
+              if(vector1.dist(vector2) < 380 && (y <= playerYValue + 56 && y >= playerYValue - 56 ))  //Enemy will move away if within a 300 radius of the player
               {
                 addX(-16);
                 if (y < playerYValue)
@@ -730,7 +721,7 @@ public class Enemy
                   }
                   else
                   {
-                    addY(-4);
+                    addY(-8);
                   }
                  }
                  else
@@ -742,7 +733,7 @@ public class Enemy
                   }
                   else
                   {
-                    addY(4);
+                    addY(8);
                   }
                  }
               }
@@ -776,20 +767,12 @@ public class Enemy
                     addY(8);
                   else if (playerY + 24 <= currentEnemyPositionY())
                     addY(-8);
-                  //addX(-16);
+                  else
+                    addX(-16);
                 }
                 else if (playerX + 250 > currentEnemyPositionX())
                 {
                    addX(16);
-                   
-                  if(playerY - 24 > currentEnemyPositionY())
-                  {
-                    
-                  }
-                  else if (playerY + 24 < currentEnemyPositionY())
-                  {
-                    
-                  }
                 }
               } 
             }
@@ -798,7 +781,41 @@ public class Enemy
           {
             if (currentEnemyPositionX() < playerX)  //Enemy to the left of the player
             {
-
+              left = false;
+              lastLeft = false;
+              right = true;
+              if (playerX - 250 <= currentEnemyPositionX() 
+              &&  playerY - 24 <= currentEnemyPositionY() 
+              &&  playerY + 24 >= currentEnemyPositionY())  //Enemy in position to hit or get hit
+              {
+                y = playerYValue + 12;
+                
+                if (abs(playerX - currentEnemyPositionX()) <= 200)
+                {
+                  addX(-16);
+                }
+                else
+                {
+                  isAttacking = true;
+                  isMoving = false;
+                }
+              }
+              else 
+              {
+                if (playerX - 250 > currentEnemyPositionX())
+                {
+                  if(playerY - 24 > currentEnemyPositionY())
+                    addY(8);
+                  else if (playerY + 24 <= currentEnemyPositionY())
+                    addY(-8);
+                  else
+                    addX(16);
+                }
+                else if (playerX - 250 <= currentEnemyPositionX())
+                {
+                   addX(-16);
+                }
+              } 
             }
             else  //Enemy to the right of the player
             {
@@ -806,29 +823,32 @@ public class Enemy
               lastLeft = true;
               right = false;
               
-              if(vector1.dist(vector2) < 302 && (y <= playerYValue + 24 && y >= playerYValue - 24 ))  //Enemy will move away if within a 300 radius of the player
+              if(vector1.dist(vector2) < 380 && (y <= playerYValue + 56 && y >= playerYValue - 56 ))  //Enemy will move away if within a 300 radius of the player
               {
                // print(vector1.dist(vector2)+"\n");
                 addX(16);
                 if (y < playerYValue)
                 {
-                  addY(-8);
+                  addY(-12);
                 }
                 else
                 {
-                  addY(8);
+                  addY(12);
                 }
               }
               else  //Enemy will try to navigate while avoiding being within the 300 radius
               {
-                float dist = vector1.dist(new PVector(x - 16, y - 4));
+                float dist = vector1.dist(new PVector(x - 16, y));
                 
                 if (y < playerYValue)
                 {
                   if (dist >= 25)
                   {
                     addX(-16);
-                    //addY(-4);
+                  }
+                  else
+                  {
+                    addY(-8);
                   }
                 }
                 else
@@ -836,7 +856,10 @@ public class Enemy
                   if (dist >= 25)
                   {
                     addX(-16);
-                    //addY(4);
+                  }
+                  else
+                  {
+                    addY(8);
                   }
                 }
               }
