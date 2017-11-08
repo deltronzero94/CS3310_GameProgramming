@@ -17,14 +17,14 @@ public class TiledMap
   public TiledMap(PApplet applet)
   {
     this.applet = applet;
-    sx = 300;
-    sy = 170;
+    sx = 1000;  //sx = 300
+    sy = 550;  //sy = 170
     leftSideBorder = 50.0;
-    rightSideBorder = 1650.0;
+    rightSideBorder = 1660.0;  //1650
     player = new Player();
-    enemy = new Enemy[]{new Enemy(200, 100, 1), new Enemy(500,150,1), new Enemy(1000,200,1), new Enemy(1000,250,1), new Enemy(800, 175)};
+    enemy = new Enemy[]{new Enemy(200, -700, 1), new Enemy(500,-700,1), new Enemy(1000,-700,1), new Enemy(1000,-700,1), new Enemy(800, -700)};
     //enemy = new Enemy[]{new Enemy(800,250,1)};
-    map = new Ptmx(applet,"sor2_1v3.tmx");
+    map = new Ptmx(applet,"sor2_1v4.tmx");
     map.setDrawMode(CENTER);
     map.setPositionMode("CANVAS");//Default Position Mode
     q = new PriorityQueue<Image>(enemy.length, new Comparator<Image>() {
@@ -43,40 +43,45 @@ public class TiledMap
     
     float px = player.getPX();
     int x = player.getX();
-    int topBorder;
+    //int topBorder;
     PImage sprite;
     
-    //Prevents player from moving beyond top boundary/walls
-    PVector overTile = map.canvasToMap(player.currentPlayerPositionX(), player.currentPlayerPositionY());
-    topBorder = map.getTileIndex(0, round(overTile.x), round(overTile.y));
+    ////Prevents player from moving beyond top boundary/walls
+    //PVector overTile = map.canvasToMap(player.currentPlayerPositionX(), player.currentPlayerPositionY());
+    //topBorder = map.getTileIndex(0, round(overTile.x), round(overTile.y));
    
-    if(topBorder == -1 || (topBorder>10000 && topBorder < 16000 ))
+    print(player.getY() +  "\n");
+    if (player.getY() <= -1020)
     {
-      player.setY(45);
+      player.setY(-1020);
     }
+    //if(topBorder == -1 || (topBorder>10000 && topBorder < 16000 ))
+    //{
+    //  player.setY(-1020);
+    //}
     
-    if  (rightSideBorder < 1656.6) //If screen hasn't reached the end of the map
+    if  (rightSideBorder < 1681.0) //If screen hasn't reached the end of the map
     {
       //If player movement is greater than left screen boundary
       if (player.currentPlayerPositionX() >leftSideBorder)
       { 
-        if ( width/4 + x + px/3  > sx + px + width/4 + 100) //When Crossing midway point
+        if ( width/4 + x + px/3  > px/3 + sx+ width/4 ) //When Crossing midway point
         {
-          leftSideBorder+= 0.01;
-          rightSideBorder+=0.01;
-          sx+= 2;
-          player.addPX(6);
+          leftSideBorder+= 0.04;
+          rightSideBorder+=0.04;
+          sx+= 4;
+          player.addPX(4);
           
           if ( enemy != null)
           {
             for (int num = 0; num < enemy.length; num++)
-               enemy[num].addPX(6);
+               enemy[num].addPX(4);
           }
              
           sprite = player.getCurrentSprite();
           map.draw(applet.g, sx , sy);
           
-          if (player.currentPlayerPositionX() >rightSideBorder) //If player goes beyond right boundary screen
+          if (player.currentPlayerPositionX() >  rightSideBorder + 190) //If player goes beyond right boundary screen
           {
             player.addX(-14);
           }
@@ -105,12 +110,13 @@ public class TiledMap
     }
     else
     {
-      if ( width/4 + x + px/3  > sx + px + width/4) //When Crossing midway point
+      if ( width/4 + x + px/3  >  px/3 + sx+ width/4) //When Crossing midway point
         {
           sprite = player.getCurrentSprite();
           map.draw(applet.g, sx , sy);
           
-          if (player.currentPlayerPositionX() >rightSideBorder) //If player goes beyond right boundary screen
+          print(player.currentPlayerPositionX() + "\nRightSideBorder: " +rightSideBorder + "\n");
+          if (player.currentPlayerPositionX() > rightSideBorder + 190) //If player goes beyond right boundary screen
           {
             player.addX(-14);
           }
@@ -131,11 +137,6 @@ public class TiledMap
           }
         }
       }
-      //print("Player X: "+ player.getX() + "\nPosition X: " + player.currentPlayerPositionX() + "\n");
-      
-      //stroke(255);
-      //rect(player.currentPlayerPositionX(),player.currentPlayerPositionY() - 120, 220, 50); //Punch 1 HitBox
-      //rect(player.currentPlayerPositionX() + 60,player.currentPlayerPositionY() - 120, 200, 50); //Punch 2 HitBox
       
       //Checks the depth images and then draws them based on height priority queue 
       if (enemy != null)
@@ -162,9 +163,6 @@ public class TiledMap
       {
         image(sprite, player.currentPlayerPositionX(),player.currentPlayerPositionY());
       }
-      
-       //fill(200,0,200);
-       //rect(player.currentPlayerPositionX() - 60,player.currentPlayerPositionY() - 150, 130, 300); //Player Hitbox
     }
   
   //Setters

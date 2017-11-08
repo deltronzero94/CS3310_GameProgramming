@@ -285,7 +285,7 @@ public class Enemy
             mode = 1;
             timeInterval = random(0, 3);
             
-            locX = playerXValue+ (int)random(-1000,1000);
+            locX = playerXValue + (int)random(-1000,1000);
             locY = playerYValue + (int)random(-250,250);
             if (locY > 350)
               locY = 350;
@@ -355,8 +355,8 @@ public class Enemy
       startTime = millis();
     }
 
-    isMoving = true;
-    mode = 4;
+    //isMoving = true;
+    //mode = 4;
 
 
     if (timeElapsed() < timeInterval) //Action based on State Takes Place Here for Duration of Time

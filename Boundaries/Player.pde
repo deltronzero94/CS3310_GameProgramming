@@ -22,7 +22,7 @@ public class Player
   public Player()
   {
     x = 100;
-    y = 100;
+    y = -700;
     isIdle = true;
     isAttacking = false;
     isMoving = false;

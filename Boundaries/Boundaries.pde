@@ -4,8 +4,8 @@ boolean isTitleScreen, isGameScreen, isCreditScreen, isGamePause;
 
 void setup()
 {
-  //fullScreen();
-  size(600,340);
+  fullScreen();
+  //size(600,340);
  
  //Probably Needs to changed (NEED 1 SINGLE VARIABLE RATHER THAN 4) -------
   isTitleScreen = false;
@@ -23,7 +23,7 @@ void setup()
 
 void draw()  
 {  
-  scale(.35);
+  //scale(.35);
   //background(map.getMap().getBackgroundColor());
   //fill(128);
   //print(frameRate + "\n");
