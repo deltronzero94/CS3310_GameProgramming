@@ -133,6 +133,34 @@ public class Enemy
       image(sprite, currentEnemyPositionX(), currentEnemyPositionY());
     }
   }
+  
+  public void checkDistanceBetweenEnemy(Enemy e)
+  {
+    if(e.isAttacking && !this.isAttacking && mode != 1)  //If other enemy is attacking and this enemy isn't
+    {
+      //isMoving = true;
+      //mode = 4;
+      //isMoving = false;
+      //isIdle = true;
+      //isAttacking = false;
+      
+      //timeInterval = (int)random(1,3);
+      
+      PVector vector1 = new PVector(x, y);  //Enemy  1 Vector
+      PVector vector2 = new PVector(e.getX(), e.getY());  //Enemy 2 Vector
+      
+      if(vector1.dist(vector2) <= 300)
+      {
+        mode = 1;
+        isMoving = true;
+        isIdle = false;
+        isAttacking = false;
+        
+        locX = (int)abs(e.getLocX() - (300 * (e.getX() - locX)) / vector2.dist(vector1));  //https://math.stackexchange.com/questions/175896/finding-a-point-along-a-line-a-certain-distance-away-from-another-point
+        locY = (int)abs(e.getLocY() - (300 * (e.getY() - locY)) / vector2.dist(vector1));
+      }
+    }
+  }
 
   public PImage getCurrentSprite()
   {
@@ -164,6 +192,26 @@ public class Enemy
   public void addY(int y)
   {
     this.y += y;
+  }
+  
+  public int getX()
+  {
+    return this.x;
+  }
+  
+  public int getY()
+  {
+    return this.y;
+  }
+  
+  public int getLocX()
+  {
+    return this.locX;
+  }
+  
+    public int getLocY()
+  {
+    return this.locY;
   }
 
   // ******************************************
@@ -222,7 +270,7 @@ public class Enemy
         {
           int rand = (int)random(0,100);
           
-          if (rand < 30)
+          if (rand < 45)
           {
             mode = 4;
           }
@@ -231,10 +279,9 @@ public class Enemy
     }
 
 
-
     if (timeInterval == -1 && !isHit)
     {
-      int rand = (int)random(0, 10);
+      int rand = (int)random(0, 100);
 
       if (rand <25) //25% chance (Attacking)
       {
@@ -290,12 +337,12 @@ public class Enemy
           else  //35% of walking to attack 
           {
             mode = 3;
-            timeInterval = random(0, 1);
+            timeInterval = random(0, 2);
           }
         }
         //currentState = 3;
       } 
-      else if (rand >=25 && rand <55) //%30 chance (Moving)
+      else if (rand >=25 && rand <65) //%40 chance (Moving)
       {
         isMoving = true;
         isIdle = false;
@@ -326,11 +373,15 @@ public class Enemy
         }
         else  //15% of walking to attack 
         {
-          mode = 3;
+          rand = (int)random(0,2);
+          if(rand == 1)
+            mode = 4;
+          else
+            mode = 3;
           timeInterval = random(0, 2);
         }
       } 
-      else  //45% chance (Idle)
+      else  //35% chance (Idle)
       {
         isMoving = false;
         isIdle = true;
@@ -349,6 +400,9 @@ public class Enemy
       timeInterval = .4;  //Hit Stun Timer
       startTime = millis();
     }
+    //print("IsMoving: " +isMoving + " , IsAttacking: " + isAttacking + ", IsIdle: " + isIdle +"\n");
+    //print("X: " + x + ", Y: " + y + " | LocX: " + locX + ", LocY: " +locY + "\n");
+    //print("Mode: " + mode + "\nTime Interval: " +timeInterval + "\n**************************\n\n");
 
     if (timeElapsed() < timeInterval) //Action based on State Takes Place Here for Duration of Time
     {
@@ -412,7 +466,6 @@ public class Enemy
             isIdle = true;
             isMoving = false;
             
-            //y = playerYValue + 8;
             if(playerX <= currentEnemyPositionX())
             {
               left = true;
@@ -514,6 +567,7 @@ public class Enemy
             else if ( i == 2)  //Move up
             {
               addY(8);
+              
             }
             else  //Move down
             {
@@ -599,9 +653,7 @@ public class Enemy
             y = -1020;
         }
         else if(mode == 3) //Moving towards player and then fight
-        {
-          //print("ABSOLUTE: "+ (abs(playerX - currentEnemyPositionX()) <= 200) + "\n");
-          
+        { 
           if (playerX - 250 <= currentEnemyPositionX() && playerX + 250 >=currentEnemyPositionX())
           {
             
@@ -679,14 +731,6 @@ public class Enemy
           //addX(2);
           PVector vector1 = new PVector(playerXValue, playerYValue);  //Player Vector
           PVector vector2 = new PVector(x,y);  //Enemy Vector
-          //PVector vector3;
-          
-          //float distance = sqrt(abs(playerX - ))
-          //print("Player: " + playerXValue + ", " + playerYValue);
-          //print("\nVector1 : "+ vector1.x + ", "+ vector1.y + "\n");
-          //print("Vector2: "+ vector2.x + ", "+ vector2.y + "\n");
-          ////print(PVector.lerp(vector1, vector2, .2) + "\n");
-          //print(vector2.dist(vector1) + "\n");
           
           if(p.getFacingLeft())  //Player facing left
           {
@@ -865,15 +909,6 @@ public class Enemy
               }
             }
           }
-          //locX = x;
-          //locX = (int)abs(playerXValue - (302 * (playerXValue - x)) / vector2.dist(vector1));  //https://math.stackexchange.com/questions/175896/finding-a-point-along-a-line-a-certain-distance-away-from-another-point
-          //locY = (int)abs(playerYValue - (302 * (playerYValue - y)) / vector2.dist(vector1));
-          //vector3 = new PVector(locX, locY);
-          
-          //print("Location X: " + locX + ", Location Y: " + locY + "\nDistance Between Player and new Loc: " + vector3.dist(vector1) + "\n\n");
-          //x = locX;
-          //y = locY;
-         
         }
       } 
       else if (isAttacking)
@@ -885,9 +920,6 @@ public class Enemy
           isAttacking = false;
           mode = 1;
         }
-        
-        //if(currentAttack < 0 || currentAttack >= 3)  //Reset Attack
-        //  currentAttack = 0; 
         if (type == 1)
         {
           int rand = (int)random(0,101);
@@ -913,7 +945,9 @@ public class Enemy
           else if(currentAttack == 0)  //If 1st Attack
           {
             if(rand < 10) //10% chance starting off attack with a strong attack
+            {
               currentAttack = 2;    
+            }
           }
           else if (currentAttack == 1)
           {
@@ -977,10 +1011,20 @@ public class Enemy
         isAttacking = false;
         isMoving = false;
       }
-      ///activeFrame = -1;
+      locX = x;  //TESTING
+      locY = y;  //TESTING 
       timeInterval = -1;
-      mode = -1;
     }
+    
+    if (locY > -580)
+      locY = -580;
+    if (locY < -1020)
+      locY =  -1020;
+      
+    if(y > -580)
+      y = -580;
+    if (y < -1020)
+      y =  -1020;
   }
 
   private float timeElapsed()
