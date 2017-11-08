@@ -50,7 +50,6 @@ public class TiledMap
     //PVector overTile = map.canvasToMap(player.currentPlayerPositionX(), player.currentPlayerPositionY());
     //topBorder = map.getTileIndex(0, round(overTile.x), round(overTile.y));
    
-    print(player.getY() +  "\n");
     if (player.getY() <= -1020)
     {
       player.setY(-1020);
@@ -115,7 +114,6 @@ public class TiledMap
           sprite = player.getCurrentSprite();
           map.draw(applet.g, sx , sy);
           
-          print(player.currentPlayerPositionX() + "\nRightSideBorder: " +rightSideBorder + "\n");
           if (player.currentPlayerPositionX() > rightSideBorder + 190) //If player goes beyond right boundary screen
           {
             player.addX(-14);

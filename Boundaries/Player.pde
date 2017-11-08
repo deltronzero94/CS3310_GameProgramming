@@ -123,7 +123,7 @@ public class Player
       if (down)
       {
         y += 8;
-        if (y > 350) y = 350; //Prevent player from going too far bottom
+        if (y > -580) y = -580; //Prevent player from going too far bottom
       }
     }
   }

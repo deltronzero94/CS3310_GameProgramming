@@ -287,10 +287,10 @@ public class Enemy
             
             locX = playerXValue + (int)random(-1000,1000);
             locY = playerYValue + (int)random(-250,250);
-            if (locY > 350)
-              locY = 350;
-            if (locY < 45)
-              locY = 45;
+            if (locY > -580)
+              locY = -580;
+            if (locY < -1020)
+              locY = -1020;
           }
           else  //35% of walking to attack 
           {
@@ -324,10 +324,10 @@ public class Enemy
           
           locX = playerXValue+ (int)random(-500,500);
           locY = playerYValue + (int)random(-250,250);
-          if (locY > 350)
-            locY = 350;
-          if (locY < 45)
-            locY = 45;
+          if (locY > -580)
+            locY = -580;
+          if (locY < -1020)
+            locY =  -1020;
         }
         else  //15% of walking to attack 
         {
@@ -602,10 +602,10 @@ public class Enemy
             }
           }
           
-          if (y > 350)
-            y = 350;
-          if (y < 45)
-            y = 45;
+          if (y > -580)
+            y = -580;
+          if (y < -1020)
+            y = -1020;
         }
         else if(mode == 3) //Moving towards player and then fight
         {
