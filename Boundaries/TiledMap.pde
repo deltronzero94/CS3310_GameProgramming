@@ -151,11 +151,12 @@ public class TiledMap
            if (num != enemy.length)
            {
              //player.checkHit(enemy[num]);
-             for(int count = 0; count < enemy.length; count++)
+             for(int count = 0; count < enemy.length; count++) 
              {
-               enemy[num].checkDistanceBetweenEnemy(enemy[count]);
+               enemy[num].checkDistanceBetweenEnemy(enemy[count]);  //Helps stop enemies from stacking when fighting player
              }
              enemy[num].drawEnemy(player); //Draw Enemy
+             player.checkIfPlayerWasHit(enemy[num]);
            }
            else
              image(sprite, player.currentPlayerPositionX(),player.currentPlayerPositionY()); //Draw Player

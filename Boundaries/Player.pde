@@ -2,7 +2,7 @@ public class Player
 {
   //Declared Variable Members
   private PImage player; //Player avatar
-  private boolean isIdle, isAttacking, isMoving; //Keeps of current state of the player
+  private boolean isIdle, isAttacking, isMoving, isHit; //Keeps of current state of the player
   private boolean lastLeft; //Keeps track of last key released (true if last key released was left )
   private boolean left, right, up, down; //Track currentMovement
   private int x, y; //Player Movement for X and Y plane
@@ -17,39 +17,93 @@ public class Player
   private String filename;
   private int currentFrame;
   private boolean facingLeft;
+  private float timeInterval;
+  private float startTime;
+  private int health;
 
   //Default Constructor
   public Player()
   {
     x = 100;
     y = -700;
+    health = 1000;
     isIdle = true;
     isAttacking = false;
     isMoving = false;
     lastLeft = false;
+    isHit = false;
     px = width;
     py = height * 1.35; 
     activeFrame = -1;
     currentFrame = -1;
+    timeInterval = -1;
   }
 
   public Player(int x, int y)
   {
     this.x = x;
     this.y = y;
+    health = 1000;
     isIdle = true;
     isAttacking = false;
     isMoving = false;
     lastLeft = false;
+    isHit = false;
     px = width;
     py = height*1.35; 
     activeFrame = -1;
     currentFrame = -1;
+    timeInterval = -1;
   }
 
   //****************************
   //Public Methods/Functions
   //****************************
+  public void checkIfPlayerWasHit(Enemy e)
+  {
+    int enemyAttack = e.getCurrentAttack();
+    ///print(health + "\n");
+    
+    if (e.getIsAttacking() && timeInterval == -1)
+    {  
+      //if (abs(currentPlayerPositionY()-e.currentEnemyPositionY() + 25) <= 35 && abs(currentPlayerPositionX() - e.currentEnemyPositionX()) <= 350.0) //If Player is within Range
+      if (currentPlayerPositionY() + 24 >= e.currentEnemyPositionY() && currentPlayerPositionY() - 24 <= e.currentEnemyPositionY())
+      {
+        if (e.getCurrentAttack()==3-1 || e.getCurrentFrame() == 4)
+        {
+          isHit = true;
+          health -=10;
+          print("current attack is 2\n");
+        }
+        if(e.getCurrentFrame() == 1)
+        {
+          isHit = true;
+          health -=10;
+        }
+      }
+    }
+    
+    if (timeInterval == -1 && isHit) //Enemy Hit
+    {
+      isIdle = false;
+      isMoving = false;
+      isAttacking = false;
+
+      timeInterval = .4;  //Hit Stun Timer
+      startTime = millis();
+    }
+    else if (isHit && (millis() - startTime)/1000 >= timeInterval)
+    {
+      isIdle = true;
+      isHit = false;
+      isMoving = false;
+      isAttacking = false;
+      timeInterval = -1;
+    }
+    
+    //print(isHit + "\n");
+  }
+  
   public void isPlayerIdle()
   {    
     if (player == null) //initialize image if there is no image
@@ -59,18 +113,25 @@ public class Player
 
     if (!isAttackFrameActive()) //If player is not attacking
     {
-      if (isIdle && !isAttacking) //Player is Idle
-      {    
-        drawPlayerIdle();
-      } else if (isMoving && !isAttacking && checkMovement()) //Player is Moving
+      if (!isHit)
       {
-        drawPlayerMoving();
-      } else if (isAttacking) //Player is Attacking
-      {
-        drawPlayerAttacking();
+        if (isIdle && !isAttacking) //Player is Idle
+        {    
+          drawPlayerIdle();
+        } else if (isMoving && !isAttacking && checkMovement()) //Player is Moving
+        {
+          drawPlayerMoving();
+        } else if (isAttacking) //Player is Attacking
+        {
+          drawPlayerAttacking();
+        }
+        
+        playerMovement();
       }
-
-      playerMovement();
+      else
+      {
+        drawPlayerHit();
+      }
     }
   }
 
@@ -106,7 +167,7 @@ public class Player
 
   public void playerMovement()
   {
-    if (isMoving && !isAttackFrameActive())
+    if (isMoving && !isAttackFrameActive() && !isHit)
     {
       if (left)
       {
@@ -201,12 +262,14 @@ public class Player
 
   public void setY(int y)
   {
-    this.y = y;
+    if(!isHit)
+      this.y = y;
   }
 
   public void setX(int x)
   {
-    this.x = x;
+    if(!isHit)
+      this.x = x;
   }
 
 
@@ -287,6 +350,11 @@ public class Player
   {
     return this.facingLeft;
   }
+  
+  public boolean getIsPlayerHit()
+  {
+    return this.isHit;
+  }
 
   //********************
   //Private Methods
@@ -324,6 +392,28 @@ public class Player
     } else
     {
       return false;
+    }
+  }
+  
+  private void drawPlayerHit()
+  {
+    if ((lastLeft || facingLeft) && !right && filename != "PlayerHit.png" )
+    {
+      facingLeft = true;
+      filename = "PlayerHit.png";
+      player = loadImage(filename);
+      dim = 1;
+      w = player.width/dim;
+      h = player.height;
+    } 
+    else if (facingLeft == false && filename != "PlayerHit_right.png")
+    {
+      facingLeft = false;
+      filename = "PlayerHit_right.png";
+      player = loadImage(filename);
+      dim = 1;
+      w = player.width/dim;
+      h = player.height;
     }
   }
 
@@ -399,6 +489,7 @@ public class Player
 
       if (!lastLeft && !left || right) //Attacking right
       {        
+        facingLeft = false;
         if (currentAttack == 0 ) //Punch 1 
         {
           activeFrame = frameCount;
@@ -443,6 +534,7 @@ public class Player
         }
       } else //Attacking left
       {
+        facingLeft = true;
         if (currentAttack == 0 ) //Punch 1 
         {
           activeFrame = frameCount;

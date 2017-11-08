@@ -134,6 +134,11 @@ public class Enemy
     }
   }
   
+  public int getCurrentFrame()
+  {
+    return this.currentFrame;
+  }
+  
   public void checkDistanceBetweenEnemy(Enemy e)
   {
     if((e.isAttacking || e.getMode() == 3) && !this.isAttacking && (mode != 1 || mode != 3)) //If other enemy is attacking and this enemy isn't
@@ -213,6 +218,19 @@ public class Enemy
   {
     return this.mode;
   }
+  public boolean getIsAttacking()
+  {
+    return this.isAttacking;
+  }
+  
+  public int getCurrentAttack()
+  {
+    return this.currentAttack;
+  }
+  public int getEnemyType()
+  {
+    return this.type;
+  }
 
   // ******************************************
   // Private Methods
@@ -230,7 +248,7 @@ public class Enemy
     int playerXValue = p.getX();
     int playerAttack = p.getCurrentAttack();
 
-    if (p.getIsAttacking())
+    if (p.getIsAttacking() && !p.getIsPlayerHit())
     {
       if (abs(playerY-currentEnemyPositionY()+25) <= 30 && abs(playerX - currentEnemyPositionX()) <= 300.0) //If Player is within Range
       {
@@ -927,7 +945,7 @@ public class Enemy
         if (type == 1)
         {
           int rand = (int)random(0,101);
-          
+          currentAttack = 2; 
           if (currentAttack == 3)
           {
             if (!isAttackFrameActive())
@@ -1219,8 +1237,7 @@ public class Enemy
               w = enemy.width/dim;
               h = enemy.height;
             }
-          }
-          
+          }    
       }
     }
   }
