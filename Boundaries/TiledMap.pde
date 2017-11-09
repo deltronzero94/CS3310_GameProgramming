@@ -22,8 +22,8 @@ public class TiledMap
     leftSideBorder = 50.0;
     rightSideBorder = 1660.0;  //1650
     player = new Player();
-    enemy = new Enemy[]{new Enemy(200, -700, 1), new Enemy(500,-700,1), new Enemy(1000,-700,1), new Enemy(1000,-700,1), new Enemy(800, -700)};
-    //enemy = new Enemy[]{new Enemy(800,-700,1)};
+    //enemy = new Enemy[]{new Enemy(200, -700, 1), new Enemy(500,-700,1), new Enemy(1000,-700,1), new Enemy(1000,-700,1), new Enemy(800, -700)};
+    enemy = new Enemy[]{new Enemy(800,-700,1)};
     map = new Ptmx(applet,"sor2_1v4.tmx");
     map.setDrawMode(CENTER);
     map.setPositionMode("CANVAS");//Default Position Mode
@@ -43,21 +43,12 @@ public class TiledMap
     
     float px = player.getPX();
     int x = player.getX();
-    //int topBorder;
     PImage sprite;
-    
-    ////Prevents player from moving beyond top boundary/walls
-    //PVector overTile = map.canvasToMap(player.currentPlayerPositionX(), player.currentPlayerPositionY());
-    //topBorder = map.getTileIndex(0, round(overTile.x), round(overTile.y));
    
     if (player.getY() <= -1020)
     {
       player.setY(-1020);
     }
-    //if(topBorder == -1 || (topBorder>10000 && topBorder < 16000 ))
-    //{
-    //  player.setY(-1020);
-    //}
     
     if  (rightSideBorder < 1681.0) //If screen hasn't reached the end of the map
     {

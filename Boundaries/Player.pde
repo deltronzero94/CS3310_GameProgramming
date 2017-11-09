@@ -26,7 +26,7 @@ public class Player
   {
     x = 100;
     y = -700;
-    health = 1000;
+    health = 300;
     isIdle = true;
     isAttacking = false;
     isMoving = false;
@@ -43,7 +43,7 @@ public class Player
   {
     this.x = x;
     this.y = y;
-    health = 1000;
+    health = 300;
     isIdle = true;
     isAttacking = false;
     isMoving = false;
@@ -62,23 +62,30 @@ public class Player
   public void checkIfPlayerWasHit(Enemy e)
   {
     int enemyAttack = e.getCurrentAttack();
-    ///print(health + "\n");
     
-    if (e.getIsAttacking() && timeInterval == -1)
+    if (e.getIsAttacking())
     {  
-      //if (abs(currentPlayerPositionY()-e.currentEnemyPositionY() + 25) <= 35 && abs(currentPlayerPositionX() - e.currentEnemyPositionX()) <= 350.0) //If Player is within Range
       if (currentPlayerPositionY() + 24 >= e.currentEnemyPositionY() && currentPlayerPositionY() - 24 <= e.currentEnemyPositionY())
       {
-        if (e.getCurrentAttack()==3-1 || e.getCurrentFrame() == 4)
+        if (e.getType() == 0)
         {
-          isHit = true;
-          health -=10;
-          print("current attack is 2\n");
+          if (e.getCurrentFrame() == 2)
+          {
+            isHit = true;
+            health -=10;
+          }
         }
-        if(e.getCurrentFrame() == 1)
+        else if (e.getType() == 1)
         {
-          isHit = true;
-          health -=10;
+          if (e.getCurrentFrame() == 2)
+          {
+            isHit = true;
+            if(enemyAttack != 3)
+              health -= 10;
+            else
+              health -= 50;  
+            //print(enemyAttack + ", "+ health + "\n");
+          }
         }
       }
     }
@@ -100,8 +107,6 @@ public class Player
       isAttacking = false;
       timeInterval = -1;
     }
-    
-    //print(isHit + "\n");
   }
   
   public void isPlayerIdle()
@@ -131,6 +136,7 @@ public class Player
       else
       {
         drawPlayerHit();
+        //print("Player is Getting Hit.....\n");
       }
     }
   }
