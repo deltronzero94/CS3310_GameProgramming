@@ -22,8 +22,8 @@ public class TiledMap
     leftSideBorder = 50.0;
     rightSideBorder = 1660.0;  //1650
     player = new Player();
-    //enemy = new Enemy[]{new Enemy(200, -700, 1), new Enemy(500,-700,1), new Enemy(1000,-700,1), new Enemy(1000,-700,1), new Enemy(800, -700)};
-    enemy = new Enemy[]{new Enemy(800,-700,1)};
+    enemy = new Enemy[]{new Enemy(200, -700, 1), new Enemy(500,-700,1), new Enemy(1000,-700,1), new Enemy(1000,-700,1), new Enemy(800, -700)};
+    //enemy = new Enemy[]{new Enemy(800,-700,1)};
     map = new Ptmx(applet,"sor2_1v4.tmx");
     map.setDrawMode(CENTER);
     map.setPositionMode("CANVAS");//Default Position Mode

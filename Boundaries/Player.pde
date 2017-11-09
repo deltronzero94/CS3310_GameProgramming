@@ -65,7 +65,30 @@ public class Player
     
     if (e.getIsAttacking())
     {  
-      if (currentPlayerPositionY() + 24 >= e.currentEnemyPositionY() && currentPlayerPositionY() - 24 <= e.currentEnemyPositionY())
+      if (!isMoving && currentPlayerPositionY() + 24 >= e.currentEnemyPositionY() && currentPlayerPositionY() - 24 <= e.currentEnemyPositionY())
+      {
+        if (e.getType() == 0)
+        {
+          if (e.getCurrentFrame() == 2)
+          {
+            isHit = true;
+            health -=10;
+          }
+        }
+        else if (e.getType() == 1)
+        {
+          if (e.getCurrentFrame() == 2)
+          {
+            isHit = true;
+            if(enemyAttack != 3)
+              health -= 10;
+            else
+              health -= 50;  
+            //print(enemyAttack + ", "+ health + "\n");
+          }
+        }
+      }
+      else if (isMoving)
       {
         if (e.getType() == 0)
         {

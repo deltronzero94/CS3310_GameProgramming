@@ -330,12 +330,12 @@ public class Enemy
           isIdle = false;
           rand = (int) random (0,100);
  
-          if (rand < 35)  //35% for Chasing Player
+          if (rand < 25)  //25% for Chasing Player
           {
             mode = 0;
             timeInterval = random(0, 3);
           }
-          else if (rand >=35 && rand < 55)  //20% Walking to random location
+          else if (rand >=25 && rand < 45)  //20% Walking to random location
           {
             mode = 1;
             timeInterval = random(0, 2);
@@ -347,7 +347,7 @@ public class Enemy
             if (locY < -1020)
               locY = -1020;
           }
-          else  //45% of walking to attack 
+          else  //55% of walking to attack 
           {
             rand = (int)random(0,100);
             if(rand < 30)
@@ -406,12 +406,12 @@ public class Enemy
         timeInterval = random(0, 2);
       }
 
-      if(isMoving)
-        print("Enemy is Moving...Current Mode: " + mode + "\n");
-      else if (isIdle)
-        print("Enemy is idle...\n");
-      else if (isAttacking)
-        print("Enemy is attacking...\n");
+      //if(isMoving)
+      //  print("Enemy is Moving...Current Mode: " + mode + "\n");
+      //else if (isIdle)
+      //  print("Enemy is idle...\n");
+      //else if (isAttacking)
+      //  print("Enemy is attacking...\n");
       startTime = millis();
     } 
     else if (timeInterval == -1 && isHit) //Enemy Hit
@@ -1170,8 +1170,8 @@ public class Enemy
               currentAttack++;
               activeFrame = frameCount;
               lastAttackTime = millis(); //Timer for delay
-              filename = "Enemy2_Punch2_right.png";  //Enemy 1
-              dim = 6;
+              filename = "Enemy2_Punch2_rightv2.png";  //Enemy 1
+              dim = 8;
               enemy = loadImage(filename);
               w = enemy.width/dim;
               h = enemy.height;
@@ -1227,8 +1227,8 @@ public class Enemy
               currentAttack++;
               activeFrame = frameCount;
               lastAttackTime = millis(); //Timer for delay
-              filename = "Enemy2_Punch2.png";  //Enemy 1
-              dim = 6;
+              filename = "Enemy2_Punch2v2.png";  //Enemy 1
+              dim = 8;
               enemy = loadImage(filename);
               w = enemy.width/dim;
               h = enemy.height;
