@@ -381,8 +381,8 @@ public class Enemy
           mode = 1;
           timeInterval = random(0, 2);
           
-          locX = playerXValue+ (int)random(-500,500);
-          locY = playerYValue + (int)random(-250,250);
+          locX = playerXValue+ (int)random(-400,400);
+          locY = playerYValue + (int)random(-200,200);
           if (locY > -580)
             locY = -580;
           if (locY < -1020)
@@ -407,7 +407,7 @@ public class Enemy
       }
 
       if(isMoving)
-        print("Current Mode: " + mode + "\n");
+        print("Enemy is Moving...Current Mode: " + mode + "\n");
       else if (isIdle)
         print("Enemy is idle...\n");
       else if (isAttacking)
@@ -444,7 +444,7 @@ public class Enemy
               lastLeft = false;
             }
       } 
-      else if (isMoving)  //Enemy Moving
+      else if (isMoving && !isHit)  //Enemy Moving
       {
         if (mode == 0) //Chasing Player
         {
@@ -486,8 +486,8 @@ public class Enemy
           if(playerX - 250 <= currentEnemyPositionX() && playerX + 250 >=currentEnemyPositionX() 
               &&  playerY - 24 <= currentEnemyPositionY() && playerY + 24 >= currentEnemyPositionY())
           {
-            isIdle = true;
-            isMoving = false;
+            //isIdle = true;
+            //isMoving = false;
             
             if(playerX <= currentEnemyPositionX())
             {
@@ -959,7 +959,7 @@ public class Enemy
               isAttacking = false;
               currentAttack = 0;
               
-              if(rand >   25)
+              if(rand >  25)
               {
                 isMoving = true;
                 mode = 1;
