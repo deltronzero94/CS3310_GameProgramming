@@ -97,15 +97,13 @@ public class Enemy
 
   public void drawEnemy(Player p)
   {
-    PImage sprite;
-
     if (enemy == null && health != 0) //Load image if image hasn't been loaded
       getEnemyType(type);
 
     if (health > 0 && enemy != null)
       decideAction(p);
 
-    if (!isAttackFrameActive() && health != 0 && enemy != null)
+    if (!isAttackFrameActive() && health > 0 && enemy != null)
     {
       if (!isHit)
       {
@@ -123,15 +121,15 @@ public class Enemy
       {
         drawEnemyHit();
       }
-    } else if (health == 0)
+    } else if (health <= 0)
       enemy = null;
     
-    //Draw Enemy
-    if (enemy != null)
-    {
-      sprite = getCurrentSprite();
-      image(sprite, currentEnemyPositionX(), currentEnemyPositionY());
-    }
+    ////Draw Enemy
+    //if (enemy != null)
+    //{
+    //  sprite = getCurrentSprite();
+    //  image(sprite, currentEnemyPositionX(), currentEnemyPositionY());
+    //}
   }
   
   public int getCurrentFrame()
@@ -164,10 +162,15 @@ public class Enemy
 
   public PImage getCurrentSprite()
   {
-     if (activeFrame == -1)
-      return enemy.get(currentFrameX(), 0, w, h);
+    if (enemy != null)
+    {
+      if (activeFrame == -1)
+        return enemy.get(currentFrameX(), 0, w, h);
+      else
+        return enemy.get(currentFrame % dim * w, 0, w, h);
+    }
     else
-      return enemy.get(currentFrame % dim * w, 0, w, h);
+      return null;
   }
 
   public float currentEnemyPositionX()
@@ -426,6 +429,7 @@ public class Enemy
     //print("IsMoving: " +isMoving + " , IsAttacking: " + isAttacking + ", IsIdle: " + isIdle +"\n");
     ////print("X: " + x + ", Y: " + y + " | LocX: " + locX + ", LocY: " +locY + "\n");
     //print("Mode: " + mode + "\nTime Interval: " +timeInterval + "\n**************************\n\n");
+
 
     if (timeElapsed() < timeInterval) //Action based on State Takes Place Here for Duration of Time
     {

@@ -2,7 +2,7 @@ public class Player
 {
   //Declared Variable Members
   private PImage player; //Player avatar
-  private boolean isIdle, isAttacking, isMoving, isHit; //Keeps of current state of the player
+  private boolean isIdle, isAttacking, isMoving, isHit, isKnocked; //Keeps of current state of the player
   private boolean lastLeft; //Keeps track of last key released (true if last key released was left )
   private boolean left, right, up, down; //Track currentMovement
   private int x, y; //Player Movement for X and Y plane
@@ -20,6 +20,7 @@ public class Player
   private float timeInterval;
   private float startTime;
   private int health;
+  private boolean isHitLeft;
 
   //Default Constructor
   public Player()
@@ -32,6 +33,7 @@ public class Player
     isMoving = false;
     lastLeft = false;
     isHit = false;
+    isKnocked = false;
     px = width;
     py = height * 1.35; 
     activeFrame = -1;
@@ -49,6 +51,7 @@ public class Player
     isMoving = false;
     lastLeft = false;
     isHit = false;
+    isKnocked = false;
     px = width;
     py = height*1.35; 
     activeFrame = -1;
@@ -63,8 +66,14 @@ public class Player
   {
     int enemyAttack = e.getCurrentAttack();
     
-    if (e.getIsAttacking())
+    
+    if (e.getIsAttacking() && !isKnocked)
     {  
+      if (e.currentEnemyPositionX() > currentPlayerPositionX())
+        isHitLeft = false;
+      else
+        isHitLeft = true;
+      
       if (!isMoving && currentPlayerPositionY() + 24 >= e.currentEnemyPositionY() && currentPlayerPositionY() - 24 <= e.currentEnemyPositionY())
       {
         if (e.getType() == 0)
@@ -83,7 +92,11 @@ public class Player
             if(enemyAttack != 3)
               health -= 10;
             else
-              health -= 50;  
+            {
+              //timeInterval = 1;
+              isKnocked = true;
+              health -= 30;  
+            }
             //print(enemyAttack + ", "+ health + "\n");
           }
         }
@@ -106,7 +119,11 @@ public class Player
             if(enemyAttack != 3)
               health -= 10;
             else
-              health -= 50;  
+            {
+              // timeInterval = 1;
+              isKnocked = true;
+              health -= 30;  
+            }
             //print(enemyAttack + ", "+ health + "\n");
           }
         }
@@ -118,16 +135,21 @@ public class Player
       isIdle = false;
       isMoving = false;
       isAttacking = false;
-
-      timeInterval = .4;  //Hit Stun Timer
+      isHit = true;
+      
+      if (isKnocked)
+        timeInterval = .8;
+      else
+        timeInterval = .4;  //Hit Stun Timer
       startTime = millis();
     }
-    else if (isHit && (millis() - startTime)/1000 >= timeInterval)
+    else if ((isHit || isKnocked) && (millis() - startTime)/1000 >= timeInterval && timeInterval != -1)
     {
       isIdle = true;
       isHit = false;
       isMoving = false;
       isAttacking = false;
+      isKnocked = false;
       timeInterval = -1;
     }
   }
@@ -143,7 +165,7 @@ public class Player
     {
       if (!isHit)
       {
-        if (isIdle && !isAttacking) //Player is Idle
+        if (isIdle && !isAttacking ) //Player is Idle
         {    
           drawPlayerIdle();
         } else if (isMoving && !isAttacking && checkMovement()) //Player is Moving
@@ -158,8 +180,13 @@ public class Player
       }
       else
       {
-        drawPlayerHit();
-        //print("Player is Getting Hit.....\n");
+        if (!isKnocked)
+          drawPlayerHit();
+        else
+        {
+          print("testing\n");
+          drawPlayerKnocked();
+        }
       }
     }
   }
@@ -188,7 +215,7 @@ public class Player
 
   public PImage getCurrentSprite()
   {
-    if (activeFrame == -1)
+    if (activeFrame == -1 && !isKnocked)
       return player.get(currentFrameX(), 0, w, h);
     else
       return player.get(currentFrame % dim * w, 0, w, h);
@@ -309,6 +336,11 @@ public class Player
   {
     return this.player;
   }
+  
+  public int getHealth()
+  {
+    return this.health;
+  }
 
   public int getDimension()
   {
@@ -384,6 +416,20 @@ public class Player
   {
     return this.isHit;
   }
+  public boolean getIsKnocked()
+  {
+    return this.isKnocked;
+  }
+  
+  public boolean getIsHit()
+  {
+    return this.isHit;
+  }
+  
+  public int getCurrentFrame()
+  {
+    return this.currentFrame;
+  }
 
   //********************
   //Private Methods
@@ -413,7 +459,10 @@ public class Player
     {    
       if (currentFrame +  1 == dim)
       {
+        currentFrame = 0;
         activeFrame = -1;
+        
+        return true;
       }
       currentFrame++;
 
@@ -424,9 +473,87 @@ public class Player
     }
   }
   
+  private void drawPlayerKnocked()
+  {
+    if (isHitLeft && filename != "Player_Knockedv2.png" )
+    {
+      currentFrame = 0;
+      facingLeft = true;
+      filename = "Player_Knockedv2.png";
+      player = loadImage(filename);
+      dim = 4;
+      w = player.width/dim;
+      h = player.height;
+    } 
+    else if (!isHitLeft && filename != "Player_Knockedv2_right.png")
+    {
+      currentFrame = 0;
+      facingLeft = false;
+      filename = "Player_Knockedv2_right.png";
+      player = loadImage(filename);
+      dim = 4;
+      w = player.width/dim;
+      h = player.height;
+    }
+    else if (filename == "Player_Knockedv2.png")
+    {
+      if (currentFrame == 0 || currentFrame == 1)  //Move player back when hit during 0 and 1st frames
+      {
+        x+=24;
+      } 
+      if ( (millis() - startTime)/1000 >= .20 *(currentFrame + 1))
+      {
+         if (currentFrame + 1 >= dim )
+        {
+          isIdle = true;
+          isHit = false;
+          isMoving = false;
+          isAttacking = false;
+          isKnocked = false;
+          timeInterval = -1;
+          
+          filename = "idle3.png";
+          player = loadImage(filename);
+          dim = 12;
+          w = player.width/dim;
+          h = player.height;
+        }
+        else
+           currentFrame++;
+      }
+    }
+    else if (filename == "Player_Knockedv2_right.png")
+    {
+      if (currentFrame == 0 || currentFrame == 1)  //Move player back when hit during 0 and 1st frames
+      {
+        x-=24;
+      } 
+      if ( (millis() - startTime)/1000 >= .20 *(currentFrame + 1))
+      {
+         if (currentFrame + 1 >= dim )
+        {
+          isIdle = true;
+          isHit = false;
+          isMoving = false;
+          isAttacking = false;
+          isKnocked = false;
+          timeInterval = -1;
+          
+          filename = "idle3_R.png";
+          player = loadImage(filename);
+          dim = 12;
+          w = player.width/dim;
+          h = player.height;
+        }
+        else
+           currentFrame++;
+      }
+    }
+  }
+  
   private void drawPlayerHit()
   {
-    if ((lastLeft || facingLeft) && !right && filename != "PlayerHit.png" )
+    if (facingLeft && filename != "PlayerHit.png" )
     {
       facingLeft = true;
       filename = "PlayerHit.png";
@@ -435,7 +562,7 @@ public class Player
       w = player.width/dim;
       h = player.height;
     } 
-    else if (facingLeft == false && filename != "PlayerHit_right.png")
+    else if (!facingLeft && filename != "PlayerHit_right.png")
     {
       facingLeft = false;
       filename = "PlayerHit_right.png";
