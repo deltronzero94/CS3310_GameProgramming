@@ -4,8 +4,8 @@ boolean isTitleScreen, isGameScreen, isCreditScreen, isGamePause;
 
 void setup()
 {
-  //fullScreen();
-  size(600,340);
+  fullScreen();
+  //size(600,340);
  
  //Probably Needs to changed (NEED 1 SINGLE VARIABLE RATHER THAN 4) -------
   isTitleScreen = false;
@@ -21,11 +21,12 @@ void setup()
   frameRate(24);  
 }
 
-void draw()
+void draw()  
 {  
-  scale(.35);
-  background(map.getMap().getBackgroundColor());
-  fill(128);
+  //scale(.35);
+  //background(map.getMap().getBackgroundColor());
+  //fill(128);
+  ///print(frameRate + "\n");
   
   if (isTitleScreen) //Title Screen Mode
   {
@@ -33,6 +34,7 @@ void draw()
   }
   else if (isGameScreen) //Game Screen Mode
   {
+    //print(frameRate + "\n");
     map.drawMap();
   }
   else if (isCreditScreen) //Credit Screen Mode
@@ -78,7 +80,6 @@ void keyPressed(){
       map.getPlayer().setIsAttacking(true);
       map.getPlayer().setIsIdle(false);
       map.getPlayer().setIsMoving(false);
-      print(map.getPlayer().getTimeBetweenAttack()+"\n");
     }
     else
     {
@@ -113,8 +114,8 @@ void keyReleased(){
     
     if(map.getPlayer().isKeyReleased() && key != 'z') //Player just moving and not attacking
     {
-      map.getPlayer().setIsIdle(true);
       map.getPlayer().setIsAttacking(false);
+      map.getPlayer().setIsIdle(true);
       map.getPlayer().setIsMoving(false);
     } 
     else if (key == 'z' && map.getPlayer().isKeyPressed()) //Attacking while moving
