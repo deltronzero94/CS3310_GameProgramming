@@ -1,15 +1,34 @@
+import ddf.minim.*;
+
 //Global Member Variables
 TiledMap map;
+Minim minim;
+AudioPlayer player;
+AudioInput input;
+PImage bg;
+PFont titleFont;
+
 boolean isTitleScreen, isGameScreen, isCreditScreen, isGamePause;
 
 void setup()
 {
   fullScreen();
   //size(600,340);
+  
+  //Audio Player
+  minim = new Minim(this);
+  player = minim.loadFile("soldiers.mp3");
+  input = minim.getLineIn();
+  
+  //titleScreen image
+  bg = loadImage("skyline.png");
+  image(bg, 0, 0, width, height);
+  //titleFont = loadFont("subway.ttf");
+  
  
  //Probably Needs to changed (NEED 1 SINGLE VARIABLE RATHER THAN 4) -------
-  isTitleScreen = false;
-  isGameScreen = true;
+  isTitleScreen = true;
+  isGameScreen = false;
   isGamePause = false;
   isCreditScreen = false;
   // ---------------------------------------
@@ -30,7 +49,10 @@ void draw()
   
   if (isTitleScreen) //Title Screen Mode
   {
- 
+    
+    drawTitleScreen("Road of Anger", "Press 'Space'");
+  
+    
   }
   else if (isGameScreen) //Game Screen Mode
   {
@@ -45,6 +67,10 @@ void draw()
 }
 
 void keyPressed(){
+  if(isTitleScreen && key == ' '){
+    isGameScreen = true;
+    isTitleScreen = false;
+  }
   if(isGameScreen)
   {
     if(keyCode == LEFT)
@@ -133,10 +159,27 @@ void keyReleased(){
   }
 }
 
-void drawTitleScreen()
+void drawTitleScreen(String title, String instructions)
 {
-    
+   player.play();
+   imageMode(CORNER);
+   
+   
+  background(0, 0, 0);
+  image(bg, 0, 0, width, height);
+  //textFont(titleFont);
+  // draw title
+  fill(255,100,0);
+  textSize(60);
+  textAlign(CENTER);
+  translate(0, -height/4);
+  text(title, width/2, height/2);
   
+  // draw instructions
+  fill(255,255,255);
+  textSize(32);
+  textAlign(CENTER, TOP);
+  text(instructions, width/2, height/2);
   
 }
 
