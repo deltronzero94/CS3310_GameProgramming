@@ -23,7 +23,7 @@ void setup()
   //titleScreen image
   bg = loadImage("skyline.png");
   image(bg, 0, 0, width, height);
-  //titleFont = loadFont("subway.ttf");
+  titleFont = createFont("subway.ttf", 32);
   
  
  //Probably Needs to changed (NEED 1 SINGLE VARIABLE RATHER THAN 4) -------
@@ -167,7 +167,7 @@ void drawTitleScreen(String title, String instructions)
    
   background(0, 0, 0);
   image(bg, 0, 0, width, height);
-  //textFont(titleFont);
+  textFont(titleFont);
   // draw title
   fill(255,100,0);
   textSize(60);
