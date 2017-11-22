@@ -23,7 +23,7 @@ void setup()
   //titleScreen image
   bg = loadImage("skyline.png");
   image(bg, 0, 0, width, height);
-  titleFont = createFont("subway.ttf", 32);
+  titleFont = createFont("ARCADECLASSIC.TTF", 32);
   
  
  //Probably Needs to changed (NEED 1 SINGLE VARIABLE RATHER THAN 4) -------
@@ -50,7 +50,7 @@ void draw()
   if (isTitleScreen) //Title Screen Mode
   {
     
-    drawTitleScreen("Road of Anger", "Press 'Space'");
+    drawTitleScreen("Road of Anger", "Press Space to Start");
   
     
   }
@@ -164,12 +164,13 @@ void drawTitleScreen(String title, String instructions)
    player.play();
    imageMode(CORNER);
    
-   
+   int x = height;
+   int y = width;
   background(0, 0, 0);
   image(bg, 0, 0, width, height);
   textFont(titleFont);
   // draw title
-  fill(255,100,0);
+  fill(240, 0, 0);
   textSize(60);
   textAlign(CENTER);
   translate(0, -height/4);
