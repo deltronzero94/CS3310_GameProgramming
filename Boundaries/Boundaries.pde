@@ -70,6 +70,7 @@ void keyPressed(){
   if(isTitleScreen && key == ' '){
     isGameScreen = true;
     isTitleScreen = false;
+    imageMode(CENTER);
   }
   if(isGameScreen)
   {

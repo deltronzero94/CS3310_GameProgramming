@@ -10,6 +10,7 @@ public class TiledMap
   private PApplet applet;
   private Player player;
   private Enemy[] enemy;
+  private ArrayList<Enemy> e;
   
   private PriorityQueue<Image> q;
   

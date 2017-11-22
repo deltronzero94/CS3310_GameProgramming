@@ -184,7 +184,6 @@ public class Player
           drawPlayerHit();
         else
         {
-          print("testing\n");
           drawPlayerKnocked();
         }
       }
