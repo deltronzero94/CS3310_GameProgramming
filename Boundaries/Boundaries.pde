@@ -171,14 +171,14 @@ void drawTitleScreen(String title, String instructions)
   textFont(titleFont);
   // draw title
   fill(240, 0, 0);
-  textSize(60);
+  textSize(100);
   textAlign(CENTER);
   translate(0, -height/4);
   text(title, width/2, height/2);
   
   // draw instructions
   fill(255,255,255);
-  textSize(32);
+  textSize(50);
   textAlign(CENTER, TOP);
   text(instructions, width/2, height/2);
   
