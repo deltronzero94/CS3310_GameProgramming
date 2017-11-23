@@ -3,21 +3,24 @@ import ddf.minim.*;
 //Global Member Variables
 TiledMap map;
 Minim minim;
-AudioPlayer player;
+AudioPlayer player, hitSFX;
 AudioInput input;
 PImage bg;
 PFont titleFont;
 
 boolean isTitleScreen, isGameScreen, isCreditScreen, isGamePause;
+boolean isZHeld;
 
 void setup()
 {
   fullScreen();
+  isZHeld = false;
   //size(600,340);
   
   //Audio Player
   minim = new Minim(this);
   player = minim.loadFile("soldiers.mp3");
+  hitSFX = minim.loadFile("punchsfx.wav");
   input = minim.getLineIn();
   
   //titleScreen image
@@ -49,19 +52,32 @@ void draw()
   
   if (isTitleScreen) //Title Screen Mode
   {
-    
     drawTitleScreen("Road of Anger", "Press Space to Start");
-  
-    
   }
   else if (isGameScreen) //Game Screen Mode
   {
-    //print(frameRate + "\n");
-    map.drawMap();
+    if (map == null)
+      map = new TiledMap(this);
+    
+    if (!map.getGameOver())
+      map.drawMap();
+    else
+    {
+      map = null;
+      isCreditScreen = true;
+      isGameScreen = false;
+    }
+    
+    if (map != null && map.getPlayer().getHealth() <= 0)
+    {
+      map = null;
+      isTitleScreen = true;
+      isGameScreen = false;
+    }
   }
   else if (isCreditScreen) //Credit Screen Mode
   {
-    
+    drawTitleScreen("You Win!", "Press Space to Start to back to the Title Screen");
   }
   
 }
@@ -72,7 +88,13 @@ void keyPressed(){
     isTitleScreen = false;
     imageMode(CENTER);
   }
-  if(isGameScreen)
+  
+  if (isCreditScreen && key == ' ')
+  {
+    isCreditScreen = false;
+    isTitleScreen = true;
+  }
+  if(isGameScreen && map != null)
   {
     if(keyCode == LEFT)
     {
@@ -118,7 +140,7 @@ void keyPressed(){
 }
 
 void keyReleased(){
-  if (isGameScreen)
+  if (isGameScreen && map != null)
   {
     if(keyCode == LEFT) 
     {
@@ -155,18 +177,16 @@ void keyReleased(){
     {
       map.getPlayer().setIsAttacking(false);
       map.getPlayer().setIsIdle(true);
-      map.getPlayer().setIsMoving(false);
-    }
-  }
+      map.getPlayer().setIsMoving(false);}   }
 }
 
 void drawTitleScreen(String title, String instructions)
 {
-   player.play();
-   imageMode(CORNER);
+  player.play();
+  imageMode(CORNER);
    
-   int x = height;
-   int y = width;
+  int x = height;
+  int y = width;
   background(0, 0, 0);
   image(bg, 0, 0, width, height);
   textFont(titleFont);

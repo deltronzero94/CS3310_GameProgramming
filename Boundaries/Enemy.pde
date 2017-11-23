@@ -77,7 +77,7 @@ public class Enemy
     enemy = loadImage(filename);
     this.type = type;
     activeFrame = -1;
-    health = 300;
+    health = 100;
     dim = 1;
     this.x = x;
     this.y = y;
@@ -233,6 +233,11 @@ public class Enemy
   public int getType()
   {
     return this.type;
+  }
+  
+  public int getHealth()
+  {
+    return this.health;
   }
 
   // ******************************************

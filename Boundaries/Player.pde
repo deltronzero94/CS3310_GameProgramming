@@ -429,6 +429,11 @@ public class Player
   {
     return this.currentFrame;
   }
+  
+  public int getActiveFrame()
+  {
+    return this.activeFrame;
+  }
 
   //********************
   //Private Methods
