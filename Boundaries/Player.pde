@@ -80,6 +80,8 @@ public class Player
         {
           if (e.getCurrentFrame() == 2)
           {
+            hitSFX.play();
+            hitSFX.rewind();
             isHit = true;
             health -=10;
           }
@@ -88,6 +90,8 @@ public class Player
         {
           if (e.getCurrentFrame() == 2)
           {
+            hitSFX.play();
+            hitSFX.rewind();
             isHit = true;
             if(enemyAttack != 3)
               health -= 10;
@@ -107,6 +111,8 @@ public class Player
         {
           if (e.getCurrentFrame() == 2)
           {
+            hitSFX.play();
+            hitSFX.rewind();
             isHit = true;
             health -=10;
           }
@@ -115,6 +121,8 @@ public class Player
         {
           if (e.getCurrentFrame() == 2)
           {
+            hitSFX.play();
+            hitSFX.rewind();
             isHit = true;
             if(enemyAttack != 3)
               health -= 10;

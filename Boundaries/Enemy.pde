@@ -22,9 +22,13 @@ public class Enemy
   private int lastAttackTime;
   private int currentAttack;
   private int currentFrame;
+  private boolean isHitLeft;
+  private boolean isKnocked;
 
   public Enemy()
   { 
+    isKnocked = false;
+    isHitLeft = false;
     getEnemyType(0);
     enemy = loadImage(filename);
     activeFrame = -1;
@@ -49,6 +53,8 @@ public class Enemy
 
   public Enemy(int x, int y)
   {
+    isKnocked = false;
+    isHitLeft = false;
     getEnemyType(0);
     enemy = loadImage(filename);
     activeFrame = -1;
@@ -73,6 +79,8 @@ public class Enemy
 
   public Enemy(int x, int y, int type)
   {
+    isKnocked = false;
+    isHitLeft = false;
     getEnemyType(type);
     enemy = loadImage(filename);
     this.type = type;
@@ -119,7 +127,10 @@ public class Enemy
         }
       } else
       {
-        drawEnemyHit();
+        if (!isKnocked)
+          drawEnemyHit();
+        else
+          drawPlayerKnocked();
       }
     } else if (health <= 0)
       enemy = null;
@@ -164,7 +175,7 @@ public class Enemy
   {
     if (enemy != null)
     {
-      if (activeFrame == -1)
+      if (activeFrame == -1 && !isKnocked)
         return enemy.get(currentFrameX(), 0, w, h);
       else
         return enemy.get(currentFrame % dim * w, 0, w, h);
@@ -247,6 +258,164 @@ public class Enemy
   {
     return frameCount % dim * w;
   }
+  
+  private void drawPlayerKnocked()
+  {
+    if (type == 0)  //Enenmy 1
+    {
+      if (isHitLeft && filename != "Enemy1_Knocked.png" )
+      {
+        currentFrame = 0;
+        left = true;
+        filename = "Enemy1_Knocked.png";
+        enemy = loadImage(filename);
+        dim = 4;
+        w = enemy.width/dim;
+        h = enemy.height;
+      } 
+      else if (!isHitLeft && filename != "Enemy1_Knocked_right.png")
+      {
+        currentFrame = 0;
+        left = false;
+        filename = "Enemy1_Knocked_right.png";
+        enemy = loadImage(filename);
+        dim = 4;
+        w = enemy.width/dim;
+        h = enemy.height;
+      }
+      else if (filename == "Enemy1_Knocked.png")
+      {
+        if (currentFrame == 0 || currentFrame == 1)  //Move player back when hit during 0 and 1st frames
+        {
+          x+=24;
+        } 
+        if ( (millis() - startTime)/1000 >= .20 *(currentFrame + 1))
+        {
+           if (currentFrame + 1 >= dim )
+          {
+            isIdle = true;
+            isHit = false;
+            isMoving = false;
+            isAttacking = false;
+            isKnocked = false;
+            timeInterval = -1;
+            
+            filename = "Enemy1_standing.png";
+            enemy = loadImage(filename);
+            dim = 12;
+            w = enemy.width/dim;
+            h = enemy.height;
+          }
+          else
+             currentFrame++;
+        }
+      }
+      else if (filename == "Enemy1_Knocked_right.png")
+      {
+        if (currentFrame == 0 || currentFrame == 1)  //Move player back when hit during 0 and 1st frames
+        {
+          x-=24;
+        } 
+        if ( (millis() - startTime)/1000 >= .20 *(currentFrame + 1))
+        {
+           if (currentFrame + 1 >= dim )
+          {
+            isIdle = true;
+            isHit = false;
+            isMoving = false;
+            isAttacking = false;
+            isKnocked = false;
+            timeInterval = -1;
+            
+            filename = "Enemy1_standing_Right.png";
+            enemy = loadImage(filename);
+            dim = 12;
+            w = enemy.width/dim;
+            h = enemy.height;
+          }
+          else
+             currentFrame++;
+        }
+      }
+    }
+    else if (type == 1)  //Enemy 2
+    {
+      if (isHitLeft && filename != "Enemy2_Knocked.png" )
+      {
+        currentFrame = 0;
+        left = true;
+        filename = "Enemy2_Knocked.png";
+        enemy = loadImage(filename);
+        dim = 4;
+        w = enemy.width/dim;
+        h = enemy.height;
+      } 
+      else if (!isHitLeft && filename != "Enemy2_Knocked_right.png")
+      {
+        currentFrame = 0;
+        left = false;
+        filename = "Enemy2_Knocked_right.png";
+        enemy = loadImage(filename);
+        dim = 4;
+        w = enemy.width/dim;
+        h = enemy.height;
+      }
+      else if (filename == "Enemy2_Knocked.png")
+      {
+        if (currentFrame == 0 || currentFrame == 1)  //Move player back when hit during 0 and 1st frames
+        {
+          x+=24;
+        } 
+        if ( (millis() - startTime)/1000 >= .20 *(currentFrame + 1))
+        {
+           if (currentFrame + 1 >= dim )
+          {
+            isIdle = true;
+            isHit = false;
+            isMoving = false;
+            isAttacking = false;
+            isKnocked = false;
+            timeInterval = -1;
+            
+            filename = "Enemy2_standing.png";
+            enemy = loadImage(filename);
+            dim = 1;
+            w = enemy.width/dim;
+            h = enemy.height;
+          }
+          else
+             currentFrame++;
+        }
+      }
+      else if (filename == "Enemy2_Knocked_right.png")
+      {
+        if (currentFrame == 0 || currentFrame == 1)  //Move player back when hit during 0 and 1st frames
+        {
+          x-=24;
+        } 
+        if ( (millis() - startTime)/1000 >= .20 *(currentFrame + 1))
+        {
+           if (currentFrame + 1 >= dim )
+          {
+            isIdle = true;
+            isHit = false;
+            isMoving = false;
+            isAttacking = false;
+            isKnocked = false;
+            timeInterval = -1;
+            
+            filename = "Enemy2_standing_Right.png";
+            enemy = loadImage(filename);
+            dim =1;
+            w = enemy.width/dim;
+            h = enemy.height;
+          }
+          else
+             currentFrame++;
+        }
+      }
+    }
+  }
 
   private void decideAction(Player p)
   {
@@ -256,15 +425,19 @@ public class Enemy
     int playerXValue = p.getX();
     int playerAttack = p.getCurrentAttack();
 
-    if (p.getIsAttacking() && !p.getIsPlayerHit())
+    if (p.getIsAttacking() && !p.getIsPlayerHit() && !isKnocked)
     {
       if (abs(playerY-currentEnemyPositionY()+25) <= 30 && abs(playerX - currentEnemyPositionX()) <= 300.0) //If Player is within Range
       {
         if (currentEnemyPositionX() >=playerX && !p.getFacingLeft())  //If player is facing right
         {
           timeInterval = -1;
+          isHitLeft = true;
+          
           if (playerAttack == 0)  //Punch #1
           {
+            health -= 20;
+            isKnocked = true;
             isHit = true;
           } else if (playerAttack == 1)  //Punch #2
           {
@@ -277,8 +450,11 @@ public class Enemy
         } else if (p.getFacingLeft() && currentEnemyPositionX() < playerX)//Player facing left
         {
           timeInterval = -1;
+          isHitLeft = false;
           if (playerAttack == 0)  //Punch #1
           {
+            health -= 20;
+            isKnocked = true;
             isHit = true;
           } else if (playerAttack == 1)  //Punch #2
           {
@@ -288,6 +464,12 @@ public class Enemy
             isHit = true;
           }
           health -=10;
+        }
+        
+        if (isHit && isAttackFrameActive())
+        {
+          currentFrame = 0;
+          activeFrame = -1;
         }
       }
       else  //If enemy is outside hit range 
@@ -301,7 +483,7 @@ public class Enemy
             mode = 4;
           }
         }
-      }
+      } 
     }
 
 
@@ -427,9 +609,23 @@ public class Enemy
       isIdle = false;
       isMoving = false;
       isAttacking = false;
-
-      timeInterval = .4;  //Hit Stun Timer
+      isHit = true;
+      
+      if (isKnocked)
+        timeInterval = .8;
+      else
+        timeInterval = .4;  //Hit Stun Timer
+        
       startTime = millis();
+    }
+    else if ((isHit || isKnocked) && (millis() - startTime)/1000 >= timeInterval && timeInterval != -1)
+    {
+        isIdle = true;
+        isHit = false;
+        isMoving = false;
+        isAttacking = false;
+        isKnocked = false;
+        timeInterval = -1;
     }
     //print("IsMoving: " +isMoving + " , IsAttacking: " + isAttacking + ", IsIdle: " + isIdle +"\n");
     ////print("X: " + x + ", Y: " + y + " | LocX: " + locX + ", LocY: " +locY + "\n");
@@ -1045,7 +1241,7 @@ public class Enemy
         // Draw bar
         noStroke();
         // Get fraction 0->1 and multiply it by width of bar
-        float drawWidth = ((float)health/ 100.0) * 175;
+        float drawWidth = ((float)health/ 100.0) * 160 ;
         rect(100, 200, drawWidth, 50);
       }
     } 
