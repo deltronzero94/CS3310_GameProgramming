@@ -1036,7 +1036,17 @@ public class Enemy
       }
       else if (isHit)
       {
-        
+        // Outline
+        stroke(0);
+        fill(255,0,0);
+        rect(100, 200, rectWidth, 50);
+      
+        fill(255, 255, 0);
+        // Draw bar
+        noStroke();
+        // Get fraction 0->1 and multiply it by width of bar
+        float drawWidth = ((float)health/ 100.0) * 175;
+        rect(100, 200, drawWidth, 50);
       }
     } 
     else if (!isAttackFrameActive())

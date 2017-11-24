@@ -128,6 +128,12 @@ public class Player
           }
         }
       }
+      
+      if (isHit && isAttackFrameActive())
+      {
+        currentFrame = 0;
+        activeFrame = -1;
+      }
     }
     
     if (timeInterval == -1 && isHit) //Enemy Hit
