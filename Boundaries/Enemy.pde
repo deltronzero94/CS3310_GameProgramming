@@ -424,6 +424,7 @@ public class Enemy
     int playerYValue = p.getY();
     int playerXValue = p.getX();
     int playerAttack = p.getCurrentAttack();
+    int playerCurrentFrame = p.getCurrentFrame();
 
     if (p.getIsAttacking() && !p.getIsPlayerHit() && !isKnocked)
     {
@@ -439,12 +440,31 @@ public class Enemy
             health -= 20;
             isKnocked = true;
             isHit = true;
+            
+            if (playerCurrentFrame >= 0)
+            {
+              hitSFX.play();
+              hitSFX.rewind();
+            }
+            
           } else if (playerAttack == 1)  //Punch #2
           {
             isHit = true;
+            
+            if ( playerCurrentFrame == 0)
+            {
+              hitSFX.play();
+              hitSFX.rewind();
+            }
           } else if (playerAttack == 2) //Punch #3
           {
             isHit = true;
+            
+            if ( playerCurrentFrame == 0)
+            {
+              hitSFX.play();
+              hitSFX.rewind();
+            }
           }
           health -=10;
         } else if (p.getFacingLeft() && currentEnemyPositionX() < playerX)//Player facing left
@@ -456,12 +476,30 @@ public class Enemy
             health -= 20;
             isKnocked = true;
             isHit = true;
+            
+            if (playerCurrentFrame >= 0)
+            {
+              hitSFX.play();
+              hitSFX.rewind();
+            }
           } else if (playerAttack == 1)  //Punch #2
           {
             isHit = true;
+            
+            if ( playerCurrentFrame == 0)
+            {
+              hitSFX.play();
+              hitSFX.rewind();
+            }
           } else if (playerAttack == 2) //Punch #3
           {
             isHit = true;
+            
+            if ( playerCurrentFrame == 0)
+            {
+              hitSFX.play();
+              hitSFX.rewind();
+            } 
           }
           health -=10;
         }
