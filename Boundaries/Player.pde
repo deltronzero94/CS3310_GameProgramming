@@ -90,14 +90,18 @@ public class Player
         {
           if (e.getCurrentFrame() == 2)
           {
-            hitSFX.play();
-            hitSFX.rewind();
             isHit = true;
             if(enemyAttack != 3)
+            {
+              hitSFX.play();
+              hitSFX.rewind();
               health -= 10;
+            }
             else
             {
               //timeInterval = 1;
+              strongSFX.play();
+              strongSFX.rewind();
               isKnocked = true;
               health -= 30;  
             }
@@ -121,14 +125,18 @@ public class Player
         {
           if (e.getCurrentFrame() == 2)
           {
-            hitSFX.play();
-            hitSFX.rewind();
             isHit = true;
             if(enemyAttack != 3)
+            {
+              hitSFX.play();
+              hitSFX.rewind();
               health -= 10;
+            }
             else
             {
               // timeInterval = 1;
+              strongSFX.play();
+              strongSFX.rewind();
               isKnocked = true;
               health -= 30;  
             }
@@ -537,7 +545,14 @@ public class Player
           h = player.height;
         }
         else
+        {
+           if (currentFrame == 0)
+           {
+             floorHit.play();
+             floorHit.rewind();
+           }
            currentFrame++;
+        }
       }
     }
     else if (filename == "Player_Knockedv2_right.png")
@@ -564,7 +579,14 @@ public class Player
           h = player.height;
         }
         else
+        {
+           if (currentFrame == 0)
+           {
+             floorHit.play();
+             floorHit.rewind();
+           }
            currentFrame++;
+        }
       }
     }
   }

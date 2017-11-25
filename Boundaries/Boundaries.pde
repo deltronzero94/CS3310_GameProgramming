@@ -3,7 +3,7 @@ import ddf.minim.*;
 //Global Member Variables
 TiledMap map;
 Minim minim;
-AudioPlayer player, hitSFX;
+AudioPlayer player, hitSFX, strongSFX,floorHit;
 AudioInput input;
 PImage bg;
 PFont titleFont;
@@ -21,6 +21,8 @@ void setup()
   minim = new Minim(this);
   player = minim.loadFile("soldiers.mp3");
   hitSFX = minim.loadFile("punchsfx.wav");
+  floorHit = minim.loadFile("floorHit.wav");
+  strongSFX = minim.loadFile("strongAttack.wav");
   input = minim.getLineIn();
   
   //titleScreen image

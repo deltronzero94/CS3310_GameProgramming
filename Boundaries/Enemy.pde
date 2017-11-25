@@ -307,7 +307,14 @@ public class Enemy
             h = enemy.height;
           }
           else
+          {
+             if (currentFrame == 0)
+             {
+               floorHit.play();
+               floorHit.rewind();
+             }
              currentFrame++;
+          }
         }
       }
       else if (filename == "Enemy1_Knocked_right.png")
@@ -334,7 +341,14 @@ public class Enemy
             h = enemy.height;
           }
           else
+          {
+             if (currentFrame == 0)
+             {
+               floorHit.play();
+               floorHit.rewind();
+             }
              currentFrame++;
+          }
         }
       }
     }
@@ -384,7 +398,14 @@ public class Enemy
             h = enemy.height;
           }
           else
+          {
+             if (currentFrame == 0)
+             {
+               floorHit.play();
+               floorHit.rewind();
+             }
              currentFrame++;
+          }
         }
       }
       else if (filename == "Enemy2_Knocked_right.png")
@@ -411,7 +432,14 @@ public class Enemy
             h = enemy.height;
           }
           else
+          {
+             if (currentFrame == 0)
+             {
+               floorHit.play();
+               floorHit.rewind();
+             }
              currentFrame++;
+          }
         }
       }
     }
