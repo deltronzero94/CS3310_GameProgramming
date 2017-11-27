@@ -3,12 +3,12 @@ import ddf.minim.*;
 //Global Member Variables
 TiledMap map;
 Minim minim;
-AudioPlayer player, hitSFX, strongSFX,floorHit;
+AudioPlayer player, hitSFX, strongSFX,floorHit, gameMusic;
 AudioInput input;
-PImage bg;
+PImage bg, story, ending, logo;
 PFont titleFont;
 
-boolean isTitleScreen, isGameScreen, isCreditScreen, isGamePause;
+boolean isTitleScreen, isGameScreen, isCreditScreen, isGamePause, isStoryScreen;
 boolean isZHeld;
 
 void setup()
@@ -20,6 +20,7 @@ void setup()
   //Audio Player
   minim = new Minim(this);
   player = minim.loadFile("soldiers.mp3");
+  gameMusic = minim.loadFile("oddlook.mp3");
   hitSFX = minim.loadFile("punchsfx.wav");
   floorHit = minim.loadFile("floorHit.wav");
   strongSFX = minim.loadFile("strongAttack.wav");
@@ -27,6 +28,9 @@ void setup()
   
   //titleScreen image
   bg = loadImage("skyline.png");
+  story = loadImage("street.jpg");
+  ending = loadImage("sunrise.png");
+  logo = loadImage("Logo.PNG");
   image(bg, 0, 0, width, height);
   titleFont = createFont("ARCADECLASSIC.TTF", 32);
   
@@ -54,10 +58,18 @@ void draw()
   
   if (isTitleScreen) //Title Screen Mode
   {
+    player.play();
     drawTitleScreen("Road of Anger", "Press Space to Start");
+  }
+  else if (isStoryScreen)//Story Screen Mode
+  {
+    drawStoryScreen();
   }
   else if (isGameScreen) //Game Screen Mode
   {
+    player.close();
+    gameMusic.setGain(-15);
+    gameMusic.play();
     if (map == null)
       map = new TiledMap(this);
     
@@ -74,22 +86,30 @@ void draw()
     {
       map = null;
       isTitleScreen = true;
+      isStoryScreen = true;
       isGameScreen = false;
     }
   }
   else if (isCreditScreen) //Credit Screen Mode
-  {
-    drawTitleScreen("You Win!", "Press Space to Start to back to the Title Screen");
+  { 
+    drawCreditScreen("Peace is restored!", "Thank you for playing"+"\nPress Space to Start to back to the Title Screen");
   }
   
 }
 
 void keyPressed(){
   if(isTitleScreen && key == ' '){
-    isGameScreen = true;
+    isStoryScreen = true;
     isTitleScreen = false;
+    imageMode(CORNER);
+  }
+  
+  if(isStoryScreen && key == 's'){
+    isGameScreen = true;
+    isStoryScreen = false;
     imageMode(CENTER);
   }
+  
   
   if (isCreditScreen && key == ' ')
   {
@@ -184,7 +204,7 @@ void keyReleased(){
 
 void drawTitleScreen(String title, String instructions)
 {
-  player.play();
+  
   imageMode(CORNER);
    
   int x = height;
@@ -207,7 +227,47 @@ void drawTitleScreen(String title, String instructions)
   
 }
 
-void drawCreditScreen()
+void drawStoryScreen()
 {
+  background(0, 0, 0);
+  imageMode(CORNER);
+  image(story, 0, 0, width, height);
+  
+
+  textFont(titleFont);
+  textSize(50);
+  textAlign(CENTER, BOTTOM);
+  fill(255, 255, 255);
+  String gameStory = "A man who lost his family to gang violence\n sets out to take vengeance against the streets";
+  translate(width/4, height/4);
+  text(gameStory, width/8, height/3);
+  text("Press S to Skip", width/2, height/2);
+  
+}
+
+
+void drawCreditScreen(String heading, String body)
+{
+  imageMode(CORNER);
+   
+  int x = height;
+  int y = width;
+  background(0, 0, 0);
+  image(ending, 0, 0, width, height);
+  textFont(titleFont);
+  // draw title
+  fill(240, 0, 0);
+  textSize(100);
+  textAlign(CENTER);
+  translate(0, -height/4);
+  text(heading, width/2, height/2);
+  
+  // draw instructions
+  fill(255,255,255);
+  textSize(50);
+  textAlign(CENTER, TOP);
+  text(body, width/2, height/2);
+  //translate();
+  image(logo, (width/2)+(width/4)+(width/16), (height/2)+(height/2)+(height/16), 400, 200 );
   
 }
