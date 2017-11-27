@@ -8,13 +8,11 @@ AudioInput input;
 PImage bg, story, ending, logo;
 PFont titleFont;
 
-boolean isTitleScreen, isGameScreen, isCreditScreen, isGamePause, isStoryScreen;
-boolean isZHeld;
+boolean isTitleScreen, isGameScreen, isCreditScreen, isGamePause;
 
 void setup()
 {
   fullScreen();
-  isZHeld = false;
   //size(600,340);
   
   //Audio Player

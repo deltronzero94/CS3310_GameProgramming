@@ -24,11 +24,13 @@ public class Enemy
   private int currentFrame;
   private boolean isHitLeft;
   private boolean isKnocked;
+  private boolean isDeathAnimationFinished;
 
   public Enemy()
   { 
     isKnocked = false;
     isHitLeft = false;
+    isDeathAnimationFinished = false;
     getEnemyType(0);
     enemy = loadImage(filename);
     activeFrame = -1;
@@ -55,6 +57,7 @@ public class Enemy
   {
     isKnocked = false;
     isHitLeft = false;
+    isDeathAnimationFinished = false;
     getEnemyType(0);
     enemy = loadImage(filename);
     activeFrame = -1;
@@ -81,6 +84,7 @@ public class Enemy
   {
     isKnocked = false;
     isHitLeft = false;
+    isDeathAnimationFinished = false;
     getEnemyType(type);
     enemy = loadImage(filename);
     this.type = type;
@@ -105,7 +109,7 @@ public class Enemy
 
   public void drawEnemy(Player p)
   {
-    if (enemy == null && health != 0) //Load image if image hasn't been loaded
+    if (enemy == null && health != 0 && !isDeathAnimationFinished) //Load image if image hasn't been loaded
       getEnemyType(type);
 
     if (health > 0 && enemy != null)
@@ -133,7 +137,12 @@ public class Enemy
           drawPlayerKnocked();
       }
     } else if (health <= 0)
-      enemy = null;
+    {
+      if (!isDeathAnimationFinished)
+        drawPlayerKnocked();
+      else
+        enemy = null;
+    }
     
     ////Draw Enemy
     //if (enemy != null)
@@ -169,6 +178,11 @@ public class Enemy
     else
     {
     }
+  }
+  
+  public boolean isDeathAnimationFinished()
+  {
+    return this.isDeathAnimationFinished;
   }
 
   public PImage getCurrentSprite()
@@ -291,22 +305,33 @@ public class Enemy
         } 
         if ( (millis() - startTime)/1000 >= .20 *(currentFrame + 1))
         {
-           if (currentFrame + 1 >= dim )
+          if (currentFrame + 1 >= dim )
           {
-            isIdle = true;
-            isHit = false;
-            isMoving = false;
-            isAttacking = false;
-            isKnocked = false;
-            timeInterval = -1;
-            
-            filename = "Enemy1_standing.png";
-            enemy = loadImage(filename);
-            dim = 12;
-            w = enemy.width/dim;
-            h = enemy.height;
+            if (health > 0)
+            {
+              isIdle = true;
+              isHit = false;
+              isMoving = false;
+              isAttacking = false;
+              isKnocked = false;
+              timeInterval = -1;
+              
+              filename = "Enemy1_standing.png";
+              enemy = loadImage(filename);
+              dim = 12;
+              w = enemy.width/dim;
+              h = enemy.height;
+            }
+            else
+            {
+              
+              if ( (millis() - startTime)/1000 >= .20 *10)
+              {
+                isDeathAnimationFinished = true;
+              }
+            }
           }
-          else
+          else if (!isDeathAnimationFinished)
           {
              if (currentFrame == 0)
              {
@@ -327,18 +352,28 @@ public class Enemy
         {
            if (currentFrame + 1 >= dim )
           {
-            isIdle = true;
-            isHit = false;
-            isMoving = false;
-            isAttacking = false;
-            isKnocked = false;
-            timeInterval = -1;
-            
-            filename = "Enemy1_standing_Right.png";
-            enemy = loadImage(filename);
-            dim = 12;
-            w = enemy.width/dim;
-            h = enemy.height;
+            if (health > 0)
+            {
+              isIdle = true;
+              isHit = false;
+              isMoving = false;
+              isAttacking = false;
+              isKnocked = false;
+              timeInterval = -1;
+              
+              filename = "Enemy1_standing_Right.png";
+              enemy = loadImage(filename);
+              dim = 12;
+              w = enemy.width/dim;
+              h = enemy.height;
+            }
+            else
+            {
+              if ((millis() - startTime)/1000 >= .20 *10)
+              {
+                isDeathAnimationFinished = true;
+              }
+            }
           }
           else
           {
@@ -384,18 +419,28 @@ public class Enemy
         {
            if (currentFrame + 1 >= dim )
           {
-            isIdle = true;
-            isHit = false;
-            isMoving = false;
-            isAttacking = false;
-            isKnocked = false;
-            timeInterval = -1;
-            
-            filename = "Enemy2_standing.png";
-            enemy = loadImage(filename);
-            dim = 1;
-            w = enemy.width/dim;
-            h = enemy.height;
+            if (health > 0)
+            {
+              isIdle = true;
+              isHit = false;
+              isMoving = false;
+              isAttacking = false;
+              isKnocked = false;
+              timeInterval = -1;
+              
+              filename = "Enemy2_standing.png";
+              enemy = loadImage(filename);
+              dim = 1;
+              w = enemy.width/dim;
+              h = enemy.height;
+            }
+            else
+            {
+              if ((millis() - startTime)/1000 >= .20 *10)
+              {
+                isDeathAnimationFinished = true;
+              }
+            }
           }
           else
           {
@@ -418,18 +463,28 @@ public class Enemy
         {
            if (currentFrame + 1 >= dim )
           {
-            isIdle = true;
-            isHit = false;
-            isMoving = false;
-            isAttacking = false;
-            isKnocked = false;
-            timeInterval = -1;
-            
-            filename = "Enemy2_standing_Right.png";
-            enemy = loadImage(filename);
-            dim =1;
-            w = enemy.width/dim;
-            h = enemy.height;
+            if (health > 0)
+            {
+              isIdle = true;
+              isHit = false;
+              isMoving = false;
+              isAttacking = false;
+              isKnocked = false;
+              timeInterval = -1;
+              
+              filename = "Enemy2_standing_Right.png";
+              enemy = loadImage(filename);
+              dim =1;
+              w = enemy.width/dim;
+              h = enemy.height;
+            }
+            else
+            {
+              if ( (millis() - startTime)/1000 >= .20 *10)
+              {
+                isDeathAnimationFinished = true;
+              }
+            }
           }
           else
           {
