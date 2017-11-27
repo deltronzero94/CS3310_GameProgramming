@@ -303,7 +303,7 @@ public class TiledMap
     {
       for (int x = 0; x < e.size(); x++)
       {
-        if (e.get(x).getHealth() <= 0)
+        if (e.get(x).getHealth() <= 0 && e.get(x).isDeathAnimationFinished())
         {
           e.remove(x);
         }
