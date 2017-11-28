@@ -80,8 +80,6 @@ public class Player
         {
           if (e.getCurrentFrame() == 2)
           {
-            hitSFX.play();
-            hitSFX.rewind();
             isHit = true;
             health -=10;
           }
@@ -92,16 +90,10 @@ public class Player
           {
             isHit = true;
             if(enemyAttack != 3)
-            {
-              hitSFX.play();
-              hitSFX.rewind();
               health -= 10;
-            }
             else
             {
               //timeInterval = 1;
-              strongSFX.play();
-              strongSFX.rewind();
               isKnocked = true;
               health -= 30;  
             }
@@ -115,8 +107,6 @@ public class Player
         {
           if (e.getCurrentFrame() == 2)
           {
-            hitSFX.play();
-            hitSFX.rewind();
             isHit = true;
             health -=10;
           }
@@ -127,28 +117,16 @@ public class Player
           {
             isHit = true;
             if(enemyAttack != 3)
-            {
-              hitSFX.play();
-              hitSFX.rewind();
               health -= 10;
-            }
             else
             {
               // timeInterval = 1;
-              strongSFX.play();
-              strongSFX.rewind();
               isKnocked = true;
               health -= 30;  
             }
             //print(enemyAttack + ", "+ health + "\n");
           }
         }
-      }
-      
-      if (isHit && isAttackFrameActive())
-      {
-        currentFrame = 0;
-        activeFrame = -1;
       }
     }
     
@@ -206,6 +184,7 @@ public class Player
           drawPlayerHit();
         else
         {
+          print("testing\n");
           drawPlayerKnocked();
         }
       }
@@ -451,11 +430,6 @@ public class Player
   {
     return this.currentFrame;
   }
-  
-  public int getActiveFrame()
-  {
-    return this.activeFrame;
-  }
 
   //********************
   //Private Methods
@@ -545,14 +519,7 @@ public class Player
           h = player.height;
         }
         else
-        {
-           if (currentFrame == 0)
-           {
-             floorHit.play();
-             floorHit.rewind();
-           }
            currentFrame++;
-        }
       }
     }
     else if (filename == "Player_Knockedv2_right.png")
@@ -579,14 +546,7 @@ public class Player
           h = player.height;
         }
         else
-        {
-           if (currentFrame == 0)
-           {
-             floorHit.play();
-             floorHit.rewind();
-           }
            currentFrame++;
-        }
       }
     }
   }
