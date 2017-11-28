@@ -138,18 +138,12 @@ public class Enemy
       }
     } else if (health <= 0)
     {
+      //print(isDeathAnimationFinished + "\n");
       if (!isDeathAnimationFinished)
+      {
         drawPlayerKnocked();
-      else
-        enemy = null;
+      }
     }
-    
-    ////Draw Enemy
-    //if (enemy != null)
-    //{
-    //  sprite = getCurrentSprite();
-    //  image(sprite, currentEnemyPositionX(), currentEnemyPositionY());
-    //}
   }
   
   public int getCurrentFrame()
@@ -189,7 +183,7 @@ public class Enemy
   {
     if (enemy != null)
     {
-      if (activeFrame == -1 && !isKnocked)
+      if (activeFrame == -1 && !isKnocked && health > 0)
         return enemy.get(currentFrameX(), 0, w, h);
       else
         return enemy.get(currentFrame % dim * w, 0, w, h);
@@ -275,6 +269,14 @@ public class Enemy
   
   private void drawPlayerKnocked()
   {
+    
+    if (health <= 0)
+    {
+      print("Filename: " + filename); 
+      print("\nDIM: " + dim);
+      print("\nCurrentFrame: " + currentFrame + "\n");
+    }
+    
     if (type == 0)  //Enenmy 1
     {
       if (isHitLeft && filename != "Enemy1_Knocked.png" )
@@ -324,14 +326,14 @@ public class Enemy
             }
             else
             {
-              
               if ( (millis() - startTime)/1000 >= .20 *10)
               {
                 isDeathAnimationFinished = true;
+                enemy = null;
               }
             }
           }
-          else if (!isDeathAnimationFinished)
+          else
           {
              if (currentFrame == 0)
              {
@@ -369,9 +371,11 @@ public class Enemy
             }
             else
             {
-              if ((millis() - startTime)/1000 >= .20 *10)
+              //currentFrame++;
+              if ((millis() - startTime)/1000 >= .20 * 10)
               {
                 isDeathAnimationFinished = true;
+                enemy = null;
               }
             }
           }
@@ -438,6 +442,7 @@ public class Enemy
             {
               if ((millis() - startTime)/1000 >= .20 *10)
               {
+                enemy = null;
                 isDeathAnimationFinished = true;
               }
             }
@@ -482,6 +487,7 @@ public class Enemy
             {
               if ( (millis() - startTime)/1000 >= .20 *10)
               {
+                enemy = null;
                 isDeathAnimationFinished = true;
               }
             }
@@ -738,6 +744,12 @@ public class Enemy
         timeInterval = .4;  //Hit Stun Timer
         
       startTime = millis();
+      
+      if (health <= 0)
+      {
+        deathSFX.play();
+        deathSFX.rewind();
+      }
     }
     else if ((isHit || isKnocked) && (millis() - startTime)/1000 >= timeInterval && timeInterval != -1)
     {
