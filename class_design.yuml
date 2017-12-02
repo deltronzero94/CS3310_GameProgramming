@@ -1,0 +1,12 @@
+// {type:class}
+// {direction:topDown}
+[note: You can stick notes on diagrams too!{bg:cornsilk}]
+[Character]^-[Player]
+[Character]^-[Enemy]
+[Player]^-[Axel]
+[Player]^-[Skate]
+[Player]^-[Blaze]
+[Player]^-[Max]
+[Map]+->[Character]
+[Enemy]+->[AI]
+[Enemy]^-[Galasa]

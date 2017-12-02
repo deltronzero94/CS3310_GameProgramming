@@ -13,6 +13,7 @@ public class TiledMap
  // private Enemy[] enemy;
   private ArrayList<Enemy> e;
   private int spawn;
+  private boolean bossSpawned;
   private boolean gameOver;
   
   private PriorityQueue<Image> q;
@@ -33,8 +34,9 @@ public class TiledMap
     map.setDrawMode(CENTER);
     map.setPositionMode("CANVAS");//Default Position Mode
     e = new ArrayList<Enemy>();
-    e.add(new Enemy(800,-700));
+    e.add(new Enemy(800,-700));    
     spawn = 1;
+    bossSpawned=false;
     q = new PriorityQueue<Image>(e.size(), new Comparator<Image>() {
     public int compare(Image edge1, Image edge2) {
         if (edge1.positionY < edge2.positionY) return -1;
@@ -148,8 +150,17 @@ public class TiledMap
         
         if (noEnemies())
         {
-          e = null;
-          gameOver = true;
+            if (bossSpawned==false)
+            {
+              getSome.play();
+              e.add(new Enemy(round(player.currentPlayerPositionX()),round(player.currentPlayerPositionY()),2));
+            }
+            bossSpawned=true;
+            if (noEnemies()&&(bossSpawned==true))
+            {
+              e = null;
+              gameOver = true;
+            }
         }
       }
       
@@ -197,6 +208,7 @@ public class TiledMap
         sprite = player.getCurrentSprite();
         image(sprite, player.currentPlayerPositionX(),player.currentPlayerPositionY());
       }
+      
       
       //Delete Enemy with 0 Health
       checkEnemyHealth();

@@ -108,6 +108,16 @@ public class Player
             //print(enemyAttack + ", "+ health + "\n");
           }
         }
+        else if (e.getType() == 2)
+        {
+          if (e.getCurrentFrame() == 2)
+          {
+            hitSFX.play();
+            hitSFX.rewind();
+            isHit = true;
+            health -=100;     //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+          }
+        }
       }
       else if (isMoving)
       {
@@ -141,6 +151,16 @@ public class Player
               health -= 30;  
             }
             //print(enemyAttack + ", "+ health + "\n");
+          }
+        }
+        else if (e.getType() == 2)
+        {
+          if (e.getCurrentFrame() == 2)
+          {
+            hitSFX.play();
+            hitSFX.rewind();
+            isHit = true;
+            health -=10;
           }
         }
       }

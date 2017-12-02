@@ -1,5 +1,6 @@
 import ptmx.*;
 import java.util.*;
+static float rectWidth = 500;
 
 public class TiledMap
 {
@@ -9,25 +10,34 @@ public class TiledMap
   private Ptmx map;
   private PApplet applet;
   private Player player;
-  private Enemy[] enemy;
+ // private Enemy[] enemy;
+  private ArrayList<Enemy> e;
+  private int spawn;
+  private boolean bossSpawned;
+  private boolean gameOver;
   
   private PriorityQueue<Image> q;
   
   //Default Constructor
   public TiledMap(PApplet applet)
   {
+    gameOver = false;
     this.applet = applet;
     sx = 1000;  //sx = 300
     sy = 550;  //sy = 170
     leftSideBorder = 50.0;
     rightSideBorder = 1660.0;  //1650
     player = new Player();
-    enemy = new Enemy[]{new Enemy(200, -700, 1), new Enemy(500,-700,1), new Enemy(1000,-700,1), new Enemy(1000,-700,1), new Enemy(800, -700)};
-    //enemy = new Enemy[]{new Enemy(800,-700, 1)};
+    //enemy = new Enemy[]{new Enemy(200, -700, 1), new Enemy(500,-700,1), new Enemy(1000,-700,1), new Enemy(1000,-700,1), new Enemy(800, -700)};
+   // enemy = new Enemy[]{new Enemy(800,-700, 1)};
     map = new Ptmx(applet,"sor2_1v4.tmx");
     map.setDrawMode(CENTER);
     map.setPositionMode("CANVAS");//Default Position Mode
-    q = new PriorityQueue<Image>(enemy.length, new Comparator<Image>() {
+    e = new ArrayList<Enemy>();
+    e.add(new Enemy(800,-700));    
+    spawn = 1;
+    bossSpawned=false;
+    q = new PriorityQueue<Image>(e.size(), new Comparator<Image>() {
     public int compare(Image edge1, Image edge2) {
         if (edge1.positionY < edge2.positionY) return -1;
         if (edge1.positionY > edge2.positionY) return 1;
@@ -50,7 +60,18 @@ public class TiledMap
       player.setY(-1020);
     }
     
-    if  (rightSideBorder < 1681.0) //If screen hasn't reached the end of the map
+    //print(spawn + "\n");
+    if (spawn % 150 == 0)
+    {
+      spawn = 1;
+      e.add(new Enemy((int)rightSideBorder + 150, -700, 1));
+      e.add(new Enemy((int)rightSideBorder + 150, -800));
+      e.add(new Enemy((int)rightSideBorder + 150, -650,1));
+      //print(e.size() + "\n");
+    }
+    
+    
+    if (rightSideBorder < 1681.0) //If screen hasn't reached the end of the map
     {
       //If player movement is greater than left screen boundary
       if (player.currentPlayerPositionX() >leftSideBorder)
@@ -59,13 +80,14 @@ public class TiledMap
         {
           leftSideBorder+= 0.04;
           rightSideBorder+=0.04;
+          spawn += 1;
           sx+= 4;
           player.addPX(4);
           
-          if ( enemy != null)
+          if ( e != null)
           {
-            for (int num = 0; num < enemy.length; num++)
-               enemy[num].addPX(4);
+            for (int num = 0; num < e.size(); num++)
+               e.get(num).addPX(4);
           }
              
           //sprite = player.getCurrentSprite();
@@ -125,21 +147,36 @@ public class TiledMap
             map.draw(applet.g, sx , sy);
           }
         }
+        
+        if (noEnemies())
+        {
+            if (bossSpawned==false)
+            {
+              getSome.play();
+              e.add(new Enemy(round(player.currentPlayerPositionX()),round(player.currentPlayerPositionY()),2));
+            }
+            bossSpawned=true;
+            if (noEnemies()&&(bossSpawned==true))
+            {
+              e = null;
+              gameOver = true;
+            }
+        }
       }
       
       
       //Checks the depth images and then draws them based on height priority queue 
-      if (enemy != null)
+      if (e != null)
       {
-         for(int num = 0; num < enemy.length; num++) 
+         for(int num = 0; num < e.size(); num++) 
          {
-           enemy[num].drawEnemy(player);
-           for(int count = 0; count < enemy.length; count++) 
+           e.get(num).drawEnemy(player);
+           for(int count = 0; count < e.size(); count++) 
            {
-             if (num != count && enemy[num].getCurrentSprite() != null)
-               enemy[num].checkDistanceBetweenEnemy(enemy[count]);  //Helps stop enemies from stacking when fighting player
+             if (num != count && e.get(num).getCurrentSprite() != null)
+               e.get(num).checkDistanceBetweenEnemy(e.get(count));  //Helps stop enemies from stacking when fighting player
            }  
-           player.checkIfPlayerWasHit(enemy[num]);
+           player.checkIfPlayerWasHit(e.get(num));
          }  
          
          checkDepth();
@@ -151,12 +188,12 @@ public class TiledMap
            
            itr.remove();
             
-           if (num != enemy.length)
+           if (num != e.size())
            {
-             sprite = enemy[num].getCurrentSprite();
+             sprite = e.get(num).getCurrentSprite();
              
              if (sprite != null)
-               image(sprite, enemy[num].currentEnemyPositionX(),enemy[num].currentEnemyPositionY()); 
+               image(sprite, e.get(num).currentEnemyPositionX(),e.get(num).currentEnemyPositionY()); 
            }
            else
            {
@@ -170,21 +207,19 @@ public class TiledMap
       {
         sprite = player.getCurrentSprite();
         image(sprite, player.currentPlayerPositionX(),player.currentPlayerPositionY());
-        if (player.getIsKnocked())
-        {
-          if (player.currentPlayerPositionX() <= leftSideBorder)
-          {
-            player.setX((int)leftSideBorder);
-          }
-          else if ((player.currentPlayerPositionX() >  rightSideBorder + 190))
-          {
-            player.setX((int)rightSideBorder + 190);
-          }
-        }
       }
       
-      textSize(32);
-      text(player.getHealth(), width/2, 60);
+      
+      //Delete Enemy with 0 Health
+      checkEnemyHealth();
+     
+      //Draw Player HealthBar
+      drawPlayerHealthBar();
+    }
+    
+    public boolean getGameOver()
+    {
+      return this.gameOver;
     }
   
   //Setters
@@ -229,20 +264,62 @@ public class TiledMap
     return this.player;
   }
   
+  public boolean noEnemies()
+  {
+    if (e.size() == 0)
+    {
+      return true;
+    }
+    else 
+    {
+      return false;
+    }
+  }
+  
   //Check and prioritize drawing queue based on height (the higher the y position of image, the higher priority it has)
   private void checkDepth()
   {
-    for(int num = 0; num <= enemy.length ; num++)
+    for(int num = 0; num <= e.size() ; num++)
     {
-      if( num < enemy.length) //For Enemy height
+      if( num < e.size()) //For Enemy height
       {
-        float enemyHeight = enemy[num].currentEnemyPositionY();
+        float enemyHeight = e.get(num).currentEnemyPositionY();
         q.add(new Image(num, enemyHeight - 15));
       }
       else //For Player Height
       {
         q.add(new Image(num, player.currentPlayerPositionY()));
       } 
+    }
+  }
+  
+  private void drawPlayerHealthBar()
+  {
+      // Outline
+      stroke(0);
+      fill(255,0,0);
+      rect(100, 100, rectWidth, 50);
+    
+      fill(255, 255, 0);
+      // Draw bar
+      noStroke();
+      // Get fraction 0->1 and multiply it by width of bar
+      float drawWidth = ((float)player.getHealth() / 300.0) * rectWidth;
+      rect(100, 100, drawWidth, 50);
+      
+  }
+  
+  private void checkEnemyHealth()
+  {
+    if( e != null)
+    {
+      for (int x = 0; x < e.size(); x++)
+      {
+        if (e.get(x).getHealth() <= 0 && e.get(x).isDeathAnimationFinished())
+        {
+          e.remove(x);
+        }
+      }
     }
   }
   
