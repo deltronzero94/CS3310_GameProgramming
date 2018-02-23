@@ -12,7 +12,7 @@ Features
 
 Installation
 ---
-To play this game, one needs to have Processing 3 IDE installed. Once that is done, the ptmx library has to also be installed as it is one of the required library. This is done in Processing 3 IDE by going to Sketch->Import Library->Add Library->ptmx. Once that is done, you can run the game. It is recommended that the game is run on 1920x1080 resolution as it does not scale well above or below that resolution. 
+To play this game, one needs to have Processing 3 IDE installed. Once that is done, open any of the .pde files in the Boundaries folder. Next, install ptmx and minim library as they are required. This is done in Processing 3 IDE by going to Sketch->Import Library->Add Library->ptmx and Sketch->Import Library->Add Library->minim. Once that is done, you can run the game. It is recommended that the game is run on 1920x1080 resolution as it does not scale well above or below that resolution. 
 
 How to play
 ----
